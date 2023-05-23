@@ -1,0 +1,116 @@
+---
+sidebar: sidebar 
+permalink: concept_storage_management.html 
+keywords: provisioning, capacity management, storage provisioning, manual, automatic, advanced allocation, aggregates, thin provisioning, free space, mode 
+summary: Cloud Manager offre una gestione semplificata e avanzata dello storage Cloud Volumes ONTAP. 
+---
+= Gestione dello storage
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Cloud Manager offre una gestione semplificata e avanzata dello storage Cloud Volumes ONTAP.
+
+
+IMPORTANT: Tutti i dischi e gli aggregati devono essere creati ed eliminati direttamente da Cloud Manager. Non eseguire queste azioni da un altro tool di gestione. In questo modo si può influire sulla stabilità del sistema, ostacolare la possibilità di aggiungere dischi in futuro e potenzialmente generare tariffe ridondanti per i provider di cloud.
+
+
+
+== Provisioning dello storage
+
+Cloud Manager semplifica il provisioning dello storage per Cloud Volumes ONTAP acquistando dischi e gestendo aggregati per te. È sufficiente creare volumi. Se lo si desidera, è possibile utilizzare un'opzione di allocazione avanzata per eseguire il provisioning degli aggregati.
+
+
+
+=== Provisioning semplificato
+
+Gli aggregati forniscono lo storage cloud ai volumi. Cloud Manager crea aggregati per te quando avvii un'istanza e quando esegui il provisioning di volumi aggiuntivi.
+
+Quando crei un volume, Cloud Manager esegue una delle tre operazioni seguenti:
+
+* Posiziona il volume su un aggregato esistente con spazio libero sufficiente.
+* Il volume viene inserito in un aggregato esistente acquistando più dischi per tale aggregato.
+* L'IT acquista dischi per un nuovo aggregato e colloca il volume su tale aggregato.
+
+
+Cloud Manager determina dove posizionare un nuovo volume prendendo in considerazione diversi fattori: La dimensione massima di un aggregato, l'attivazione del thin provisioning e le soglie di spazio libero per gli aggregati.
+
+
+TIP: L'amministratore dell'account può modificare le soglie di spazio libero dalla pagina *Impostazioni*.
+
+
+
+==== Selezione delle dimensioni dei dischi per gli aggregati in AWS
+
+Quando Cloud Manager crea nuovi aggregati per Cloud Volumes ONTAP in AWS, aumenta gradualmente la dimensione del disco in un aggregato, con l'aumentare del numero di aggregati nel sistema. Cloud Manager consente di utilizzare la capacità massima del sistema prima che raggiunga il numero massimo di dischi dati consentito da AWS.
+
+Ad esempio, Cloud Manager può scegliere le seguenti dimensioni dei dischi per gli aggregati in un sistema Cloud Volumes ONTAP Premium o BYOL:
+
+[cols="3*"]
+|===
+| Numero aggregato | Dimensioni del disco | Capacità aggregata massima 
+
+
+| 1 | 500 MB | 3 TB 
+
+
+| 4 | 1 TB | 6 TB 
+
+
+| 6 | 2 TB | 12 TB 
+|===
+È possibile scegliere autonomamente le dimensioni del disco utilizzando l'opzione Advanced allocation (allocazione avanzata).
+
+
+
+=== Allocazione avanzata
+
+Invece di consentire a Cloud Manager di gestire gli aggregati per te, puoi farlo da solo. link:task_provisioning_storage.html#creating-aggregates["Dalla pagina *allocazione avanzata*"], è possibile creare nuovi aggregati che includono un numero specifico di dischi, aggiungere dischi a un aggregato esistente e creare volumi in aggregati specifici.
+
+
+
+== Gestione della capacità
+
+L'account Admin può scegliere se Cloud Manager notifica le decisioni relative alla capacità dello storage o se Cloud Manager gestisce automaticamente i requisiti di capacità per te. Potrebbe essere utile comprendere il funzionamento di queste modalità.
+
+
+
+=== Gestione automatica della capacità
+
+Per impostazione predefinita, Capacity Management Mode (modalità di gestione della capacità) è impostata su Automatic (automatica). In questa modalità, Cloud Manager acquista automaticamente nuovi dischi per le istanze di Cloud Volumes ONTAP quando è necessaria una maggiore capacità, elimina raccolte di dischi inutilizzate (aggregati), sposta i volumi tra aggregati quando necessario e tenta di eliminare i dischi guasti.
+
+I seguenti esempi illustrano il funzionamento di questa modalità:
+
+* Se un aggregato con 5 o meno dischi EBS raggiunge la soglia di capacità, Cloud Manager acquista automaticamente nuovi dischi per quell'aggregato in modo che i volumi possano continuare a crescere.
+* Se un aggregato con 12 dischi Azure raggiunge la soglia di capacità, Cloud Manager sposta automaticamente un volume da tale aggregato a un aggregato con capacità disponibile o a un nuovo aggregato.
++
+Se Cloud Manager crea un nuovo aggregato per il volume, sceglie una dimensione del disco che si adatta alle dimensioni del volume.
+
++
+Si noti che lo spazio libero è ora disponibile sull'aggregato originale. I volumi esistenti o nuovi volumi possono utilizzare tale spazio. In questo scenario, non è possibile restituire lo spazio ad AWS, Azure o GCP.
+
+* Se un aggregato non contiene volumi per più di 12 ore, Cloud Manager lo elimina.
+
+
+
+
+==== Gestione delle LUN con gestione automatica della capacità
+
+La gestione automatica della capacità di Cloud Manager non si applica alle LUN. Quando Cloud Manager crea un LUN, disattiva la funzione di crescita automatica.
+
+
+
+==== Gestione degli inode con gestione automatica della capacità
+
+Cloud Manager monitora l'utilizzo dell'inode su un volume. Quando viene utilizzato il 85% degli inode, Cloud Manager aumenta le dimensioni del volume per aumentare il numero di inode disponibili. Il numero di file che un volume può contenere è determinato dal numero di inode.
+
+
+
+=== Gestione manuale della capacità
+
+Se l'account Admin imposta la modalità di gestione della capacità su manuale, Cloud Manager visualizza i messaggi azione richiesta quando è necessario prendere decisioni in merito alla capacità. Gli stessi esempi descritti nella modalità automatica si applicano alla modalità manuale, ma spetta all'utente accettare le azioni.

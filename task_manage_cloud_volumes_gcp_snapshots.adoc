@@ -1,0 +1,120 @@
+---
+sidebar: sidebar 
+permalink: task_manage_cloud_volumes_gcp_snapshots.html 
+keywords: Cloud Volumes Service for Google Cloud, gcp, snapshots, on-demand, snapshot schedule 
+summary: 'È possibile creare un criterio di snapshot per ciascun volume in modo da poter ripristinare o ripristinare l"intero contenuto di un volume da un momento precedente. È inoltre possibile creare un"istantanea on-demand di un volume cloud quando necessario.' 
+---
+= Gestire le snapshot dei volumi cloud
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+È possibile creare un criterio di snapshot per ciascun volume in modo da poter ripristinare o ripristinare l'intero contenuto di un volume da un momento precedente. È inoltre possibile creare un'istantanea on-demand di un volume cloud quando necessario.
+
+
+
+== Crea un'istantanea on-demand
+
+È possibile creare uno snapshot on-demand di un volume cloud se si desidera creare uno snapshot con lo stato corrente del volume.
+
+.Fasi
+. Aprire l'ambiente di lavoro.
+. Passare il mouse sul volume e fare clic su *Create a snapshot copy* (Crea una copia snapshot).
+. Immettere un nome per lo snapshot oppure utilizzare il nome generato automaticamente e fare clic su *Create* (Crea).
++
+image:screenshot_cvs_ondemand_snapshot.png["Schermata della selezione della copia snapshot da ripristinare in un nuovo volume"]
+
++
+L'istantanea viene creata.
+
+
+
+
+
+== Creare o modificare un criterio di snapshot
+
+È possibile creare o modificare una policy di snapshot in base alle necessità per un volume cloud. La policy di snapshot viene definita dalla scheda _Snapshot Policy_ durante la creazione di un volume o la modifica di un volume.
+
+.Fasi
+. Aprire l'ambiente di lavoro.
+. Passare il mouse sul volume e fare clic su *Edit* (Modifica).
+. Dalla scheda _Snapshot Policy_, spostare il dispositivo di scorrimento Enable Snapshot (attiva snapshot) verso destra.
+. Definire la pianificazione delle snapshot:
++
+.. Selezionare la frequenza: *Orario*, *giornaliero*, *settimanale* o *mensile*
+.. Selezionare il numero di snapshot che si desidera conservare.
+.. Selezionare il giorno, l'ora e il minuto in cui eseguire l'istantanea.
++
+image:screenshot_cvs_aws_snapshot_policy.png["Schermata di un criterio Snapshot configurato"]
+
+
+
+. Fare clic su *Add volume* (Aggiungi volume) o *Update volume* (Aggiorna volume) per salvare le impostazioni dei criteri.
+
+
+
+
+== Disattiva un criterio di snapshot
+
+È possibile disattivare un criterio di snapshot per impedire la creazione di snapshot per un breve periodo di tempo, mantenendo le impostazioni del criterio di snapshot.
+
+.Fasi
+. Aprire l'ambiente di lavoro.
+. Passare il mouse sul volume e fare clic su *Edit* (Modifica).
+. Dalla scheda _Snapshot Policy_, spostare il dispositivo di scorrimento Enable Snapshot (attiva snapshot) verso sinistra.
++
+image:screenshot_cvs_aws_snapshot_policy_button_off.png["Schermata del pulsante snapshot policy nella posizione disabled"]
+
+. Fare clic su *Update volume* (Aggiorna volume).
+
+
+Se si desidera riattivare il criterio di snapshot, spostare il dispositivo di scorrimento Enable Snapshot (attiva snapshot) verso destra e fare clic su *Update volume* (Aggiorna volume).
+
+
+
+== Eliminare uno snapshot
+
+È possibile eliminare uno snapshot se non è più necessario.
+
+.Fasi
+. Aprire l'ambiente di lavoro.
+. Passare il mouse sul volume e fare clic su *Delete a Snapshot copy* (Elimina una copia Snapshot).
+. Selezionare l'istantanea dall'elenco a discesa e fare clic su *Delete* (Elimina).
++
+image:screenshot_cvs_delete_snapshot.png["Schermata della selezione della copia snapshot da eliminare"]
+
+. Nella finestra di dialogo di conferma, fare clic su *Delete* (Elimina).
+
+
+
+
+== Ripristinare uno snapshot in un nuovo volume
+
+Se necessario, è possibile ripristinare uno snapshot in un nuovo volume.
+
+.Fasi
+. Aprire l'ambiente di lavoro.
+. Passare il mouse sul volume e fare clic su *Restore to a new volume* (Ripristina un nuovo volume).
+. Selezionare l'istantanea che si desidera utilizzare per creare il nuovo volume dall'elenco a discesa.
+. Immettere un nome per il nuovo volume e fare clic su *Restore* (Ripristina).
++
+image:screenshot_cvs_restore_snapshot.png["Schermata della selezione della copia snapshot da ripristinare in un nuovo volume"]
+
++
+Il volume viene creato nell'ambiente di lavoro.
+
+. Se è necessario modificare uno degli attributi del volume, ad esempio il percorso del volume o il livello di servizio:
++
+.. Passare il mouse sul volume e fare clic su *Edit* (Modifica).
+.. Apportare le modifiche e fare clic su *Update volume* (Aggiorna volume).
+
+
+
+
+.Al termine
+Continuare con link:task_manage_cvs_gcp.html#mount-cloud-volumes["Montaggio del volume cloud"^].

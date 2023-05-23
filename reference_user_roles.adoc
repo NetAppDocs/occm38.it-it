@@ -1,0 +1,74 @@
+---
+sidebar: sidebar 
+permalink: reference_user_roles.html 
+keywords: user, users, roles, role, task, permission, permissions, tasks, admin, Account Admin, Workspace Admin, Cloud Compliance Viewer 
+summary: 'I ruoli account Admin (Amministratore account), Workspace Admin (Amministratore area di lavoro) e Cloud Compliance Viewer (Visualizzatore conformità cloud) forniscono autorizzazioni specifiche agli utenti.' 
+---
+= Ruoli
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+I ruoli account Admin (Amministratore account), Workspace Admin (Amministratore area di lavoro) e Cloud Compliance Viewer (Visualizzatore conformità cloud) forniscono autorizzazioni specifiche agli utenti.
+
+[cols="31,23,23,23"]
+|===
+| Attività | Amministratore account | Amministratore dello spazio di lavoro | Cloud Compliance Viewer 
+
+
+| Gestire gli ambienti di lavoro | Sì | Sì | No 
+
+
+| Abilitare i servizi negli ambienti di lavoro | Sì | Sì | No 
+
+
+| Visualizzare lo stato della replica dei dati | Sì | Sì | No 
+
+
+| Visualizza la timeline | Sì | Sì | No 
+
+
+| Passare da un'area di lavoro all'altra | Sì | Sì | Sì 
+
+
+| Visualizzare i risultati della scansione Compliance | Sì | Sì | Sì 
+
+
+| Eliminare gli ambienti di lavoro | Sì | No | No 
+
+
+| Connettere i cluster Kubernetes agli ambienti di lavoro | Sì | No | No 
+
+
+| Ricevere il report Cloud Volumes ONTAP | Sì | No | No 
+
+
+| Creare connettori | Sì | No | No 
+
+
+| Gestire gli account Cloud Central | Sì | No | No 
+
+
+| Gestire le credenziali | Sì | No | No 
+
+
+| Modificare le impostazioni di Cloud Manager | Sì | No | No 
+
+
+| Visualizza e gestisci la dashboard di supporto | Sì | No | No 
+
+
+| Rimuovere gli ambienti di lavoro da Cloud Manager | Sì | No | No 
+
+
+| Installare un certificato HTTPS | Sì | No | No 
+|===
+.Link correlati
+* link:task_setting_up_cloud_central_accounts.html["Impostazione di aree di lavoro e utenti nell'account Cloud Central"^]
+* link:task_managing_cloud_central_accounts.html["Gestione degli spazi di lavoro e degli utenti nell'account Cloud Central"^]
+

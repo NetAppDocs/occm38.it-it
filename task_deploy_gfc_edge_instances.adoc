@@ -1,0 +1,134 @@
+---
+sidebar: sidebar 
+permalink: task_deploy_gfc_edge_instances.html 
+keywords: global file cache, edge 
+summary: 'Dopo aver verificato che l"ambiente soddisfa tutti i requisiti, installare il software Global file cache Edge in ogni sede remota.' 
+---
+= Implementare istanze Global file cache Edge
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Dopo aver verificato che l'ambiente soddisfa tutti i requisiti, installare il software Global file cache Edge in ogni sede remota.
+
+
+
+== Prima di iniziare
+
+Per completare le attività di configurazione di Global file cache Edge, sono necessarie le seguenti informazioni:
+
+* Indirizzi IP statici per ogni istanza di Global file cache
+* Subnet mask
+* Indirizzo IP del gateway
+* Il nome FQDN che si desidera assegnare a ciascun server Global file cache
+* Il suffisso DNS (opzionale)
+* Il nome utente e la password di un utente amministrativo nel dominio
+* L'FQDN e/o l'indirizzo IP dei server Core associati
+* Volume da utilizzare come Intelligent file cache. Si consiglia di raddoppiare la dimensione del dataset attivo. Deve essere formattato come NTFS e assegnato come `D:\`.
+
+
+
+
+=== Porte TCP comunemente utilizzate
+
+I servizi Global file cache utilizzano diverse porte TCP. È obbligatorio che i dispositivi possano comunicare su queste porte ed essere esclusi da qualsiasi dispositivo di ottimizzazione WAN o policy di restrizione firewall:
+
+* Global file cache Licensing TCP Port: 443
+* Porte TCP Global file cache: 6618-6630
+
+
+
+
+== Implementare il modello virtuale Global file cache
+
+Il modello virtuale  `.OVA` e. `.VHD`) Le immagini contengono l'ultima versione del software Global file cache. Se si sta implementando Global file cache utilizzando `.OVA` oppure `.VHD` Modello di macchina virtuale (VM), seguire i passaggi descritti in questa sezione. Si presuppone che si comprenda come implementare `.OVA` oppure `.VHD` modello sulla piattaforma hypervisor designata.
+
+Assicurarsi che le preferenze delle macchine virtuali, incluse le prenotazioni delle risorse, siano in linea con i requisiti descritti nella link:download_gfc_resources.html#physical-hardware-requirements["Requisiti di implementazione virtuale"^].
+
+.Fasi
+. Estrarre il pacchetto dal modello scaricato.
+. Implementare il modello virtuale. Fare riferimento ai seguenti video prima di iniziare l'implementazione:
++
+** https://youtu.be/8MGuhITiXfs["Implementare il modello virtuale su VMware"^]
+** https://youtu.be/4zCX4iwi8aU["Implementare il modello virtuale su Hyper-V."^]
+
+
+. Dopo aver implementato il modello virtuale e aver configurato le impostazioni della macchina virtuale, avviare la macchina virtuale.
+. Durante l'avvio iniziale, quando il sistema operativo Windows Server 2016 o 2019 si prepara per il primo utilizzo, completare l'esperienza pronta all'uso installando i driver corretti e installando i componenti necessari per il rispettivo hardware.
+. Una volta completata l'installazione di base dell'istanza Global file cache Edge, il sistema operativo Windows Server 2016 o 2019 guida l'utente attraverso una configurazione guidata iniziale per configurare le specifiche del sistema operativo, come la localizzazione e il codice "Product Key".
+. Una volta completata la configurazione guidata iniziale, accedere localmente al sistema operativo Windows Server 2016 o 2019 con le seguenti credenziali:
++
+** Nome utente: *FASTAdmin*
+** Password: *Tal0nFAST!*
+
+
+. Configurare la macchina virtuale Windows Server, accedere al dominio Active Directory dell'organizzazione e passare alla sezione di configurazione Global file cache Edge.
+
+
+
+
+== Configurare l'istanza Global file cache Edge
+
+L'istanza Global file cache Edge si connette a un core Global file cache per fornire agli utenti della filiale l'accesso alle risorse del file server del data center.
+
+
+NOTE: Prima di iniziare la configurazione, l'istanza di Edge deve essere concessa in licenza come parte della distribuzione di Cloud Volumes ONTAP. Vedere link:concept_gfc.html#licensing["Licensing"^] per ulteriori informazioni sulle licenze.
+
+Se la configurazione richiede l'installazione di più di un Global file cache Core a causa di un elevato numero di istanze Edge, verranno configurate alcune istanze Edge per la connessione al primo core e altre per la connessione al secondo core. Assicurarsi di disporre dell'FQDN o dell'indirizzo IP e di altre informazioni necessarie per l'istanza Core corretta.
+
+Per configurare l'istanza di Edge, attenersi alla seguente procedura:
+
+.Fasi
+. Fare clic su *Perform* (Esegui) accanto alla fase Core Configuration (Configurazione principale) non selezionata, elencata nella sezione "Edge Configuration Steps" (fasi di configurazione edge) dell'assistente di configurazione iniziale. Viene visualizzata una nuova scheda, GFC Edge, che mostra la sezione _istanze core_.
+. Fornire l'ID *Cloud Fabric* del server Global file cache Core. L'ID Cloud Fabric è generalmente il nome NetBIOS o la posizione geografica del file server back-end.
+. Fornire l'indirizzo *FQDN/IP* del server Global file cache Core:
++
+.. (Facoltativo) selezionare la casella *SSL* per abilitare il supporto SSL per la crittografia avanzata dall'edge al core.
+.. Inserire il nome utente e la password, ovvero le credenziali dell'account di servizio utilizzato nel Core.
+
+
+. Fare clic su *Add* (Aggiungi) per confermare l'aggiunta dell'appliance Global file cache Core. Viene visualizzata una finestra di conferma. Fare clic su *OK* per chiudere l'operazione.
++
+image:screenshot_gfc_edge_install1.png["Una schermata che mostra le voci Edge che identificano il core Global file cache che verrà utilizzato."]
+
+
+
+
+
+== Aggiornare il software Global file cache Edge
+
+Global file cache rilascia frequentemente aggiornamenti al software, patch, miglioramenti o nuove funzionalità. Anche se il modello virtuale (`.OVA` e. `.VHD`) Le immagini contengono l'ultima release del software Global file cache, è possibile che una versione più recente sia disponibile sul portale NetApp Support Download.
+
+Assicurarsi che le istanze Global file cache siano aggiornate con la versione più recente.
+
+
+NOTE: Questo pacchetto software può essere utilizzato anche per installazioni incontaminate su Microsoft Windows Server 2016 Standard o Datacenter Edition, Windows Server 2019 Standard o Datacenter Edition, oppure come parte della strategia di upgrade.
+
+Di seguito sono riportati i passaggi necessari per aggiornare il pacchetto di installazione Global file cache:
+
+.Fasi
+. Dopo aver salvato l'ultimo pacchetto di installazione nell'istanza di Windows Server desiderata, fare doppio clic su di esso per eseguire l'eseguibile di installazione.
+. Fare clic su *Avanti* per continuare il processo.
+. Fare clic su *Avanti* per continuare.
+. Accettare il Contratto di licenza e fare clic su *Avanti*.
+. Selezionare la posizione di destinazione dell'installazione desiderata.
++
+NetApp consiglia di utilizzare la posizione di installazione predefinita.
+
+. Fare clic su *Avanti* per continuare.
+. Selezionare la cartella del menu Start.
+. Fare clic su *Avanti* per continuare.
+. Verificare i parametri di installazione desiderati e fare clic su *Install* (Installa) per avviare l'installazione.
++
+Il processo di installazione viene eseguito.
+
+. Al termine dell'installazione, riavviare il server quando richiesto.
+
+
+.Quali sono le prossime novità?
+Per ulteriori informazioni sulla configurazione avanzata di Global file cache Edge, consultare link:https://repo.cloudsync.netapp.com/gfc/NetApp%20GFC%20-%20User%20Guide.pdf["Guida utente di NetApp Global file cache"^].

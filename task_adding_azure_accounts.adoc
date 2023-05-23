@@ -1,0 +1,288 @@
+---
+sidebar: sidebar 
+permalink: task_adding_azure_accounts.html 
+keywords: permissions, microsoft, azure, permissions, custom role, role, json, active directory, ad, service principal, key, tenant id, application key, application id, operator role, managed identity, iam, operator, role, virtual machine 
+summary: 'Quando si crea un sistema Cloud Volumes ONTAP, è necessario selezionare le credenziali Azure e l"abbonamento Marketplace da utilizzare con tale sistema. Se si gestiscono più sottoscrizioni Azure Marketplace, è possibile assegnarle a diverse credenziali Azure dalla pagina credenziali.' 
+---
+= Gestione delle credenziali e delle sottoscrizioni di Azure per Cloud Manager
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Quando si crea un sistema Cloud Volumes ONTAP, è necessario selezionare le credenziali Azure e l'abbonamento Marketplace da utilizzare con tale sistema. Se si gestiscono più sottoscrizioni Azure Marketplace, è possibile assegnarle a diverse credenziali Azure dalla pagina credenziali.
+
+Esistono due modi per gestire le credenziali Azure in Cloud Manager. Innanzitutto, se si desidera implementare Cloud Volumes ONTAP in diversi account Azure, è necessario fornire le autorizzazioni necessarie e aggiungere le credenziali a Cloud Manager. Il secondo metodo consiste nell'associare sottoscrizioni aggiuntive all'identità gestita da Azure.
+
+
+NOTE: Quando si implementa un connettore da Cloud Manager, Cloud Manager aggiunge automaticamente l'account Azure in cui è stato implementato il connettore. Se il software Connector è stato installato manualmente su un sistema esistente, non viene aggiunto un account iniziale. link:concept_accounts_azure.html["Scopri gli account e le autorizzazioni di Azure"].
+
+
+
+== Concessione delle autorizzazioni di Azure mediante un'entità del servizio
+
+Cloud Manager ha bisogno delle autorizzazioni per eseguire azioni in Azure. È possibile concedere le autorizzazioni richieste a un account Azure creando e impostando un'entità di servizio in Azure Active Directory e ottenendo le credenziali Azure di cui Cloud Manager ha bisogno.
+
+.A proposito di questa attività
+La seguente immagine mostra come Cloud Manager ottiene le autorizzazioni per eseguire operazioni in Azure. Un oggetto principale del servizio, legato a una o più sottoscrizioni Azure, rappresenta Cloud Manager in Azure Active Directory e viene assegnato a un ruolo personalizzato che consente le autorizzazioni richieste.
+
+image:diagram_azure_authentication.png["Immagine concettuale che mostra come Cloud Manager ottiene l'autenticazione e l'autorizzazione da Azure Active Directory prima di poter effettuare una chiamata API. In Active Directory, il ruolo Cloud Manager Operator definisce le autorizzazioni. È legato a una o più sottoscrizioni Azure e a un oggetto principale del servizio che rappresenta l'applicazione Cloud Manager."]
+
+.Fasi
+. <<Creazione di un'applicazione Azure Active Directory,Creare un'applicazione Azure Active Directory>>.
+. <<Assegnazione dell'applicazione a un ruolo,Assegnare l'applicazione a un ruolo>>.
+. <<Aggiunta delle autorizzazioni API per la gestione dei servizi di Windows Azure,Aggiungere le autorizzazioni API per la gestione dei servizi Windows Azure>>.
+. <<Ottenere l'ID dell'applicazione e l'ID della directory,Ottenere l'ID dell'applicazione e l'ID della directory>>.
+. <<Creazione di un client segreto,Creare un client segreto>>.
+
+
+
+
+=== Creazione di un'applicazione Azure Active Directory
+
+Creare un'applicazione e un service principal Azure Active Directory (ad) che Cloud Manager può utilizzare per il controllo degli accessi in base al ruolo.
+
+.Prima di iniziare
+Per creare un'applicazione Active Directory e assegnarla a un ruolo, è necessario disporre delle autorizzazioni appropriate in Azure. Per ulteriori informazioni, fare riferimento a. https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal#required-permissions/["Documentazione di Microsoft Azure: Autorizzazioni richieste"^].
+
+.Fasi
+. Dal portale Azure, aprire il servizio *Azure Active Directory*.
++
+image:screenshot_azure_ad.gif["Mostra il servizio Active Directory in Microsoft Azure."]
+
+. Nel menu, fare clic su *App Registrations*.
+. Fare clic su *Nuova registrazione*.
+. Specificare i dettagli dell'applicazione:
++
+** *Nome*: Immettere un nome per l'applicazione.
+** *Tipo di account*: Selezionare un tipo di account (qualsiasi verrà utilizzato con Cloud Manager).
+** *Redirect URI* (reindirizzamento URI): Selezionare *Web* e inserire un URL qualsiasi, ad esempio https://url
+
+
+. Fare clic su *Registra*.
+
+
+.Risultato
+Hai creato l'applicazione ad e il service principal.
+
+
+
+=== Assegnazione dell'applicazione a un ruolo
+
+È necessario associare l'entità del servizio a una o più sottoscrizioni Azure e assegnarle il ruolo personalizzato di "operatore cloud manager OnCommand" in modo che quest'ultimo disponga delle autorizzazioni.
+
+.Fasi
+. Creare un ruolo personalizzato:
++
+.. Scaricare il https://mysupport.netapp.com/site/info/cloud-manager-policies["Policy di Cloud Manager Azure"^].
+.. Modificare il file JSON aggiungendo gli ID di abbonamento Azure all'ambito assegnabile.
++
+È necessario aggiungere l'ID per ogni abbonamento Azure da cui gli utenti creeranno i sistemi Cloud Volumes ONTAP.
+
++
+*Esempio*
+
++
+[source, json]
+----
+"AssignableScopes": [
+"/subscriptions/d333af45-0d07-4154-943d-c25fbzzzzzzz",
+"/subscriptions/54b91999-b3e6-4599-908e-416e0zzzzzzz",
+"/subscriptions/398e471c-3b42-4ae7-9b59-ce5bbzzzzzzz"
+----
+.. Utilizzare il file JSON per creare un ruolo personalizzato in Azure.
++
+Nell'esempio seguente viene illustrato come creare un ruolo personalizzato utilizzando Azure CLI 2.0:
+
++
+`az role definition create --role-definition C:\Policy_for_cloud_Manager_Azure_3.8.7.json`
+
++
+Ora dovresti avere un ruolo personalizzato chiamato _Cloud Manager Operator_.
+
+
+
+. Assegnare l'applicazione al ruolo:
++
+.. Dal portale Azure, aprire il servizio *Subscriptions*.
+.. Selezionare l'abbonamento.
+.. Fare clic su *Access control (IAM) > Add > Add role assignment* (controllo accesso (IAM) > Add > Add role assign
+.. Selezionare il ruolo *Cloud Manager Operator*.
+.. Mantieni selezionata l'opzione *Azure ad user, group o service principal*.
+.. Cercare il nome dell'applicazione (non è possibile trovarla nell'elenco scorrendo).
++
+image:screenshot_azure_service_principal_role.gif["Una schermata che mostra il modulo Add role assignment nel portale Azure."]
+
+.. Selezionare l'applicazione e fare clic su *Save* (Salva).
++
+Il service principal per Cloud Manager dispone ora delle autorizzazioni Azure necessarie per tale abbonamento.
+
++
+Se si desidera implementare Cloud Volumes ONTAP da più sottoscrizioni Azure, è necessario associare l'entità del servizio a ciascuna di queste sottoscrizioni. Cloud Manager consente di selezionare l'abbonamento che si desidera utilizzare durante l'implementazione di Cloud Volumes ONTAP.
+
+
+
+
+
+
+
+=== Aggiunta delle autorizzazioni API per la gestione dei servizi di Windows Azure
+
+L'entità del servizio deve disporre delle autorizzazioni "API di gestione dei servizi Windows Azure".
+
+.Fasi
+. Nel servizio *Azure Active Directory*, fare clic su *App Registrations* e selezionare l'applicazione.
+. Fare clic su *API permissions > Add a permission* (autorizzazioni API > Aggiungi autorizzazione)
+. In *Microsoft API*, selezionare *Azure Service Management*.
++
+image:screenshot_azure_service_mgmt_apis.gif["Una schermata del portale Azure che mostra le autorizzazioni API di Azure Service Management."]
+
+. Fare clic su *Access Azure Service Management as organization users* (Accedi a Azure Service Management come utenti dell'organizzazione), quindi fare clic su *Add permissions* (
++
+image:screenshot_azure_service_mgmt_apis_add.gif["Una schermata del portale Azure che mostra l'aggiunta delle API di gestione dei servizi Azure."]
+
+
+
+
+
+=== Ottenere l'ID dell'applicazione e l'ID della directory
+
+Quando si aggiunge l'account Azure a Cloud Manager, è necessario fornire l'ID dell'applicazione (client) e l'ID della directory (tenant) per l'applicazione. Cloud Manager utilizza gli ID per effettuare l'accesso a livello di programmazione.
+
+.Fasi
+. Nel servizio *Azure Active Directory*, fare clic su *App Registrations* e selezionare l'applicazione.
+. Copiare *Application (client) ID* e *Directory (tenant) ID*.
++
+image:screenshot_azure_app_ids.gif["Una schermata che mostra l'ID dell'applicazione (client) e l'ID della directory (tenant) per un'applicazione in Azure Active Directory."]
+
+
+
+
+
+=== Creazione di un client segreto
+
+È necessario creare un client secret e quindi fornire a Cloud Manager il valore del segreto in modo che Cloud Manager possa utilizzarlo per l'autenticazione con Azure ad.
+
+
+NOTE: Quando si aggiunge l'account a Cloud Manager, Cloud Manager fa riferimento al segreto del client come Application Key.
+
+.Fasi
+. Aprire il servizio *Azure Active Directory*.
+. Fare clic su *App Registrations* e selezionare l'applicazione.
+. Fare clic su *certificati e segreti > nuovo segreto client*.
+. Fornire una descrizione del segreto e una durata.
+. Fare clic su *Aggiungi*.
+. Copiare il valore del client secret.
++
+image:screenshot_azure_client_secret.gif["Schermata del portale Azure che mostra un segreto client per l'entità del servizio Azure ad."]
+
+
+
+.Risultato
+L'entità del servizio è ora impostata e l'ID dell'applicazione (client), l'ID della directory (tenant) e il valore del client secret dovrebbero essere stati copiati. Devi inserire queste informazioni in Cloud Manager quando Aggiungi un account Azure.
+
+
+
+== Aggiunta di credenziali Azure a Cloud Manager
+
+Dopo aver fornito un account Azure con le autorizzazioni richieste, è possibile aggiungere le credenziali per tale account a Cloud Manager. Ciò consente di avviare i sistemi Cloud Volumes ONTAP in tale account.
+
+.Di cosa hai bisogno
+È necessario creare un connettore prima di poter modificare le impostazioni di Cloud Manager. link:concept_connectors.html#how-to-create-a-connector["Scopri come"].
+
+.Fasi
+. Nella parte superiore destra della console di Cloud Manager, fare clic sull'icona Impostazioni e selezionare *credenziali*.
++
+image:screenshot_settings_icon.gif["Una schermata che mostra l'icona Settings (Impostazioni) in alto a destra della console di Cloud Manager."]
+
+. Fare clic su *Aggiungi credenziali* e selezionare *Microsoft Azure*.
+. Immettere le informazioni relative all'entità del servizio Azure Active Directory che concede le autorizzazioni richieste:
++
+** ID applicazione (client): Vedere <<Ottenere l'ID dell'applicazione e l'ID della directory>>.
+** ID directory (tenant): Vedere <<Ottenere l'ID dell'applicazione e l'ID della directory>>.
+** Segreto del client: Vedere <<Creazione di un client segreto>>.
+
+
+. Confermare che i requisiti della policy sono stati soddisfatti, quindi fare clic su *continua*.
+. Scegli l'abbonamento pay-as-you-go che desideri associare alle credenziali o fai clic su *Aggiungi abbonamento* se non ne hai ancora uno.
++
+Per creare un sistema Cloud Volumes ONTAP pay-as-you-go, le credenziali Azure devono essere associate a un abbonamento a Cloud Volumes ONTAP da Azure Marketplace.
+
+. Fare clic su *Aggiungi*.
+
+
+.Risultato
+È ora possibile passare a un set di credenziali diverso dalla pagina Dettagli e credenziali link:task_deploying_otc_azure.html["quando si crea un nuovo ambiente di lavoro"]:
+
+image:screenshot_accounts_switch_azure.gif["Una schermata che mostra la selezione tra le credenziali dopo aver fatto clic su Edit Credentials (Modifica credenziali) nella pagina Details  Credentials (Dettagli  credenziali)."]
+
+
+
+== Associazione di un abbonamento a Azure Marketplace alle credenziali
+
+Dopo aver aggiunto le tue credenziali Azure a Cloud Manager, puoi associare un abbonamento a Azure Marketplace a tali credenziali. L'abbonamento consente di creare un sistema Cloud Volumes ONTAP pay-as-you-go e di utilizzare altri servizi cloud NetApp.
+
+Esistono due scenari in cui è possibile associare un abbonamento a Azure Marketplace dopo aver aggiunto le credenziali a Cloud Manager:
+
+* Non hai associato un abbonamento quando inizialmente hai aggiunto le credenziali a Cloud Manager.
+* Si desidera sostituire un abbonamento a Azure Marketplace esistente con un nuovo abbonamento.
+
+
+.Di cosa hai bisogno
+È necessario creare un connettore prima di poter modificare le impostazioni di Cloud Manager. link:concept_connectors.html#how-to-create-a-connector["Scopri come"].
+
+.Fasi
+. Nella parte superiore destra della console di Cloud Manager, fare clic sull'icona Impostazioni e selezionare *credenziali*.
+. Passare il mouse su un set di credenziali e fare clic sul menu delle azioni.
+. Dal menu, fare clic su *Associa abbonamento*.
++
+image:screenshot_azure_add_subscription.gif["Schermata della pagina credenziali in cui è possibile aggiungere un abbonamento alle credenziali Azure dal menu."]
+
+. Selezionare un abbonamento dall'elenco a discesa oppure fare clic su *Aggiungi abbonamento* e seguire la procedura per creare un nuovo abbonamento.
++
+Il seguente video inizia dal contesto della procedura guidata dell'ambiente di lavoro, ma mostra lo stesso flusso di lavoro dopo aver fatto clic su *Add Subscription* (Aggiungi abbonamento):
+
++
+video::video_subscribing_azure.mp4[width=848,height=480]
+
+
+
+
+== Associazione di sottoscrizioni Azure aggiuntive a un'identità gestita
+
+Cloud Manager consente di scegliere le credenziali Azure e l'abbonamento Azure in cui si desidera implementare Cloud Volumes ONTAP. Non è possibile selezionare un'altra sottoscrizione Azure per il profilo di identità gestita, a meno che non venga associato a. https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview["identità gestita"^] con questi abbonamenti.
+
+.A proposito di questa attività
+Un'identità gestita è link:concept_accounts_azure.html["L'account Azure iniziale"] Quando si implementa un connettore da Cloud Manager. Quando hai implementato il connettore, Cloud Manager ha creato il ruolo Cloud Manager Operator e lo ha assegnato alla macchina virtuale del connettore.
+
+.Fasi
+. Accedere al portale Azure.
+. Aprire il servizio *Abbonamenti* e selezionare l'abbonamento in cui si desidera implementare Cloud Volumes ONTAP.
+. Fare clic su *controllo di accesso (IAM)*.
++
+.. Fare clic su *Aggiungi* > *Aggiungi assegnazione ruolo* e aggiungere le autorizzazioni:
++
+*** Selezionare il ruolo *Cloud Manager Operator*.
++
+
+NOTE: Cloud Manager Operator è il nome predefinito fornito in https://mysupport.netapp.com/site/info/cloud-manager-policies["Policy di Cloud Manager"]. Se si sceglie un nome diverso per il ruolo, selezionare il nome desiderato.
+
+*** Assegnare l'accesso a una *macchina virtuale*.
+*** Selezionare l'abbonamento in cui è stata creata la macchina virtuale Connector.
+*** Selezionare la macchina virtuale Connector.
+*** Fare clic su *Save* (Salva).
+
+
+
+
+. Ripetere questa procedura per gli abbonamenti aggiuntivi.
+
+
+.Risultato
+Quando crei un nuovo ambiente di lavoro, dovresti ora avere la possibilità di scegliere tra più sottoscrizioni Azure per il profilo di identità gestito.
+
+image:screenshot_accounts_switch_azure_subscription.gif["Una schermata che mostra la possibilità di selezionare più sottoscrizioni Azure quando si seleziona un account Microsoft Azure Provider."]

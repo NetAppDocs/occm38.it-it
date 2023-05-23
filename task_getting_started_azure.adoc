@@ -1,0 +1,64 @@
+---
+sidebar: sidebar 
+permalink: task_getting_started_azure.html 
+keywords: microsoft, azure, netapp, data fabric, hybrid cloud, cloud, public cloud, networking, marketplace, virtual machine, vnet, quick, getting started, install, installing, deploy, deploying, setup, setting up, launching, requirements, prerequisites, cloud central, permissions, custom role, role, json, permissions, virtual machine, video, connectivity, internet, outbound, endpoint, connection, networks, vpn, replicating, policy, iam, setupasservice, sign up, cloud manager, cloud volumes ontap, cloud ontap, subscription, create 
+summary: Inizia a utilizzare Cloud Volumes ONTAP per Azure in pochi passaggi. 
+---
+= Introduzione a Cloud Volumes ONTAP per Azure
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Inizia a utilizzare Cloud Volumes ONTAP per Azure in pochi passaggi.
+
+
+
+==== image:number1.png["Numero 1"] Creare un connettore
+
+[role="quick-margin-para"]
+Se non si dispone di un link:concept_connectors.html["Connettore"] Tuttavia, un amministratore dell'account deve crearne uno. link:task_creating_connectors_azure.html["Scopri come creare un connettore in Azure"].
+
+[role="quick-margin-para"]
+Quando crei il tuo primo ambiente di lavoro Cloud Volumes ONTAP, Cloud Manager ti chiede di implementare un connettore se non ne hai ancora uno.
+
+
+
+==== image:number2.png["Numero 2"] Pianificare la configurazione
+
+[role="quick-margin-para"]
+Cloud Manager offre pacchetti preconfigurati che soddisfano i tuoi requisiti di carico di lavoro, oppure puoi creare la tua configurazione. Se si sceglie una configurazione personalizzata, è necessario comprendere le opzioni disponibili. link:task_planning_your_config_azure.html["Scopri di più"].
+
+
+
+==== image:number3.png["Numero 3"] Configurare la rete
+
+[role="quick-margin-list"]
+. Assicurarsi che VNET e le subnet supportino la connettività tra il connettore e Cloud Volumes ONTAP.
+. Abilitare l'accesso a Internet in uscita dal VNET di destinazione in modo che il connettore e Cloud Volumes ONTAP possano contattare diversi endpoint.
++
+Questo passaggio è importante perché il connettore non è in grado di gestire Cloud Volumes ONTAP senza accesso a Internet in uscita. Se è necessario limitare la connettività in uscita, fare riferimento all'elenco degli endpoint per link:reference_networking_azure.html["Il connettore e Cloud Volumes ONTAP"].
+
+
+
+[role="quick-margin-para"]
+link:reference_networking_azure.html["Scopri di più sui requisiti di rete"].
+
+
+
+==== image:number4.png["Numero 4"] Avviare Cloud Volumes ONTAP utilizzando Cloud Manager
+
+[role="quick-margin-para"]
+Fare clic su *Add Working Environment* (Aggiungi ambiente di lavoro), selezionare il tipo di sistema che si desidera implementare e completare la procedura guidata. link:task_deploying_otc_azure.html["Leggi le istruzioni dettagliate"].
+
+.Link correlati
+* link:concept_evaluating.html["Valutazione"]
+* link:task_creating_connectors_azure.html["Creazione di un connettore da Cloud Manager"]
+* link:task_launching_azure_mktp.html["Creazione di un connettore da Azure Marketplace"]
+* link:task_installing_linux.html["Installazione del software del connettore su un host Linux"]
+* link:reference_permissions.html#what-cloud-manager-does-with-azure-permissions["Cosa fa Cloud Manager con le autorizzazioni Azure"]
+

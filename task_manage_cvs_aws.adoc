@@ -1,0 +1,355 @@
+---
+sidebar: sidebar 
+permalink: task_manage_cvs_aws.html 
+keywords: cloud volumes service for aws, cloud volumes, create cloud volumes, discover cloud volumes service for aws, delete cloud volumes, cloud volumes service subscription, discover cloud volumes service subscription, access key, secret key, discover region, service level, allowed clients, create snapshots 
+summary: 'Cloud Manager ti consente di creare volumi cloud in base al tuo abbonamento a Cloud Volumes Service per AWS. Puoi anche scoprire i volumi cloud che hai già creato dall"interfaccia Cloud Volumes Service e aggiungerli a un ambiente di lavoro.' 
+---
+= Gestione di Cloud Volumes Service per AWS
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Cloud Manager ti consente di creare volumi cloud in base al tuo https://cloud.netapp.com/cloud-volumes-service-for-aws["Cloud Volumes Service per AWS"^] iscrizione. Puoi anche scoprire i volumi cloud che hai già creato dall'interfaccia Cloud Volumes Service e aggiungerli a un ambiente di lavoro.
+
+
+
+== Aggiungi il tuo abbonamento a Cloud Volumes Service per AWS
+
+Indipendentemente dal fatto che siano già stati creati volumi dall'interfaccia utente di Cloud Volumes Service o se si è appena iscritti a Cloud Volumes Service per AWS e non si dispone ancora di volumi, il primo passo è creare un ambiente di lavoro per i volumi in base all'abbonamento AWS.
+
+Se per questo abbonamento esistono già volumi cloud, i volumi vengono aggiunti automaticamente al nuovo ambiente di lavoro. Se non hai ancora aggiunto volumi cloud per l'abbonamento AWS, lo fai dopo aver creato il nuovo ambiente di lavoro.
+
+
+TIP: Se si dispone di sottoscrizioni e volumi in più regioni AWS, è necessario eseguire questa attività per ciascuna regione.
+
+.Prima di iniziare
+Quando si aggiunge un abbonamento in ciascuna regione, è necessario disporre delle seguenti informazioni:
+
+* Chiave API e chiave segreta Cloud Volumes: https://docs.netapp.com/us-en/cloud_volumes/aws/reference_cloud_volume_apis.html#finding-the-api-url-api-key-and-secret-key["Consultare la documentazione di Cloud Volumes Service per AWS per ottenere queste informazioni"^].
+* Regione AWS in cui è stato creato l'abbonamento.
+
+
+.Fasi
+. In Cloud Manager, Aggiungi un nuovo ambiente di lavoro, seleziona la posizione *Amazon Web Services* e fai clic su *continua*.
+. Selezionare *Cloud Volumes Service* e fare clic su *Continue*.
++
+image:screenshot_add_cvs_aws_working_env.png["Schermata dell'aggiunta di un ambiente di lavoro per un abbonamento a Cloud Volumes Service per AWS"]
+
+. Fornisci informazioni sull'abbonamento a Cloud Volumes Service:
++
+.. Inserire il nome dell'ambiente di lavoro che si desidera utilizzare.
+.. Inserire la chiave API Cloud Volumes Service e la chiave segreta.
+.. Selezionare la regione AWS in cui risiedono i volumi cloud o dove verranno implementati.
+.. Fare clic su *Aggiungi*.
++
+image:screenshot_add_cvs_aws_credentials.png["Schermata dell'aggiunta di credenziali per un abbonamento a Cloud Volumes Service per AWS"]
+
+
+
+
+
+.Risultato
+Cloud Manager visualizza la configurazione di Cloud Volumes Service per AWS nella pagina Working Environments (ambienti di lavoro).
+
+image:screenshot_cvs_aws_cloud.gif["Una schermata di Cloud Volumes Service per AWS sulla pagina Working Environments (ambienti di lavoro)."]
+
+Se per questo abbonamento esistono già volumi cloud, i volumi vengono aggiunti automaticamente al nuovo ambiente di lavoro, come mostrato nella schermata. Puoi aggiungere altri volumi cloud da Cloud Manager.
+
+Se non esistono volumi cloud per questo abbonamento, puoi crearli ora.
+
+
+
+== Creare volumi cloud
+
+Per le configurazioni in cui i volumi sono già presenti nell'ambiente di lavoro Cloud Volumes Service, è possibile utilizzare questa procedura per aggiungere nuovi volumi.
+
+Per le configurazioni in cui non esistono volumi, è possibile creare il primo volume direttamente da Cloud Manager dopo aver configurato l'abbonamento a Cloud Volumes Service per AWS. In passato, il primo volume doveva essere creato direttamente nell'interfaccia utente di Cloud Volumes Service.
+
+.Prima di iniziare
+* Se si desidera utilizzare SMB in AWS, è necessario aver configurato DNS e Active Directory.
+* Quando si intende creare un volume SMB, è necessario disporre di un server Windows Active Directory a cui connettersi. Queste informazioni verranno inserite durante la creazione del volume. Inoltre, assicurarsi che l'utente Admin sia in grado di creare un account macchina nel percorso dell'unità organizzativa (OU) specificato.
+* Queste informazioni saranno necessarie quando si crea il primo volume in una nuova regione/ambiente di lavoro:
++
+** AWS account ID (ID account AWS): Un identificativo di account Amazon a 12 cifre senza trattini. Per trovare l'ID account, fare riferimento a questa sezione link:https://docs.aws.amazon.com/IAM/latest/UserGuide/console_account-alias.html["Argomento AWS"^].
+** Blocco CIDR (Classless Inter-Domain Routing): Un blocco CIDR IPv4 non utilizzato. Il prefisso di rete deve essere compreso tra /16 e /28 e deve rientrare anche negli intervalli riservati alle reti private (RFC 1918). Non scegliere una rete che si sovrapponga alle allocazioni CIDR VPC.
+
+
+
+
+.Fasi
+. Selezionare il nuovo ambiente di lavoro e fare clic su *Add New Volume* (Aggiungi nuovo volume).
+. Se si aggiunge il primo volume all'ambiente di lavoro nella regione, è necessario aggiungere informazioni di rete AWS.
++
+.. Immettere l'intervallo IPv4 (CIDR) per la regione.
+.. Inserisci l'ID dell'account AWS a 12 cifre (senza trattini) per connettere l'account Cloud Volumes al tuo account AWS.
+.. Fare clic su *continua*.
++
+image:screenshot_cvs_aws_network_setup.png["Una schermata della pagina di configurazione della rete in cui è possibile aggiungere l'ID account CIDR e AWS"]
+
+
+
+. La pagina accettazione delle interfacce virtuali descrive alcuni passaggi da eseguire dopo l'aggiunta del volume in modo da essere pronti a completare tale passaggio. Fai clic su *continua* di nuovo.
+. Nella pagina Details & Tags (Dettagli e tag), immettere i dettagli relativi al volume:
++
+.. Immettere un nome per il volume.
+.. Specificare una dimensione compresa nell'intervallo da 100 GiB a 90,000 GiB (equivalente a 88 Tibs).
++
+link:reference_cvs_service_levels_and_quotas.html#allocated-capacity["Scopri di più sulla capacità allocata"^].
+
+.. Specificare un livello di servizio: Standard, Premium o Extreme.
++
+link:reference_cvs_service_levels_and_quotas.html#service-levels["Scopri di più sui livelli di servizio"^].
+
+.. Inserire uno o più nomi di tag per classificare il volume, se si desidera.
+.. Fare clic su *continua*.
++
+image:screenshot_cvs_vol_details_page.png["Una schermata della pagina dei dettagli del volume in cui vengono forniti nome, dimensione e livello di servizio"]
+
+
+
+. Nella pagina Protocol (protocollo), selezionare NFS, SMB o Dual Protocol (protocollo doppio), quindi definire i dettagli. Le voci richieste per NFS e SMB sono illustrate in sezioni separate di seguito.
+. Nel campo Volume Path (percorso volume), specificare il nome dell'esportazione del volume che verrà visualizzato quando si monta il volume.
+. Se si seleziona Dual-Protocol, è possibile selezionare lo stile di protezione selezionando NTFS o UNIX. Gli stili di sicurezza influiscono sul tipo di autorizzazione del file utilizzato e sulla modalità di modifica delle autorizzazioni.
++
+** UNIX utilizza i bit di modalità NFSv3 e solo i client NFS possono modificare le autorizzazioni.
+** NTFS utilizza ACL NTFS e solo i client SMB possono modificare le autorizzazioni.
+
+
+. Per NFS:
++
+.. Nel campo NFS Version (versione NFS), selezionare NFSv3, NFSv4.1 o entrambi a seconda dei requisiti.
+.. Facoltativamente, è possibile creare una policy di esportazione per identificare i client che possono accedere al volume. Specificare:
++
+*** Client consentiti utilizzando un indirizzo IP o CIDR (Classless Inter-Domain Routing).
+*** Diritti di accesso in lettura e scrittura o in sola lettura.
+*** Protocollo di accesso (o protocolli se il volume consente l'accesso NFSv3 e NFSv4.1) utilizzato per gli utenti.
+*** Fare clic su *+ Add Export Policy Rule* (Aggiungi regola policy di esportazione) se si desidera definire ulteriori regole dei criteri di esportazione.
++
+La seguente immagine mostra la pagina Volume compilata per il protocollo NFS:
+
++
+image:screenshot_cvs_nfs_details.png["Una schermata che mostra la pagina del volume compilata per un volume NFS Cloud Volumes Service."]
+
+
+
+
+
+. Per PMI:
++
+.. È possibile attivare la crittografia della sessione SMB selezionando la casella di controllo SMB Protocol Encryption (crittografia protocollo SMB).
+.. È possibile integrare il volume con un server Windows Active Directory esistente completando i campi nella sezione Active directory:
++
+[cols="25,75"]
+|===
+| Campo | Descrizione 
+
+
+| Indirizzo IP primario DNS | Gli indirizzi IP dei server DNS che forniscono la risoluzione dei nomi per il server SMB. Utilizzare una virgola per separare gli indirizzi IP quando si fa riferimento a più server, ad esempio 172.31.25.223, 172.31.2.74. 
+
+
+| Dominio Active Directory da unire | L'FQDN del dominio Active Directory (ad) a cui si desidera che il server SMB si unisca. Quando si utilizza AWS Managed Microsoft ad, utilizzare il valore del campo "Directory DNS name" (Nome DNS directory). 
+
+
+| Nome NetBIOS del server SMB | Un nome NetBIOS per il server SMB che verrà creato. 
+
+
+| Credenziali autorizzate per l'accesso al dominio | Il nome e la password di un account Windows con privilegi sufficienti per aggiungere computer all'unità organizzativa (OU) specificata nel dominio ad. 
+
+
+| Unità organizzativa | L'unità organizzativa all'interno del dominio ad da associare al server SMB. L'impostazione predefinita è CN=computer per le connessioni al proprio server Windows Active Directory. Se si configura AWS Managed Microsoft ad come server ad per Cloud Volumes Service, immettere *OU=computer,OU=corp* in questo campo. 
+|===
++
+La seguente immagine mostra la pagina Volume compilata per il protocollo SMB:
+
++
+image:screenshot_cvs_smb_details.png["Una schermata che mostra la pagina del volume compilata per un volume SMB Cloud Volumes Service."]
+
++
+
+TIP: Seguire le istruzioni relative alle impostazioni del gruppo di sicurezza AWS per consentire ai volumi cloud di integrarsi correttamente con i server Windows Active Directory. Vedere link:reference_security_groups_windows_ad_servers.html["Impostazioni del gruppo di protezione AWS per i server Windows ad"^] per ulteriori informazioni.
+
+
+
+. Nella pagina Volume from Snapshot (Volume da snapshot), se si desidera creare questo volume in base a uno snapshot di un volume esistente, selezionare lo snapshot dall'elenco a discesa Snapshot Name (Nome snapshot).
+. Nella pagina Snapshot Policy, è possibile abilitare Cloud Volumes Service per creare copie Snapshot dei volumi in base a una pianificazione. È possibile eseguire questa operazione ora o modificare il volume in un secondo momento per definire il criterio di snapshot.
++
+Vedere link:task_manage_cloud_volumes_snapshots.html#create_or_modify_a_snapshot_policy["Creazione di un criterio di snapshot"^] per ulteriori informazioni sulla funzionalità di snapshot.
+
+. Fare clic su *Add Volume* (Aggiungi volume).
+
+
+Il nuovo volume viene aggiunto all'ambiente di lavoro.
+
+.Al termine
+Se si tratta del primo volume creato in questo abbonamento AWS, è necessario avviare AWS Management Console per accettare le due interfacce virtuali che verranno utilizzate in questa regione AWS per connettere tutti i volumi cloud. Vedere https://docs.netapp.com/us-en/cloud_volumes/aws/media/cvs_aws_account_setup.pdf["Guida alla configurazione dell'account NetApp Cloud Volumes Service per AWS"^] per ulteriori informazioni.
+
+È necessario accettare le interfacce entro 10 minuti dopo aver fatto clic sul pulsante *Add Volume* (Aggiungi volume), altrimenti il sistema potrebbe scadere. In questo caso, inviare un'e-mail all'indirizzo cvs-support@netapp.com con l'ID cliente AWS e il numero di serie NetApp. Il supporto risolverà il problema ed è possibile riavviare il processo di assunzione.
+
+Quindi continuare con link:task_manage_cvs_aws.html#mount-the-cloud-volume["Montaggio del volume cloud"].
+
+
+
+== Montare il volume cloud
+
+È possibile montare un volume cloud sull'istanza di AWS. I volumi cloud attualmente supportano NFSv3 e NFSv4.1 per client Linux e UNIX e SMB 3.0 e 3.1.1 per client Windows.
+
+*Nota:* utilizzare il protocollo/dialetto evidenziato supportato dal client.
+
+.Fasi
+. Aprire l'ambiente di lavoro.
+. Passare il mouse sul volume e fare clic su *montare il volume*.
++
+I volumi NFS e SMB visualizzano le istruzioni di montaggio per quel protocollo. I volumi a doppio protocollo forniscono entrambe le serie di istruzioni.
+
+. Passare il mouse sui comandi e copiarli negli Appunti per semplificare questo processo. Basta aggiungere la directory di destinazione/punto di montaggio alla fine del comando.
++
+*Esempio NFS:*
+
++
+image:screenshot_cvs_aws_nfs_mount.png["Istruzioni di montaggio per i volumi NFS"]
+
++
+La dimensione i/o massima definita da `rsize` e. `wsize` options è 1048576, tuttavia 65536 è l'impostazione predefinita consigliata per la maggior parte dei casi di utilizzo.
+
++
+Si noti che i client Linux imposteranno per impostazione predefinita NFSv4.1, a meno che la versione non sia specificata con `vers=<nfs_version>` opzione.
+
++
+*Esempio SMB:*
+
++
+image:screenshot_cvs_aws_smb_mount.png["Istruzioni di montaggio per volumi SMB"]
+
+. Connettersi all'istanza di Amazon Elastic Compute Cloud (EC2) utilizzando un client SSH o RDP, quindi seguire le istruzioni di montaggio dell'istanza.
++
+Dopo aver completato i passaggi nelle istruzioni di montaggio, il volume cloud è stato montato correttamente sull'istanza di AWS.
+
+
+
+
+
+== Gestione dei volumi esistenti
+
+Puoi gestire i volumi esistenti in base alle tue esigenze di storage. È possibile visualizzare, modificare, ripristinare ed eliminare i volumi.
+
+.Fasi
+. Aprire l'ambiente di lavoro.
+. Passare il mouse sul volume.
++
+image:screenshot_cvs_aws_volume_hover_menu.png["Una schermata del menu del volume che consente di eseguire le attività del volume"]
+
+. Gestisci i tuoi volumi:
++
+[cols="30,70"]
+|===
+| Attività | Azione 
+
+
+| Consente di visualizzare informazioni su un volume | Selezionare un volume, quindi fare clic su *Info*. 
+
+
+| Modifica di un volume (inclusa la policy di snapshot)  a| 
+.. Selezionare un volume, quindi fare clic su *Modifica*.
+.. Modificare le proprietà del volume, quindi fare clic su *Update* (Aggiorna).
+
+
+
+
+| Ottieni il comando di montaggio NFS o SMB  a| 
+.. Selezionare un volume, quindi fare clic su *montare il volume*.
+.. Fare clic su *Copy* (Copia) per copiare i comandi.
+
+
+
+
+| Crea una copia Snapshot on-demand  a| 
+.. Selezionare un volume, quindi fare clic su *Crea una copia Snapshot*.
+.. Modificare il nome dello snapshot, se necessario, quindi fare clic su *Create* (Crea).
+
+
+
+
+| Sostituire il volume con il contenuto di una copia Snapshot  a| 
+.. Selezionare un volume, quindi fare clic su *Ripristina volume in Snapshot*.
+.. Selezionare una copia Snapshot e fare clic su *Ripristina*.
+
+
+
+
+| Eliminare una copia Snapshot  a| 
+.. Selezionare un volume, quindi fare clic su *Delete a Snapshot copy* (Elimina una copia Snapshot).
+.. Selezionare la copia Snapshot che si desidera eliminare e fare clic su *Delete* (Elimina).
+.. Fare nuovamente clic su *Delete* per confermare.
+
+
+
+
+| Eliminare un volume  a| 
+.. Smontare il volume da tutti i client:
++
+*** Sui client Linux, utilizzare `umount` comando.
+*** Sui client Windows, fare clic su *Disconnetti unità di rete*.
+
+
+.. Selezionare un volume, quindi fare clic su *Delete* (Elimina).
+.. Fare nuovamente clic su *Delete* per confermare.
+
+
+|===
+
+
+
+
+== Rimuovere Cloud Volumes Service da Cloud Manager
+
+Puoi rimuovere un abbonamento a Cloud Volumes Service per AWS e tutti i volumi esistenti da Cloud Manager. I volumi non vengono cancellati, ma vengono semplicemente rimossi dall'interfaccia di Cloud Manager.
+
+.Fasi
+. Aprire l'ambiente di lavoro.
++
+image:screenshot_cvs_aws_remove.png["Schermata che mostra la selezione dell'opzione per rimuovere Cloud Volumes Service da Cloud Manager."]
+
+. Fare clic su image:screenshot_gallery_options.gif[""] Nella parte superiore della pagina e fare clic su *Rimuovi Cloud Volumes Service*.
+. Nella finestra di dialogo di conferma, fare clic su *Rimuovi*.
+
+
+
+
+== Gestire la configurazione di Active Directory
+
+Se si modificano i server DNS o il dominio Active Directory, è necessario modificare il server SMB in Cloud Volumes Services in modo che possa continuare a servire lo storage ai client.
+
+È inoltre possibile eliminare il collegamento ad Active Directory se non è più necessario.
+
+.Fasi
+. Aprire l'ambiente di lavoro.
+. Fare clic su image:screenshot_gallery_options.gif[""] Nella parte superiore della pagina e fare clic su *Gestisci Active Directory*.
+. Se non è configurata alcuna Active Directory, è possibile aggiungerne una ora. Se ne è stata configurata una, è possibile modificare le impostazioni o eliminarle utilizzando image:screenshot_gallery_options.gif[""] pulsante.
+. Specificare le impostazioni per Active Directory a cui si desidera accedere:
++
+[cols="25,75"]
+|===
+| Campo | Descrizione 
+
+
+| Indirizzo IP primario DNS | Gli indirizzi IP dei server DNS che forniscono la risoluzione dei nomi per il server SMB. Utilizzare una virgola per separare gli indirizzi IP quando si fa riferimento a più server, ad esempio 172.31.25.223, 172.31.2.74. 
+
+
+| Dominio Active Directory da unire | L'FQDN del dominio Active Directory (ad) a cui si desidera che il server SMB si unisca. Quando si utilizza AWS Managed Microsoft ad, utilizzare il valore del campo "Directory DNS name" (Nome DNS directory). 
+
+
+| Nome NetBIOS del server SMB | Un nome NetBIOS per il server SMB che verrà creato. 
+
+
+| Credenziali autorizzate per l'accesso al dominio | Il nome e la password di un account Windows con privilegi sufficienti per aggiungere computer all'unità organizzativa (OU) specificata nel dominio ad. 
+
+
+| Unità organizzativa | L'unità organizzativa all'interno del dominio ad da associare al server SMB. L'impostazione predefinita è CN=computer per le connessioni al proprio server Windows Active Directory. Se si configura AWS Managed Microsoft ad come server ad per Cloud Volumes Service, immettere *OU=computer,OU=corp* in questo campo. 
+|===
+. Fare clic su *Save* (Salva) per salvare le impostazioni.
+

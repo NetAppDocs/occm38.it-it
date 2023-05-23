@@ -1,0 +1,129 @@
+---
+sidebar: sidebar 
+permalink: task_sync_managing_relationships.html 
+keywords: sync, immediate, now, schedule, minutes, hours, on, off, delete, group, accelerate, accelerating, grouping, multiple data brokers, sync now, turn off, turn on, sync schedule, settings, change settings, recently modified files, delete files on target, retries, retry, file types, exclude file type, include file type, delete relationship 
+summary: Puoi gestire le relazioni di sincronizzazione in qualsiasi momento sincronizzando immediatamente i dati, modificando le pianificazioni e molto altro ancora. 
+---
+= Gestione delle relazioni di sincronizzazione
+:toc: macro
+:hardbreaks:
+:allow-uri-read: 
+:toc: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+Puoi gestire le relazioni di sincronizzazione in qualsiasi momento sincronizzando immediatamente i dati, modificando le pianificazioni e molto altro ancora.
+
+
+
+== Esecuzione di una sincronizzazione dei dati immediata
+
+Invece di attendere la successiva sincronizzazione pianificata, è possibile premere un pulsante per sincronizzare immediatamente i dati tra l'origine e la destinazione.
+
+.Fasi
+. Dalla dashboard di sincronizzazione, passare il mouse sulla relazione di sincronizzazione e fare clic sul menu delle azioni.
++
+image:screenshot_relationship_menu.gif["Schermata che mostra il menu delle azioni visualizzato quando si passa il mouse su una relazione di sincronizzazione."]
+
+. Fare clic su *Sincronizza ora*, quindi su *Sincronizza* per confermare.
++
+image:screenshot_dashboard_actions.gif["Questa schermata mostra le azioni che è possibile eseguire su una relazione di sincronizzazione."]
+
+
+
+.Risultato
+Cloud Sync avvia il processo di sincronizzazione dei dati per la relazione.
+
+
+
+== Accelerazione delle performance di sincronizzazione
+
+Accelera le performance di una relazione di sincronizzazione aggiungendo un broker di dati aggiuntivo alla relazione. Il data broker aggiuntivo deve essere un _new_ data broker.
+
+.Come funziona
+Se i data broker esistenti nella relazione vengono utilizzati in altre relazioni di sincronizzazione, Cloud Sync aggiunge automaticamente anche il nuovo data broker a tali relazioni.
+
+Ad esempio, supponiamo di avere tre relazioni:
+
+* La relazione 1 utilizza il broker di dati A.
+* La relazione 2 utilizza il data broker B.
+* La relazione 3 utilizza il data broker A.
+
+
+Si desidera accelerare le performance della relazione 1 in modo da aggiungere un nuovo data broker a tale relazione (data broker C). Poiché il broker di dati A viene utilizzato anche nella relazione 3, anche il nuovo broker di dati viene aggiunto automaticamente alla relazione 3.
+
+.Fasi
+. Assicurarsi che almeno uno dei broker di dati esistenti nella relazione sia online.
+. Passare il mouse sulla relazione di sincronizzazione e fare clic sul menu delle azioni.
+. Fare clic su *Accelerate* (accelera).
++
+image:screenshot_accelerate.gif["Una schermata di Cloud Sync che mostra il menu delle azioni per una relazione di sincronizzazione. Accelerare viene evidenziato con il puntatore del mouse."]
+
+. Seguire le istruzioni per creare un nuovo data broker.
+
+
+.Risultato
+Cloud Sync aggiunge il nuovo data broker alle relazioni di sincronizzazione. Le performance della successiva sincronizzazione dei dati dovrebbero essere accelerate.
+
+
+
+== Modifica delle impostazioni per una relazione di sincronizzazione
+
+Modificare le impostazioni che definiscono la modalità di sincronizzazione e gestione dei file e delle cartelle di origine nella posizione di destinazione.
+
+. Passare il mouse sulla relazione di sincronizzazione e fare clic sul menu delle azioni.
+. Fare clic su *Impostazioni*.
+. Modificare le impostazioni.
++
+image:screenshot_sync_settings.gif["Una schermata che mostra le impostazioni per una relazione di sincronizzazione."]
+
++
+[[deleteonsource]] Ecco una breve descrizione di ciascuna impostazione:
+
++
+Pianificazione:: Scegliere una pianificazione ricorrente per le sincronizzazioni future o disattivare la pianificazione della sincronizzazione. È possibile pianificare una relazione per sincronizzare i dati ogni 1 minuto.
+Tentativi:: Definire il numero di tentativi di sincronizzazione di un file da parte di Cloud Sync prima di ignorarlo.
+File modificati di recente:: Scegliere di escludere i file modificati di recente prima della sincronizzazione pianificata.
+Elimina file in origine:: Scegliere di eliminare i file dalla posizione di origine dopo che Cloud Sync copia i file nella posizione di destinazione. Questa opzione include il rischio di perdita dei dati perché i file di origine vengono cancellati dopo la copia.
++
+--
+Se si attiva questa opzione, è necessario modificare anche un parametro nel file local.json sul data broker. Aprire il file e modificare il parametro denominato _workers.transferrer.delete-on-source_ in *true*.
+
+--
+Eliminare i file di destinazione:: Scegliere di eliminare i file dalla posizione di destinazione, se sono stati eliminati dall'origine. Per impostazione predefinita, non elimina mai i file dalla posizione di destinazione.
+Tagging degli oggetti:: Quando AWS S3 è la destinazione in una relazione di sincronizzazione, Cloud Sync contrassegna gli oggetti S3 con metadati rilevanti per l'operazione di sincronizzazione. È possibile disattivare la tagging degli oggetti S3, se non si desidera, nell'ambiente in uso. La disattivazione del tagging non ha alcun impatto su Cloud Sync: Cloud Sync memorizza i metadati di sincronizzazione in un modo diverso.
+Tipi di file:: Definire i tipi di file da includere in ogni sincronizzazione: File, directory e collegamenti simbolici.
+Escludi estensioni file:: Specificare le estensioni dei file da escludere dalla sincronizzazione digitando l'estensione del file e premendo *Invio*. Ad esempio, digitare _log_ o _.log_ per escludere i file *.log. Non è necessario un separatore per più interni. Il seguente video fornisce una breve demo:
++
+--
+video::video_file_extensions.mp4[width=840,height=240]
+--
+Dimensione del file:: Scegliere di sincronizzare tutti i file indipendentemente dalle dimensioni o solo i file che si trovano in un intervallo di dimensioni specifico.
+Data di modifica:: Scegliere tutti i file indipendentemente dalla data dell'ultima modifica, i file modificati dopo una data specifica, prima di una data specifica o tra un intervallo di tempo.
+Copia gli elenchi di controllo degli accessi nella destinazione:: Scegliere di copiare gli elenchi di controllo degli accessi (ACL) tra le condivisioni SMB di origine e le condivisioni SMB di destinazione. Si noti che questa opzione è disponibile solo per le relazioni di sincronizzazione create dopo la release del 23 febbraio 2020.
+
+
+. Fare clic su *Save Settings* (Salva impostazioni).
+
+
+.Risultato
+Cloud Sync modifica la relazione di sincronizzazione con le nuove impostazioni.
+
+
+
+== Eliminazione delle relazioni
+
+È possibile eliminare una relazione di sincronizzazione, se non è più necessario sincronizzare i dati tra l'origine e la destinazione. Questa azione non elimina l'istanza del broker di dati e non elimina i dati dalla destinazione.
+
+.Fasi
+. Passare il mouse sulla relazione di sincronizzazione e fare clic sul menu delle azioni.
+. Fare clic su *Delete* (Elimina), quindi fare nuovamente clic su *Delete* (Elimina) per confermare.
+
+
+.Risultato
+Cloud Sync elimina la relazione di sincronizzazione.

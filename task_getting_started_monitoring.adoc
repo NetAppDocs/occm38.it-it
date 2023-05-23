@@ -1,0 +1,185 @@
+---
+sidebar: sidebar 
+permalink: task_getting_started_monitoring.html 
+keywords: monitoring, cloud insights, tenant, acquisition unit, iops, throughput, latency, performance, cloud volumes ontap performance, volume performance 
+summary: Completa alcuni passaggi per iniziare a monitorare le performance di Cloud Volumes ONTAP. 
+---
+= Monitoraggio di Cloud Volumes ONTAP in AWS
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Completa alcuni passaggi per iniziare a monitorare le performance di Cloud Volumes ONTAP.
+
+
+
+== Avvio rapido
+
+Inizia subito seguendo questi passaggi o scorri verso il basso fino alle restanti sezioni per ottenere informazioni dettagliate.
+
+
+
+==== image:number1.png["Numero 1"] Verificare il supporto per la configurazione
+
+[role="quick-margin-para"]
+È necessaria una nuova installazione di Cloud Manager 3.8.4 o successiva in AWS, Cloud Volumes ONTAP in AWS e devi essere un nuovo cliente Cloud Insights.
+
+
+
+==== image:number2.png["Numero 2"] Abilitare il monitoraggio sul sistema nuovo o esistente
+
+[role="quick-margin-list"]
+* Nuovi ambienti di lavoro: Assicurarsi di mantenere attivato il monitoraggio quando si crea l'ambiente di lavoro (attivato per impostazione predefinita).
+* Ambienti di lavoro esistenti: Selezionare un ambiente di lavoro e fare clic su *Avvia monitoraggio*.
+
+
+
+
+==== image:number3.png["Numero 3"] Visualizzare i dati sulle performance
+
+[role="quick-margin-para"]
+Fare clic su *Monitoring* (monitoraggio) e visualizzare i dati delle performance dei volumi.
+
+
+
+==== image:number4.png["Numero 4"] Iscriviti a Cloud Insights
+
+[role="quick-margin-para"]
+Iscriviti prima della fine della prova gratuita di 30 giorni per continuare a visualizzare i dati sulle performance in Cloud Manager e Cloud Insights. https://docs.netapp.com/us-en/cloudinsights/concept_subscribing_to_cloud_insights.html["Scopri come iscriverti"^].
+
+
+
+== Requisiti
+
+Leggere i seguenti requisiti per assicurarsi di disporre di una configurazione supportata.
+
+Versioni supportate di Cloud Manager:: È necessaria una nuova installazione di Cloud Manager 3.8.4 o successiva. È necessaria una nuova installazione perché è necessaria una nuova infrastruttura per abilitare il servizio di monitoraggio. Questa infrastruttura è disponibile a partire dalle nuove installazioni di Cloud Manager 3.8.4.
+Versioni di Cloud Volumes ONTAP supportate:: Qualsiasi versione di Cloud Volumes ONTAP in AWS.
+Requisito Cloud Insights:: Devi essere un nuovo cliente Cloud Insights. Il monitoraggio non è supportato se si dispone già di un tenant Cloud Insights.
+Indirizzo e-mail per Cloud Central:: L'indirizzo e-mail dell'account utente Cloud Central deve essere l'indirizzo e-mail aziendale. I domini email gratuiti come gmail e hotmail non sono supportati quando si crea un tenant Cloud Insights.
+Collegamento in rete per l'unità di acquisizione:: L'unità di acquisizione utilizza l'autenticazione reciproca/bidirezionale per connettersi al server Cloud Insights. Il certificato client deve essere passato al server Cloud Insights per essere autenticato. A tale scopo, il proxy deve essere impostato per inoltrare la richiesta http al server Cloud Insights senza decifrare i dati.
++
+--
+L'unità di acquisizione utilizza i seguenti due endpoint per comunicare con Cloud Insights. Se si dispone di un firewall tra il server dell'unità di acquisizione e Cloud Insights, sono necessari questi endpoint durante la configurazione delle regole del firewall:
+
+....
+https://aulogin.<Cloud Insights Domain>
+https://<your-tenant-ID>.<Cloud Insights Domain>
+....
+Ad esempio:
+
+....
+https://aulogin.c01.cloudinsights.netapp.com
+https://cg0c586a-ee05-45rb-a5ac-333b5ae7718d7.c01.cloudinsights.netapp.com
+....
+Contattaci tramite la chat in-product se hai bisogno di aiuto per identificare il tuo dominio Cloud Insights e l'ID tenant.
+
+--
+Collegamento in rete per il connettore:: Analogamente all'unità di acquisizione, il connettore deve essere collegato in uscita al tenant Cloud Insights. Tuttavia, l'endpoint a cui il connettore entra in contatto è leggermente diverso. Contatta l'URL host del tenant utilizzando l'ID tenant abbreviato:
++
+--
+ https://<your-short-tenant-ID>.<Cloud Insights Domain>
+Ad esempio:
+
+ https://abcd12345.c01.cloudinsights.netapp.com
+Se hai bisogno di aiuto per identificare l'URL host del tenant, puoi contattarci tramite la chat del prodotto.
+
+--
+
+
+
+
+== Abilitazione del monitoraggio su un nuovo sistema
+
+Il servizio di monitoraggio viene attivato per impostazione predefinita nella procedura guidata dell'ambiente di lavoro. Assicurarsi di mantenere l'opzione attivata.
+
+.Fasi
+. Fare clic su *Crea Cloud Volumes ONTAP*.
+. Selezionare Amazon Web Services come provider cloud, quindi scegliere un singolo nodo o sistema ha.
+. Compila la pagina Dettagli e credenziali.
+. Nella pagina servizi, lasciare attivato il servizio e fare clic su *continua*.
++
+image:screenshot_monitoring.gif["Una schermata del servizio di monitoraggio che è possibile attivare dalla procedura guidata ambienti di lavoro."]
+
+
+
+
+
+== Abilitazione del monitoraggio su un sistema esistente
+
+Consentire il monitoraggio in qualsiasi momento dall'ambiente di lavoro.
+
+.Fasi
+. Nella parte superiore di Cloud Manager, fare clic su *Working Environments* (ambienti di lavoro).
+. Selezionare un ambiente di lavoro.
+. Nel riquadro a destra, fare clic su *Avvia monitoraggio*.
++
+image:screenshot_enable_monitoring.gif["[Una schermata che mostra l'icona Enable Monitoring (attiva monitoraggio) disponibile nella scheda Working Environments (ambienti di lavoro) dopo aver selezionato un ambiente di lavoro."]
+
+
+
+
+
+== Monitoraggio dei volumi
+
+Monitorate le performance visualizzando IOPS, throughput e latenza per ciascuno dei vostri volumi.
+
+.Fasi
+. Nella parte superiore di Cloud Manager, fare clic su *Monitoring* (monitoraggio).
+. Filtrare il contenuto della dashboard per ottenere le informazioni necessarie.
++
+** Selezionare un ambiente di lavoro specifico.
+** Selezionare un intervallo di tempo diverso.
+** Selezionare una SVM specifica.
+** Cercare un volume specifico.
++
+La seguente immagine evidenzia ciascuna di queste opzioni:
+
++
+image:screenshot_filter_options.gif["Una schermata della scheda Monitoring (monitoraggio) che mostra le opzioni che è possibile utilizzare per filtrare il contenuto della dashboard."]
+
+
+
+. Fare clic su un volume nella tabella per espandere la riga e visualizzare una timeline per IOPS, throughput e latenza.
++
+image:screenshot_vol_performance.gif["Una schermata dei dati delle performance per un volume."]
+
+. Utilizza i dati per identificare i problemi di performance e ridurre al minimo l'impatto su utenti e applicazioni.
+
+
+
+
+== Ottenere ulteriori informazioni da Cloud Insights
+
+La scheda Monitoring (monitoraggio) di Cloud Manager fornisce dati di base sulle performance dei volumi. È possibile accedere all'interfaccia Web di Cloud Insights dal browser per eseguire un monitoraggio più approfondito e configurare gli avvisi per i sistemi Cloud Volumes ONTAP.
+
+.Fasi
+. Nella parte superiore di Cloud Manager, fare clic su *Monitoring* (monitoraggio).
+. Fare clic sul collegamento *Cloud Insights*.
++
+image:screenshot_cloud_insights.gif["Una schermata che mostra il collegamento Cloud Insights disponibile nella parte superiore destra della scheda Monitoring (monitoraggio)."]
+
+
+
+.Risultato
+Cloud Insights si apre in una nuova scheda del browser. Per ulteriori informazioni, consultare la sezione https://docs.netapp.com/us-en/cloudinsights["Documentazione Cloud Insights"^].
+
+
+
+== Disattivazione del monitoraggio
+
+Se non si desidera più monitorare Cloud Volumes ONTAP, è possibile disattivare il servizio in qualsiasi momento.
+
+
+NOTE: Se si disattiva il monitoraggio da ciascuno degli ambienti di lavoro, sarà necessario eliminare l'istanza EC2 da soli. L'istanza è denominata _AcquisitionUnit_ con un hash generato (UUID) concatenato ad essa. Ad esempio: _AcquisitionUnit-FAN7FqeH_
+
+.Fasi
+. Nella parte superiore di Cloud Manager, fare clic su *Working Environments* (ambienti di lavoro).
+. Selezionare un ambiente di lavoro.
+. Nel riquadro a destra, fare clic su image:screenshot_gallery_options.gif["Una schermata dell'icona delle opzioni visualizzata nel pannello servizi dopo aver selezionato un ambiente di lavoro"] E selezionare *Disattiva scansione*.
+

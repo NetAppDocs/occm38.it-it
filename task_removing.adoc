@@ -1,0 +1,40 @@
+---
+sidebar: sidebar 
+permalink: task_removing.html 
+keywords: working environments, removing, remove, rediscover 
+summary: 'L"amministratore dell"account può rimuovere un ambiente di lavoro Cloud Volumes ONTAP per spostarlo in un altro sistema o per risolvere i problemi di rilevamento.' 
+---
+= Rimozione degli ambienti di lavoro Cloud Volumes ONTAP
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+L'amministratore dell'account può rimuovere un ambiente di lavoro Cloud Volumes ONTAP per spostarlo in un altro sistema o per risolvere i problemi di rilevamento.
+
+.A proposito di questa attività
+La rimozione di un ambiente di lavoro Cloud Volumes ONTAP lo rimuove da Cloud Manager. Non elimina il sistema Cloud Volumes ONTAP. In seguito, sarà possibile riscoprire l'ambiente di lavoro.
+
+La rimozione di un ambiente di lavoro da Cloud Manager consente di effettuare le seguenti operazioni:
+
+* Riscoprirla in un altro spazio di lavoro
+* Riscoprilo da un altro sistema Cloud Manager
+* Riscoprirla se si sono verificati problemi durante il rilevamento iniziale
+
+
+.Fasi
+. Nella parte superiore destra della console di Cloud Manager, fare clic sull'icona Impostazioni e selezionare *Strumenti*.
++
+image:screenshot_settings_icon.gif["Una schermata che mostra l'icona Settings (Impostazioni) in alto a destra della console di Cloud Manager."]
+
+. Dalla pagina Tools (Strumenti), fare clic su *Launch* (Avvia).
+. Selezionare l'ambiente di lavoro Cloud Volumes ONTAP che si desidera rimuovere.
+. Nella pagina Review and Approve (esamina e approva), fare clic su *Go* (Vai).
+
+
+.Risultato
+Cloud Manager rimuove l'ambiente di lavoro. Gli utenti possono riscoprire questo ambiente di lavoro dalla pagina ambienti di lavoro in qualsiasi momento.

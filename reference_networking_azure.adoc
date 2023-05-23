@@ -1,0 +1,537 @@
+---
+sidebar: sidebar 
+permalink: reference_networking_azure.html 
+keywords: networking, network, requirements, connection, connections, vnet, security group, security groups, subnet, vpn, internet, proxy, HTTP, private, proxy server, routing, firewall, autosupport, connection, jump host, outbound, ports, blob, service endpoint 
+summary: Configura la tua rete Azure in modo che i sistemi Cloud Volumes ONTAP possano funzionare correttamente. Ciò include il collegamento in rete per il connettore e Cloud Volumes ONTAP. 
+---
+= Requisiti di rete per implementare e gestire Cloud Volumes ONTAP in Azure
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Configura la tua rete Azure in modo che i sistemi Cloud Volumes ONTAP possano funzionare correttamente. Ciò include il collegamento in rete per il connettore e Cloud Volumes ONTAP.
+
+
+
+== Requisiti per Cloud Volumes ONTAP
+
+I seguenti requisiti di rete devono essere soddisfatti in Azure.
+
+Accesso a Internet in uscita per Cloud Volumes ONTAP:: Cloud Volumes ONTAP richiede l'accesso a Internet in uscita per inviare messaggi a NetApp AutoSupport, che monitora in maniera proattiva lo stato dello storage.
++
+--
+I criteri di routing e firewall devono consentire il traffico HTTP/HTTPS ai seguenti endpoint in modo che Cloud Volumes ONTAP possa inviare messaggi AutoSupport:
+
+* https://support.netapp.com/aods/asupmessage
+* https://support.netapp.com/asupprod/post/1.0/postAsup
++
+link:task_setting_up_ontap_cloud.html["Scopri come configurare AutoSupport"].
+
+
+
+--
+Gruppi di sicurezza:: Non è necessario creare gruppi di sicurezza perché Cloud Manager fa questo per te. Se è necessario utilizzare il proprio, fare riferimento alle regole del gruppo di protezione elencate di seguito.
+Numero di indirizzi IP:: Cloud Manager assegna il seguente numero di indirizzi IP a Cloud Volumes ONTAP in Azure:
++
+--
+* Nodo singolo: 5 indirizzi IP
+* Coppia HA: 16 indirizzi IP
++
+Si noti che Cloud Manager crea una LIF di gestione SVM sulle coppie ha, ma non sui sistemi a nodo singolo in Azure.
+
++
+
+TIP: LIF è un indirizzo IP associato a una porta fisica. Per strumenti di gestione come SnapCenter è necessaria una LIF di gestione SVM.
+
+
+
+--
+Connessione da Cloud Volumes ONTAP a Azure BLOB storage per il tiering dei dati:: Se si desidera eseguire il tiering dei dati cold allo storage Azure Blob, non è necessario configurare una connessione tra il Tier di performance e il Tier di capacità, purché Cloud Manager disponga delle autorizzazioni necessarie. Cloud Manager abilita un endpoint del servizio VNET se la policy di Cloud Manager dispone delle seguenti autorizzazioni:
++
+--
+[source, json]
+----
+"Microsoft.Network/virtualNetworks/subnets/write",
+"Microsoft.Network/routeTables/join/action",
+----
+Queste autorizzazioni sono incluse nella versione più recente https://mysupport.netapp.com/site/info/cloud-manager-policies["Policy di Cloud Manager"].
+
+Per ulteriori informazioni sull'impostazione del tiering dei dati, vedere link:task_tiering.html["Tiering dei dati cold su storage a oggetti a basso costo"].
+
+--
+Connessioni a sistemi ONTAP in altre reti:: Per replicare i dati tra un sistema Cloud Volumes ONTAP in Azure e i sistemi ONTAP in altre reti, è necessario disporre di una connessione VPN tra Azure VNET e l'altra rete, ad esempio un VPC AWS o la rete aziendale.
++
+--
+Per istruzioni, fare riferimento a. https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-howto-site-to-site-resource-manager-portal["Documentazione di Microsoft Azure: Crea una connessione Site-to-Site nel portale Azure"^].
+
+--
+
+
+
+
+== Requisiti per il connettore
+
+Configura la tua rete in modo che il connettore possa gestire risorse e processi all'interno del tuo ambiente di cloud pubblico. Il passaggio più importante è garantire l'accesso a Internet in uscita a vari endpoint.
+
+
+TIP: Se la rete utilizza un server proxy per tutte le comunicazioni a Internet, è possibile specificare il server proxy dalla pagina Impostazioni. Fare riferimento a. link:task_configuring_proxy.html["Configurazione del connettore per l'utilizzo di un server proxy"].
+
+
+
+=== Connessioni alle reti di destinazione
+
+Un connettore richiede una connessione di rete ai VPC e ai VNet in cui si desidera implementare Cloud Volumes ONTAP.
+
+Ad esempio, se si installa un connettore nella rete aziendale, è necessario impostare una connessione VPN a VPC o VNET in cui si avvia Cloud Volumes ONTAP.
+
+
+
+=== Accesso a Internet in uscita
+
+Il connettore richiede l'accesso a Internet in uscita per gestire risorse e processi all'interno del tuo ambiente di cloud pubblico. Un connettore contatta i seguenti endpoint durante la gestione delle risorse in Azure:
+
+[cols="43,57"]
+|===
+| Endpoint | Scopo 
+
+
+| https://management.azure.com https://login.microsoftonline.com | Consente a Cloud Manager di implementare e gestire Cloud Volumes ONTAP nella maggior parte delle regioni Azure. 
+
+
+| https://management.microsoftazure.de https://login.microsoftonline.de | Consente a Cloud Manager di implementare e gestire Cloud Volumes ONTAP nelle regioni di Azure Germania. 
+
+
+| https://management.usgovcloudapi.net https://login.microsoftonline.com | Consente a Cloud Manager di implementare e gestire Cloud Volumes ONTAP nelle regioni di Azure US Gov. 
+
+
+| https://api.services.cloud.netapp.com:443 | Richieste API a NetApp Cloud Central. 
+
+
+| https://cloud.support.netapp.com.s3.us-west-1.amazonaws.com | Fornisce l'accesso a immagini, manifesti e modelli software. 
+
+
+| https://repo.cloud.support.netapp.com | Utilizzato per scaricare le dipendenze di Cloud Manager. 
+
+
+| http://repo.mysql.com/ | Utilizzato per scaricare MySQL. 
+
+
+| https://cognito-idp.us-east-1.amazonaws.com https://cognito-identity.us-east-1.amazonaws.com https://sts.amazonaws.com https://cloud-support-netapp-com-accelerated.s3.amazonaws.com | Consente a Cloud Manager di accedere e scaricare manifesti, modelli e immagini di aggiornamento di Cloud Volumes ONTAP. 
+
+
+| https://cloudmanagerinfraprod.azurecr.io | Accesso alle immagini software dei componenti container per un'infrastruttura che esegue Docker e fornisce una soluzione per l'integrazione dei servizi con Cloud Manager. 
+
+
+| https://kinesis.us-east-1.amazonaws.com | Consente a NetApp di eseguire lo streaming dei dati dai record di audit. 
+
+
+| https://cloudmanager.cloud.netapp.com | Comunicazione con il servizio Cloud Manager, che include gli account Cloud Central. 
+
+
+| https://netapp-cloud-account.auth0.com | Comunicazione con NetApp Cloud Central per l'autenticazione utente centralizzata. 
+
+
+| https://mysupport.netapp.com | Comunicazione con NetApp AutoSupport. 
+
+
+| https://support.netapp.com/svcgw https://support.netapp.com/ServiceGW/entitlement https://eval.lic.netapp.com.s3.us-west-1.amazonaws.com https://cloud-support-netapp-com.s3.us-west-1.amazonaws.com | Comunicazione con NetApp per la registrazione del supporto e delle licenze di sistema. 
+
+
+| https://ipa-signer.cloudmanager.netapp.com | Consente a Cloud Manager di generare licenze (ad esempio, una licenza FlexCache per Cloud Volumes ONTAP) 
+
+
+| https://packages.cloud.google.com/yum https://github.com/NetApp/trident/releases/download/ | Necessario per connettere i sistemi Cloud Volumes ONTAP a un cluster Kubernetes. Gli endpoint consentono l'installazione di NetApp Trident. 
+
+
+| *.blob.core.windows.net | Richiesto per coppie ha quando si utilizza un proxy. 
+
+
+ a| 
+Varie sedi di terze parti, ad esempio:
+
+* https://repo1.maven.org/maven2
+* https://oss.sonatype.org/content/repositories
+* https://repo.typesafe.org
+
+
+Le sedi di terze parti sono soggette a modifiche.
+| Durante gli aggiornamenti, Cloud Manager scarica i pacchetti più recenti per le dipendenze di terze parti. 
+|===
+Sebbene sia necessario eseguire quasi tutte le attività dall'interfaccia utente SaaS, sul connettore è ancora disponibile un'interfaccia utente locale. Il computer che esegue il browser Web deve disporre di connessioni ai seguenti endpoint:
+
+[cols="43,57"]
+|===
+| Endpoint | Scopo 
+
+
+| L'host del connettore  a| 
+Per caricare la console di Cloud Manager, è necessario inserire l'indirizzo IP dell'host da un browser Web.
+
+A seconda della connettività con il cloud provider, è possibile utilizzare l'IP privato o un IP pubblico assegnato all'host:
+
+* Un IP privato funziona se si dispone di una VPN e di un accesso diretto alla rete virtuale
+* Un IP pubblico funziona in qualsiasi scenario di rete
+
+
+In ogni caso, è necessario proteggere l'accesso alla rete assicurandosi che le regole del gruppo di protezione consentano l'accesso solo da IP o subnet autorizzati.
+
+
+
+| https://auth0.com https://cdn.auth0.com https://netapp-cloud-account.auth0.com https://services.cloud.netapp.com | Il browser Web si connette a questi endpoint per un'autenticazione utente centralizzata tramite NetApp Cloud Central. 
+
+
+| https://widget.intercom.io | Per chat in-product che ti consente di parlare con gli esperti cloud di NetApp. 
+|===
+
+
+== Regole del gruppo di sicurezza per Cloud Volumes ONTAP
+
+Cloud Manager crea gruppi di sicurezza Azure che includono le regole in entrata e in uscita necessarie per il corretto funzionamento di Cloud Volumes ONTAP. È possibile fare riferimento alle porte a scopo di test o se si preferisce utilizzare i propri gruppi di protezione.
+
+Il gruppo di sicurezza per Cloud Volumes ONTAP richiede regole sia in entrata che in uscita.
+
+
+
+=== Regole in entrata per sistemi a nodo singolo
+
+Le regole elencate di seguito consentono il traffico, a meno che la descrizione non noti che blocca lo specifico traffico in entrata.
+
+[cols="4*"]
+|===
+| Priorità e nome | Porta e protocollo | Origine e destinazione | Descrizione 
+
+
+| 1000 inbound_ssh | 22 TCP | Qualsiasi a qualsiasi | Accesso SSH all'indirizzo IP della LIF di gestione del cluster o di una LIF di gestione dei nodi 
+
+
+| 1001 inbound_http | 80 TCP | Qualsiasi a qualsiasi | Accesso HTTP alla console Web di System Manager utilizzando l'indirizzo IP della LIF di gestione del cluster 
+
+
+| 1002 inbound_111_tcp | 111 TCP | Qualsiasi a qualsiasi | Chiamata a procedura remota per NFS 
+
+
+| 1003 inbound_111_udp | 111 UDP | Qualsiasi a qualsiasi | Chiamata a procedura remota per NFS 
+
+
+| 1004 inbound_139 | 139 TCP | Qualsiasi a qualsiasi | Sessione del servizio NetBIOS per CIFS 
+
+
+| 1005 inbound_161-162 _tcp | 161-162 TCP | Qualsiasi a qualsiasi | Protocollo di gestione di rete semplice 
+
+
+| 1006 inbound_161-162 _udp | 161-162 UDP | Qualsiasi a qualsiasi | Protocollo di gestione di rete semplice 
+
+
+| 1007 inbound_443 | 443 TCP | Qualsiasi a qualsiasi | Accesso HTTPS alla console Web di System Manager utilizzando l'indirizzo IP della LIF di gestione del cluster 
+
+
+| 1008 inbound_445 | 445 TCP | Qualsiasi a qualsiasi | Microsoft SMB/CIFS su TCP con frame NetBIOS 
+
+
+| 1009 inbound_635_tcp | 635 TCP | Qualsiasi a qualsiasi | Montaggio NFS 
+
+
+| 1010 inbound_635_udp | 635 UDP | Qualsiasi a qualsiasi | Montaggio NFS 
+
+
+| 1011 inbound_749 | 749 TCP | Qualsiasi a qualsiasi | Kerberos 
+
+
+| 1012 inbound_2049_tcp | 2049 TCP | Qualsiasi a qualsiasi | Daemon del server NFS 
+
+
+| 1013 inbound_2049_udp | 2049 UDP | Qualsiasi a qualsiasi | Daemon del server NFS 
+
+
+| 1014 inbound_3260 | 3260 TCP | Qualsiasi a qualsiasi | Accesso iSCSI tramite LIF dei dati iSCSI 
+
+
+| 1015 inbound_4045-4046_tcp | 4045-4046 TCP | Qualsiasi a qualsiasi | NFS lock daemon e network status monitor 
+
+
+| 1016 inbound_4045-4046_udp | 4045-4046 UDP | Qualsiasi a qualsiasi | NFS lock daemon e network status monitor 
+
+
+| 1017 inbound_10000 | 10000 TCP | Qualsiasi a qualsiasi | Backup con NDMP 
+
+
+| 1018 inbound_11104-11105 | 11104-11105 TCP | Qualsiasi a qualsiasi | Trasferimento dei dati SnapMirror 
+
+
+| 3000 inbound_deny _all_tcp | Qualsiasi porta TCP | Qualsiasi a qualsiasi | Blocca tutto il traffico TCP in entrata 
+
+
+| 3001 inbound_deny _all_udp | Qualsiasi porta UDP | Qualsiasi a qualsiasi | Blocca tutto il traffico UDP in entrata 
+
+
+| 65000 AllowVnetInBound | Qualsiasi porta qualsiasi protocollo | Da VirtualNetwork a VirtualNetwork | Traffico in entrata dall'interno di VNET 
+
+
+| 65001 AllowAzureLoad BalancerInBound | Qualsiasi porta qualsiasi protocollo | AzureLoadBalancer a qualsiasi | Traffico di dati dal bilanciamento del carico standard di Azure 
+
+
+| 65500 DenyAllInBound | Qualsiasi porta qualsiasi protocollo | Qualsiasi a qualsiasi | Bloccare tutto il traffico in entrata 
+|===
+
+
+=== Regole in entrata per i sistemi ha
+
+Le regole elencate di seguito consentono il traffico, a meno che la descrizione non noti che blocca lo specifico traffico in entrata.
+
+
+NOTE: I sistemi HA hanno meno regole in entrata rispetto ai sistemi a nodo singolo perché il traffico dati in entrata passa attraverso il bilanciamento del carico standard di Azure. Per questo motivo, il traffico proveniente dal bilanciamento del carico deve essere aperto, come mostrato nella regola "AllowAzureLoadBalancerInBound".
+
+[cols="4*"]
+|===
+| Priorità e nome | Porta e protocollo | Origine e destinazione | Descrizione 
+
+
+| 100 inbound_443 | 443 qualsiasi protocollo | Qualsiasi a qualsiasi | Accesso HTTPS alla console Web di System Manager utilizzando l'indirizzo IP della LIF di gestione del cluster 
+
+
+| 101 inbound_111_tcp | 111 qualsiasi protocollo | Qualsiasi a qualsiasi | Chiamata a procedura remota per NFS 
+
+
+| 102 inbound_2049_tcp | 2049 qualsiasi protocollo | Qualsiasi a qualsiasi | Daemon del server NFS 
+
+
+| 111 inbound_ssh | 22 qualsiasi protocollo | Qualsiasi a qualsiasi | Accesso SSH all'indirizzo IP della LIF di gestione del cluster o di una LIF di gestione dei nodi 
+
+
+| 121 inbound_53 | 53 qualsiasi protocollo | Qualsiasi a qualsiasi | DNS e CIFS 
+
+
+| 65000 AllowVnetInBound | Qualsiasi porta qualsiasi protocollo | Da VirtualNetwork a VirtualNetwork | Traffico in entrata dall'interno di VNET 
+
+
+| 65001 AllowAzureLoad BalancerInBound | Qualsiasi porta qualsiasi protocollo | AzureLoadBalancer a qualsiasi | Traffico di dati dal bilanciamento del carico standard di Azure 
+
+
+| 65500 DenyAllInBound | Qualsiasi porta qualsiasi protocollo | Qualsiasi a qualsiasi | Bloccare tutto il traffico in entrata 
+|===
+
+
+=== Regole in uscita
+
+Il gruppo di protezione predefinito per Cloud Volumes ONTAP apre tutto il traffico in uscita. Se questo è accettabile, attenersi alle regole di base per le chiamate in uscita. Se sono necessarie regole più rigide, utilizzare le regole avanzate in uscita.
+
+
+
+==== Regole di base in uscita
+
+Il gruppo di protezione predefinito per Cloud Volumes ONTAP include le seguenti regole in uscita.
+
+[cols="3*"]
+|===
+| Porta | Protocollo | Scopo 
+
+
+| Tutto | Tutti i TCP | Tutto il traffico in uscita 
+
+
+| Tutto | Tutti gli UDP | Tutto il traffico in uscita 
+|===
+
+
+==== Regole avanzate in uscita
+
+Se sono necessarie regole rigide per il traffico in uscita, è possibile utilizzare le seguenti informazioni per aprire solo le porte richieste per le comunicazioni in uscita da Cloud Volumes ONTAP.
+
+
+NOTE: L'origine è l'interfaccia (indirizzo IP) del sistema Cloud Volumes ONTAP.
+
+[cols="10,10,6,20,20,34"]
+|===
+| Servizio | Porta | Protocollo | Origine | Destinazione | Scopo 
+
+
+.18+| Active Directory | 88 | TCP | LIF di gestione dei nodi | Insieme di strutture di Active Directory | Autenticazione Kerberos V. 
+
+
+| 137 | UDP | LIF di gestione dei nodi | Insieme di strutture di Active Directory | Servizio nomi NetBIOS 
+
+
+| 138 | UDP | LIF di gestione dei nodi | Insieme di strutture di Active Directory | Servizio datagramma NetBIOS 
+
+
+| 139 | TCP | LIF di gestione dei nodi | Insieme di strutture di Active Directory | Sessione del servizio NetBIOS 
+
+
+| 389 | TCP E UDP | LIF di gestione dei nodi | Insieme di strutture di Active Directory | LDAP 
+
+
+| 445 | TCP | LIF di gestione dei nodi | Insieme di strutture di Active Directory | Microsoft SMB/CIFS su TCP con frame NetBIOS 
+
+
+| 464 | TCP | LIF di gestione dei nodi | Insieme di strutture di Active Directory | Kerberos V change & set password (SET_CHANGE) 
+
+
+| 464 | UDP | LIF di gestione dei nodi | Insieme di strutture di Active Directory | Amministrazione delle chiavi Kerberos 
+
+
+| 749 | TCP | LIF di gestione dei nodi | Insieme di strutture di Active Directory | Kerberos V change & set Password (RPCSEC_GSS) 
+
+
+| 88 | TCP | Data LIF (NFS, CIFS, iSCSI) | Insieme di strutture di Active Directory | Autenticazione Kerberos V. 
+
+
+| 137 | UDP | LIF DATI (NFS, CIFS) | Insieme di strutture di Active Directory | Servizio nomi NetBIOS 
+
+
+| 138 | UDP | LIF DATI (NFS, CIFS) | Insieme di strutture di Active Directory | Servizio datagramma NetBIOS 
+
+
+| 139 | TCP | LIF DATI (NFS, CIFS) | Insieme di strutture di Active Directory | Sessione del servizio NetBIOS 
+
+
+| 389 | TCP E UDP | LIF DATI (NFS, CIFS) | Insieme di strutture di Active Directory | LDAP 
+
+
+| 445 | TCP | LIF DATI (NFS, CIFS) | Insieme di strutture di Active Directory | Microsoft SMB/CIFS su TCP con frame NetBIOS 
+
+
+| 464 | TCP | LIF DATI (NFS, CIFS) | Insieme di strutture di Active Directory | Kerberos V change & set password (SET_CHANGE) 
+
+
+| 464 | UDP | LIF DATI (NFS, CIFS) | Insieme di strutture di Active Directory | Amministrazione delle chiavi Kerberos 
+
+
+| 749 | TCP | LIF DATI (NFS, CIFS) | Insieme di strutture di Active Directory | Kerberos V change & set password (RPCSEC_GSS) 
+
+
+| DHCP | 68 | UDP | LIF di gestione dei nodi | DHCP | Client DHCP per la prima installazione 
+
+
+| DHCPS | 67 | UDP | LIF di gestione dei nodi | DHCP | Server DHCP 
+
+
+| DNS | 53 | UDP | LIF di gestione dei nodi e LIF dei dati (NFS, CIFS) | DNS | DNS 
+
+
+| NDMP | 18600–18699 | TCP | LIF di gestione dei nodi | Server di destinazione | Copia NDMP 
+
+
+| SMTP | 25 | TCP | LIF di gestione dei nodi | Server di posta | Gli avvisi SMTP possono essere utilizzati per AutoSupport 
+
+
+.4+| SNMP | 161 | TCP | LIF di gestione dei nodi | Monitorare il server | Monitoraggio mediante trap SNMP 
+
+
+| 161 | UDP | LIF di gestione dei nodi | Monitorare il server | Monitoraggio mediante trap SNMP 
+
+
+| 162 | TCP | LIF di gestione dei nodi | Monitorare il server | Monitoraggio mediante trap SNMP 
+
+
+| 162 | UDP | LIF di gestione dei nodi | Monitorare il server | Monitoraggio mediante trap SNMP 
+
+
+.2+| SnapMirror | 11104 | TCP | LIF intercluster | ONTAP Intercluster LIF | Gestione delle sessioni di comunicazione tra cluster per SnapMirror 
+
+
+| 11105 | TCP | LIF intercluster | ONTAP Intercluster LIF | Trasferimento dei dati SnapMirror 
+
+
+| Syslog | 514 | UDP | LIF di gestione dei nodi | Server syslog | Messaggi di inoltro syslog 
+|===
+
+
+== Regole del gruppo di sicurezza per il connettore
+
+Il gruppo di protezione per il connettore richiede regole sia in entrata che in uscita.
+
+
+
+=== Regole in entrata
+
+L'origine delle regole in entrata nel gruppo di sicurezza predefinito è 0.0.0.0/0.
+
+[cols="3*"]
+|===
+| Porta | Protocollo | Scopo 
+
+
+| 22 | SSH | Fornisce l'accesso SSH all'host del connettore 
+
+
+| 80 | HTTP | Fornisce l'accesso HTTP dai browser Web client all'interfaccia utente locale 
+
+
+| 443 | HTTPS | Fornisce l'accesso HTTPS dai browser Web client all'interfaccia utente locale 
+|===
+
+
+=== Regole in uscita
+
+Il gruppo di protezione predefinito per il connettore apre tutto il traffico in uscita. Se questo è accettabile, attenersi alle regole di base per le chiamate in uscita. Se sono necessarie regole più rigide, utilizzare le regole avanzate in uscita.
+
+
+
+==== Regole di base in uscita
+
+Il gruppo di protezione predefinito per il connettore include le seguenti regole in uscita.
+
+[cols="3*"]
+|===
+| Porta | Protocollo | Scopo 
+
+
+| Tutto | Tutti i TCP | Tutto il traffico in uscita 
+
+
+| Tutto | Tutti gli UDP | Tutto il traffico in uscita 
+|===
+
+
+==== Regole avanzate in uscita
+
+Se sono necessarie regole rigide per il traffico in uscita, è possibile utilizzare le seguenti informazioni per aprire solo le porte richieste per la comunicazione in uscita dal connettore.
+
+
+NOTE: L'indirizzo IP di origine è l'host del connettore.
+
+[cols="5*"]
+|===
+| Servizio | Porta | Protocollo | Destinazione | Scopo 
+
+
+.9+| Active Directory | 88 | TCP | Insieme di strutture di Active Directory | Autenticazione Kerberos V. 
+
+
+| 139 | TCP | Insieme di strutture di Active Directory | Sessione del servizio NetBIOS 
+
+
+| 389 | TCP | Insieme di strutture di Active Directory | LDAP 
+
+
+| 445 | TCP | Insieme di strutture di Active Directory | Microsoft SMB/CIFS su TCP con frame NetBIOS 
+
+
+| 464 | TCP | Insieme di strutture di Active Directory | Kerberos V change & set password (SET_CHANGE) 
+
+
+| 749 | TCP | Insieme di strutture di Active Directory | Modifica e impostazione della password Kerberos V di Active Directory (RPCSEC_GSS) 
+
+
+| 137 | UDP | Insieme di strutture di Active Directory | Servizio nomi NetBIOS 
+
+
+| 138 | UDP | Insieme di strutture di Active Directory | Servizio datagramma NetBIOS 
+
+
+| 464 | UDP | Insieme di strutture di Active Directory | Amministrazione delle chiavi Kerberos 
+
+
+| Chiamate API e AutoSupport | 443 | HTTPS | LIF gestione cluster ONTAP e Internet in uscita | Chiamate API ad AWS e ONTAP e invio di messaggi AutoSupport a NetApp 
+
+
+| Chiamate API | 3000 | TCP | LIF gestione cluster ONTAP | Chiamate API a ONTAP 
+
+
+| DNS | 53 | UDP | DNS | Utilizzato per la risoluzione DNS da parte di Cloud Manager 
+|===

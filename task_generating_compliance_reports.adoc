@@ -1,0 +1,184 @@
+---
+sidebar: sidebar 
+permalink: task_generating_compliance_reports.html 
+keywords: report, privacy, risk, privacy risk assessment, compliance status, severity, compliance, privacy risk, data subjects, privacy, credit cards, pci dss, hipaa 
+summary: Cloud Compliance fornisce report che puoi utilizzare per comprendere meglio lo stato del programma per la privacy dei dati della tua organizzazione. 
+---
+= Visualizzazione dei report di conformità
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Cloud Compliance fornisce report che puoi utilizzare per comprendere meglio lo stato del programma per la privacy dei dati della tua organizzazione.
+
+Per impostazione predefinita, il dashboard Cloud Compliance visualizza i dati di conformità per tutti gli ambienti di lavoro e i database. Se si desidera visualizzare report contenenti dati solo per alcuni ambienti di lavoro, <<Selezione degli ambienti di lavoro per i report,selezionare gli ambienti di lavoro>>.
+
+
+NOTE: NetApp non può garantire una precisione del 100% dei dati personali e dei dati personali sensibili identificati dalla Cloud Compliance. È sempre necessario convalidare le informazioni esaminando i dati.
+
+
+
+== Report sulla valutazione dei rischi per la privacy
+
+Il report sulla valutazione dei rischi per la privacy fornisce una panoramica dello stato di rischio per la privacy della tua organizzazione, come richiesto dalle normative sulla privacy come GDPR e CCPA. Il report contiene le seguenti informazioni:
+
+Stato di compliance:: R <<Punteggio di severità,punteggio di severità>> e la distribuzione dei dati, sia che si tratti di dati personali, non sensibili o sensibili.
+Panoramica della valutazione:: Analisi dei tipi di dati personali rilevati, nonché delle categorie di dati.
+Argomenti trattati in questa valutazione:: Il numero di persone, per località, per le quali sono stati trovati identificatori nazionali.
+
+
+
+
+=== Generazione del report sulla valutazione dei rischi per la privacy
+
+Accedere alla scheda Compliance per generare il report.
+
+.Fasi
+. Nella parte superiore di Cloud Manager, fare clic su *Cloud Compliance*.
+. In *Report*, fare clic sull'icona di download accanto a *Privacy Risk Assessment*.
++
+image:screenshot_privacy_risk_assessment.gif["Una schermata della scheda Compliance di Cloud Manager che mostra il riquadro Reports (Report) in cui è possibile fare clic su Privacy Risk Assessment (Valutazione dei rischi per la privacy)."]
+
+
+
+.Risultato
+Cloud Compliance genera un report PDF che puoi rivedere e inviare ad altri gruppi in base alle esigenze.
+
+
+
+=== Punteggio di severità
+
+Cloud Compliance calcola il punteggio di severità per il report di valutazione dei rischi per la privacy sulla base di tre variabili:
+
+* La percentuale di dati personali su tutti i dati.
+* La percentuale di dati personali sensibili rispetto a tutti i dati.
+* La percentuale di file che includono soggetti dati, determinata da identificatori nazionali come ID nazionali, numeri di previdenza sociale e numeri di identificazione fiscale.
+
+
+La logica utilizzata per determinare il punteggio è la seguente:
+
+[cols="27,73"]
+|===
+| Punteggio di severità | Logica 
+
+
+| 0 | Tutte e tre le variabili sono esattamente 0% 
+
+
+| 1 | Una delle variabili è maggiore dello 0% 
+
+
+| 2 | Una delle variabili è maggiore del 3% 
+
+
+| 3 | Due delle variabili sono maggiori del 3% 
+
+
+| 4 | Tre delle variabili sono maggiori del 3% 
+
+
+| 5 | Una delle variabili è maggiore del 6% 
+
+
+| 6 | Due delle variabili sono maggiori del 6% 
+
+
+| 7 | Tre delle variabili sono maggiori del 6% 
+
+
+| 8 | Una delle variabili è maggiore del 15% 
+
+
+| 9 | Due delle variabili sono maggiori del 15% 
+
+
+| 10 | Tre delle variabili sono maggiori del 15% 
+|===
+
+
+== Report PCI DSS
+
+Il report PCI DSS (Payment Card Industry Data Security Standard) consente di identificare la distribuzione delle informazioni sulle carte di credito nei file. Il report contiene le seguenti informazioni:
+
+Panoramica:: Quanti file contengono informazioni sulla carta di credito e in quali ambienti di lavoro.
+Crittografia:: La percentuale di file contenenti informazioni sulla carta di credito presenti in ambienti di lavoro crittografati o non crittografati. Queste informazioni sono specifiche di Cloud Volumes ONTAP.
+Protezione ransomware:: La percentuale di file contenenti informazioni sulla carta di credito che si trovano in ambienti di lavoro in cui la protezione ransomware è attivata o meno. Queste informazioni sono specifiche di Cloud Volumes ONTAP.
+Conservazione:: Il periodo di tempo in cui i file sono stati modificati per l'ultima volta. Ciò è utile perché non è necessario conservare le informazioni della carta di credito per un periodo di tempo superiore a quello necessario per elaborarle.
+Distribuzione delle informazioni sulla carta di credito:: Gli ambienti di lavoro in cui sono state rilevate le informazioni sulla carta di credito e se sono attivate la crittografia e la protezione ransomware.
+
+
+
+
+=== Generazione del rapporto PCI DSS
+
+Accedere alla scheda Compliance per generare il report.
+
+.Fasi
+. Nella parte superiore di Cloud Manager, fare clic su *Cloud Compliance*.
+. In *Report*, fare clic sull'icona di download accanto a *PCI DSS Report*.
++
+image:screenshot_pci_dss.gif["Una schermata della scheda Compliance di Cloud Manager che mostra il riquadro Reports (Report) in cui è possibile fare clic su Privacy Risk Assessment (Valutazione dei rischi per la privacy)."]
+
+
+
+.Risultato
+Cloud Compliance genera un report PDF che puoi rivedere e inviare ad altri gruppi in base alle esigenze.
+
+
+
+== Report HIPAA
+
+Il report HIPAA (Health Insurance Portability and Accountability Act) consente di identificare i file contenenti informazioni sulla salute. È progettato per soddisfare i requisiti della tua organizzazione in materia di privacy dei dati HIPAA. Le informazioni che la Cloud Compliance cerca includono:
+
+* Schema di riferimento per lo stato di salute
+* ICD-10-CM Codice medico
+* Codice medico ICD-9-CM
+* HR – Categoria di salute
+* Categoria Health Application Data
+
+
+Il report contiene le seguenti informazioni:
+
+Panoramica:: Quanti file contengono informazioni sullo stato di salute e in quali ambienti di lavoro.
+Crittografia:: La percentuale di file contenenti informazioni sullo stato di salute che si trovano in ambienti di lavoro crittografati o non crittografati. Queste informazioni sono specifiche di Cloud Volumes ONTAP.
+Protezione ransomware:: La percentuale di file contenenti informazioni sullo stato di salute che si trovano in ambienti di lavoro in cui la protezione ransomware è attivata o meno. Queste informazioni sono specifiche di Cloud Volumes ONTAP.
+Conservazione:: Il periodo di tempo in cui i file sono stati modificati per l'ultima volta. Ciò è utile perché non è necessario conservare le informazioni sulla salute per un periodo di tempo superiore a quello necessario per elaborarle.
+Distribuzione delle informazioni sanitarie:: Gli ambienti di lavoro in cui sono state trovate le informazioni di salute e se sono attivate la crittografia e la protezione ransomware.
+
+
+
+
+=== Generazione del report HIPAA
+
+Accedere alla scheda Compliance per generare il report.
+
+.Fasi
+. Nella parte superiore di Cloud Manager, fare clic su *Cloud Compliance*.
+. In *Report*, fare clic sull'icona di download accanto a *Report HIPAA*.
++
+image:screenshot_hipaa.gif["Una schermata della scheda Compliance di Cloud Manager che mostra il riquadro Reports (Report), in cui è possibile fare clic su HIPAA."]
+
+
+
+.Risultato
+Cloud Compliance genera un report PDF che puoi rivedere e inviare ad altri gruppi in base alle esigenze.
+
+
+
+== Selezione degli ambienti di lavoro per i report
+
+Puoi filtrare i contenuti della dashboard Cloud Compliance per visualizzare i dati di conformità per tutti gli ambienti di lavoro e i database o solo per ambienti di lavoro specifici.
+
+Quando filtri la dashboard, Cloud Compliance regola i dati di conformità e invia report solo agli ambienti di lavoro selezionati.
+
+.Fasi
+. Fare clic sul menu a discesa del filtro, selezionare gli ambienti di lavoro per i quali si desidera visualizzare i dati e fare clic su *View* (Visualizza).
++
+image:screenshot_cloud_compliance_filter.gif["Schermata di selezione degli ambienti di lavoro per i report che si desidera eseguire."]
+
+

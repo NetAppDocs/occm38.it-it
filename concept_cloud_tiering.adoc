@@ -1,0 +1,184 @@
+---
+sidebar: sidebar 
+permalink: concept_cloud_tiering.html 
+keywords: cloud tiering, overview, conceptual, value, features, cost, charging, service connector 
+summary: Cloud Tiering è un servizio gestito da NetApp in grado di ridurre i costi dello storage on-premise attraverso il tiering automatico dei dati inattivi sullo storage a oggetti nel cloud. In questo modo puoi estendere il tuo data center al cloud pubblico senza modificare il tuo livello applicativo. 
+---
+= Scopri di più sul Cloud Tiering
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Il servizio di tiering cloud di NetApp estende il tuo data center al cloud attraverso il tiering automatico dei dati inattivi dai cluster ONTAP on-premise allo storage a oggetti. In questo modo si libera spazio prezioso sul cluster per più carichi di lavoro, senza apportare modifiche al livello applicativo. Il cloud tiering può ridurre i costi nel tuo data center e consente di passare da un modello CAPEX a un modello OPEX.
+
+Il servizio di tiering cloud sfrutta le funzionalità di _FabricPool_. FabricPool è una tecnologia NetApp Data Fabric che consente il tiering automatizzato dei dati verso uno storage a oggetti a basso costo. I dati attivi rimangono su SSD dalle performance elevate, mentre i dati inattivi vengono suddivisi in livelli per lo storage a oggetti a basso costo, preservando al contempo l'efficienza dei dati ONTAP.
+
+
+
+== Caratteristiche
+
+Cloud Tiering offre automazione, monitoraggio, report e un'interfaccia di gestione comune:
+
+* L'automazione semplifica la configurazione e la gestione del tiering dei dati dai cluster ONTAP on-premise al cloud
+* Un singolo pannello di controllo elimina la necessità di gestire in modo indipendente FabricPool in diversi cluster
+* I report mostrano la quantità di dati attivi e inattivi su ciascun cluster
+* Uno stato di salute tiering ti aiuta a identificare e correggere i problemi man mano che si verificano
+* Se disponi di sistemi Cloud Volumes ONTAP, puoi trovarli nella dashboard dei cluster per ottenere una vista completa del tiering dei dati nella tua infrastruttura di cloud ibrido
++
+
+TIP: I sistemi Cloud Volumes ONTAP sono di sola lettura dal cloud tiering. link:task_tiering.html["Hai impostato il tiering per Cloud Volumes ONTAP dall'ambiente di lavoro in Cloud Manager"].
+
+
+
+Per ulteriori informazioni sul valore offerto dal Cloud Tiering, https://cloud.netapp.com/cloud-tiering["Consulta la pagina Cloud Tiering su NetApp Cloud Central"^].
+
+
+NOTE: Anche se il Cloud Tiering può ridurre significativamente l'ingombro dello storage, non è una soluzione di backup.
+
+
+
+== Provider di storage a oggetti supportati
+
+È possibile raggruppare i dati inattivi da un cluster ONTAP in Amazon S3, storage Blob Microsoft Azure, storage cloud Google o StorageGRID (cloud privato).
+
+
+
+== Prezzi e licenze
+
+Paga il tiering cloud con un abbonamento pay-as-you-go, una licenza di tiering ONTAP chiamata _FabricPool_ o una combinazione di entrambi. Se non si dispone di una licenza, è disponibile una versione di prova gratuita di 30 giorni per il primo cluster.
+
+Non sono previsti costi per il tiering dei dati su StorageGRID. Non è richiesta alcuna licenza BYOL o registrazione PAYGO.
+
+https://cloud.netapp.com/cloud-tiering["Visualizza i dettagli dei prezzi"^].
+
+
+
+=== 30 giorni di prova gratuita
+
+Se non disponi di una licenza FabricPool, inizia una prova gratuita di 30 giorni del Cloud Tiering quando configuri il tiering sul primo cluster. Al termine della prova gratuita di 30 giorni, dovrai pagare il Tier cloud tramite un abbonamento pay-as-you-go, una licenza FabricPool o una combinazione di entrambi.
+
+Se la versione di prova gratuita termina e non hai sottoscritto o aggiunto una licenza, ONTAP non esegue più il Tier dei dati cold sullo storage a oggetti, ma i dati esistenti sono ancora disponibili per l'accesso.
+
+
+
+=== Abbonamento pay-as-you-go
+
+Cloud Tiering offre licenze basate sui consumi in un modello pay-as-you-go. Dopo aver effettuato l'iscrizione attraverso il marketplace del tuo cloud provider, paghi per GB i dati a più livelli, senza alcun pagamento anticipato. Il tuo cloud provider ti addebita la fattura mensile.
+
+È necessario iscriversi anche se si dispone di una versione di prova gratuita o se si porta la propria licenza (BYOL):
+
+* L'iscrizione garantisce che non vi siano interruzioni del servizio al termine della prova gratuita.
++
+Al termine del periodo di prova, ti verrà addebitato ogni ora in base alla quantità di dati che hai effettuato il tiering.
+
+* Se si dispone di un numero di dati superiore a quello consentito dalla licenza FabricPool, il tiering dei dati continua con l'abbonamento pay-as-you-go.
++
+Ad esempio, se si dispone di una licenza da 10 TB, tutta la capacità oltre i 10 TB viene addebitata tramite l'abbonamento pay-as-you-go.
+
+
+
+Durante la prova gratuita o se non hai superato la licenza di FabricPool, non ti verrà addebitato alcun costo dal tuo abbonamento pay-as-you-go.
+
+link:task_licensing_cloud_tiering.html["Scopri come impostare un abbonamento pay-as-you-go"].
+
+
+
+=== Porta la tua licenza
+
+Porta la tua licenza acquistando una licenza ONTAP FabricPool da NetApp. È possibile acquistare licenze a termine o perpetue.
+
+Dopo aver acquistato una licenza FabricPool, sarà necessario aggiungerla al cluster, link:task_licensing_cloud_tiering.html#adding-a-tiering-license-to-ontap["Che puoi fare direttamente da Cloud Tiering"].
+
+Dopo aver attivato la licenza tramite Cloud Tiering, se si acquista ulteriore capacità aggiuntiva in un secondo momento, la licenza sul cluster viene aggiornata automaticamente con la nuova capacità. Non è necessario applicare un nuovo file di licenza NetApp (NLF) al cluster.
+
+Come indicato in precedenza, si consiglia di impostare un abbonamento pay-as-you-go, anche se il cluster dispone di una licenza BYOL.
+
+Mailto:ng-cloud-tiering@netapp.com?subject=Licensing[Contattaci per acquistare una licenza].
+
+
+
+== Come funziona il Cloud Tiering
+
+Cloud Tiering è un servizio gestito da NetApp che utilizza la tecnologia FabricPool per tierare automaticamente i dati inattivi (cold) dai cluster ONTAP on-premise allo storage a oggetti nel cloud pubblico o privato. Le connessioni a ONTAP avvengono da un connettore.
+
+La seguente immagine mostra la relazione tra ciascun componente:
+
+image:diagram_cloud_tiering.png["Un'immagine dell'architettura che mostra il servizio di tiering cloud con una connessione al connettore di servizio nel provider cloud, il connettore di servizio con una connessione al cluster ONTAP e una connessione tra il cluster ONTAP e lo storage a oggetti nel provider cloud. I dati attivi risiedono nel cluster ONTAP, mentre i dati inattivi risiedono nello storage a oggetti."]
+
+A un livello elevato, il Cloud Tiering funziona come segue:
+
+. Scopri il tuo cluster on-premise da Cloud Manager.
+. È possibile impostare il tiering fornendo dettagli sullo storage a oggetti, tra cui bucket/container e una classe di storage o un Tier di accesso.
+. Cloud Manager configura ONTAP per l'utilizzo del provider di storage a oggetti e rileva la quantità di dati attivi e inattivi nel cluster.
+. È possibile scegliere i volumi da tiering e il criterio di tiering da applicare a tali volumi.
+. ONTAP avvia il tiering dei dati inattivi nell'archivio di oggetti, non appena i dati raggiungono le soglie da considerare inattivi (vedere <<Policy di tiering dei volumi>>).
+
+
+
+
+=== Storage a oggetti
+
+Ogni cluster ONTAP esegue il Tier dei dati inattivi in un singolo archivio di oggetti. Quando si imposta il tiering dei dati, è possibile aggiungere un nuovo bucket/container o selezionare un bucket/container esistente, insieme a una classe di storage o a un Tier di accesso.
+
+* link:reference_aws_support.html["Scopri le classi di storage S3 supportate"]
+* link:reference_azure_support.html["Scopri i Tier di accesso supportati da Azure Blob"]
+* link:reference_google_support.html["Scopri le classi di storage supportate da Google Cloud"]
+
+
+
+
+=== Policy di tiering dei volumi
+
+Quando si selezionano i volumi che si desidera applicare il Tier, si sceglie una _policy di tiering dei volumi_ da applicare a ciascun volume. Una policy di tiering determina quando o se i blocchi di dati utente di un volume vengono spostati nel cloud.
+
+Nessuna policy di tiering:: Mantiene i dati su un volume nel Tier di performance, impedendo che vengano spostati nel cloud.
+Snapshot a freddo (solo Snapshot):: ONTAP esegue il tiering dei blocchi snapshot cold nel volume che non sono condivisi con il file system attivo sullo storage a oggetti. Se letti, i blocchi di dati cold nel Tier cloud diventano hot e vengono spostati nel Tier di performance.
++
+--
+I dati vengono suddivisi in livelli solo dopo che un aggregato ha raggiunto la capacità del 50% e quando i dati hanno raggiunto il periodo di raffreddamento. Il numero predefinito di giorni di raffreddamento è 2, ma è possibile regolare il numero di giorni.
+
+
+NOTE: Le scritture dal Tier cloud al Tier performance sono disattivate se la capacità del Tier performance è superiore al 70%. In questo caso, si accede ai blocchi direttamente dal livello cloud.
+
+--
+Cold User Data (Auto) (dati utente cold):: ONTAP esegue il tiering di tutti i cold block del volume (esclusi i metadati) nello storage a oggetti. I dati cold non includono solo le copie Snapshot, ma anche i dati cold user dal file system attivo.
++
+--
+Se letti in lettura casuale, i blocchi di dati cold nel Tier cloud diventano hot e vengono spostati nel Tier di performance. Se letti in base a letture sequenziali, come quelle associate a scansioni di indice e antivirus, i blocchi di dati cold sul livello cloud rimangono freddi e non vengono scritti sul livello di performance.
+
+I dati vengono suddivisi in livelli solo dopo che un aggregato ha raggiunto la capacità del 50% e quando i dati hanno raggiunto il periodo di raffreddamento. Il periodo di raffreddamento è il tempo in cui i dati dell'utente in un volume devono rimanere inattivi per essere considerati "freddi" e spostati nell'archivio di oggetti. Il numero predefinito di giorni di raffreddamento è 31, ma è possibile regolare il numero di giorni.
+
+
+NOTE: Le scritture dal Tier cloud al Tier performance sono disattivate se la capacità del Tier performance è superiore al 70%. In questo caso, si accede ai blocchi direttamente dal livello cloud.
+
+--
+Tutti i dati utente (tutti):: Tutti i dati (non inclusi i metadati) vengono immediatamente contrassegnati come cold e tiered per lo storage a oggetti il più presto possibile. Non è necessario attendere 48 ore affinché i nuovi blocchi di un volume si raffreddino. Tenere presente che i blocchi situati nel volume prima dell'impostazione del criterio All richiedono 48 ore per diventare freddi.
++
+--
+In caso di lettura, i blocchi di dati cold nel Tier cloud restano freddi e non vengono riscritti nel Tier di performance. Questo criterio è disponibile a partire da ONTAP 9.6.
+
+Prima di scegliere questa policy di tiering, prendere in considerazione quanto segue:
+
+* Il tiering dei dati riduce immediatamente l'efficienza dello storage (solo inline).
+* Utilizzare questa policy solo se si è sicuri che i dati cold sul volume non cambiano.
+* Lo storage a oggetti non è transazionale e si tradurrà in una frammentazione significativa se soggetto a modifiche.
+* Considerare l'impatto dei trasferimenti SnapMirror prima di assegnare la policy di tiering a volumi di origine nelle relazioni di protezione dei dati.
++
+Poiché i dati vengono immediatamente suddivisi in Tier, SnapMirror legge i dati dal Tier cloud piuttosto che dal Tier di performance. Ciò rallenterà le operazioni di SnapMirror, probabilmente rallentando altre operazioni di SnapMirror in un secondo momento in coda, anche se utilizzano policy di tiering diverse.
+
+
+
+--
+Tutti i dati utente DP (backup):: Tutti i dati presenti in un volume di protezione dei dati (esclusi i metadati) vengono immediatamente spostati nel Tier cloud. In caso di lettura, i blocchi di dati cold nel livello cloud rimangono freddi e non vengono riscritti nel Tier di performance (a partire da ONTAP 9.4).
++
+--
+
+NOTE: Questo criterio è disponibile per ONTAP 9.5 o versioni precedenti. È stato sostituito con la policy di tiering *all* a partire da ONTAP 9.6.
+
+--
+

@@ -1,0 +1,150 @@
+---
+sidebar: sidebar 
+permalink: task_backup_from_onprem.html 
+keywords: backing up, back up, backup, backup cloud volumes ontap, back up cloud volumes ontap, cloud volumes ontap, on-prem, on-premises, back up volumes, Backup to Cloud, cloud backup service 
+summary: Completa alcuni passaggi per iniziare a eseguire il backup dei dati dal tuo sistema ONTAP on-premise allo storage a oggetti a basso costo nel cloud. 
+---
+= Backup dei dati da un sistema ONTAP on-premise al cloud
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Completa alcuni passaggi per iniziare a eseguire il backup dei dati dal tuo sistema ONTAP on-premise allo storage a oggetti a basso costo nel cloud.
+
+
+
+== Avvio rapido
+
+Inizia subito seguendo questi passaggi o scorri verso il basso fino alle restanti sezioni per ottenere informazioni dettagliate.
+
+
+
+==== image:number1.png["Numero 1"] Verificare il supporto per la configurazione
+
+[role="quick-margin-list"]
+* Hai scoperto il cluster on-premise e lo hai aggiunto a un ambiente di lavoro in Cloud Manager. Vedere link:task_discovering_ontap.html["Alla scoperta dei cluster ONTAP"^] per ulteriori informazioni.
+* Sul cluster è in esecuzione ONTAP 9.7P5 o versione successiva.
+* Hai un abbonamento valido al cloud provider per lo spazio di storage in cui verranno collocati i backup.
+* Si è abbonati a. https://azuremarketplace.microsoft.com/en-us/marketplace/apps/netapp.cloud-manager?tab=Overview["Offerta di backup Cloud Manager Marketplace"^], oppure è stato acquistato link:task_managing_licenses.html#adding-and-updating-your-backup-byol-license["e attivato"^] Una licenza BYOL di backup su cloud di NetApp.
+
+
+
+
+==== image:number2.png["Numero 2"] Abilitare Backup su cloud nel sistema
+
+[role="quick-margin-para"]
+Selezionare l'ambiente di lavoro e fare clic su *Activate* accanto al servizio Backup to Cloud nel pannello di destra, quindi seguire la procedura di installazione guidata.
+
+[role="quick-margin-para"]
+image:screenshot_backup_to_s3_icon.gif["Una schermata che mostra il pulsante Backup to Cloud Activate (Esegui backup su cloud) disponibile dopo aver selezionato un ambiente di lavoro."]
+
+
+
+==== image:number3.png["Numero 3"] Selezionare il provider cloud e immettere i dettagli del provider
+
+[role="quick-margin-para"]
+Selezionare il provider, quindi l'abbonamento al provider, la regione e il gruppo di risorse. È inoltre necessario specificare IPSpace nel cluster ONTAP in cui risiedono i volumi.
+
+[role="quick-margin-para"]
+image:screenshot_backup_onprem_to_azure.png["Una schermata che mostra i dettagli del cloud provider durante il backup dei volumi da un cluster on-premise a un Tier Azure Blob"]
+
+
+
+==== image:number4.png["Numero 4"] Definire il criterio di backup
+
+[role="quick-margin-para"]
+Il criterio predefinito esegue il backup dei volumi ogni giorno e conserva le 30 copie di backup più recenti di ciascun volume. Passare a backup settimanali o mensili oppure selezionare una delle policy definite dal sistema che fornisca ulteriori opzioni.
+
+[role="quick-margin-para"]
+image:screenshot_backup_onprem_policy.png["Una schermata che mostra le impostazioni di Backup nel cloud in cui è possibile scegliere la pianificazione e il periodo di conservazione del backup."]
+
+
+
+==== image:number5.png["Numero 5"] Selezionare i volumi di cui si desidera eseguire il backup
+
+[role="quick-margin-para"]
+Identificare i volumi di cui si desidera eseguire il backup dal cluster.
+
+
+
+==== image:number6.png["Numero 6"] Ripristinare i dati, se necessario
+
+[role="quick-margin-para"]
+Dall'elenco di backup, selezionare un volume, selezionare un backup, quindi ripristinare i dati dal backup a un nuovo volume su un sistema Cloud Volumes ONTAP che utilizza lo stesso provider cloud.
+
+[role="quick-margin-para"]
+image:screenshot_backup_to_s3_restore_icon.gif["Una schermata dell'icona di ripristino per un backup dopo aver selezionato un volume."]
+
+
+
+== Requisiti
+
+Leggere i seguenti requisiti per assicurarsi di disporre di una configurazione supportata prima di avviare il backup dei volumi nello storage Azure Blob.
+
+Versioni di ONTAP supportate:: ONTAP 9.7P5 e versioni successive.
+Requisiti di rete del cluster:: Su ogni nodo ONTAP che ospita i volumi di cui si desidera eseguire il backup è richiesta una LIF intercluster. La LIF deve essere associata a _IPSpace_ che ONTAP deve utilizzare per connettersi allo storage a oggetti. La SVM amministrativa deve risiedere su IPSpace. http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-69120CF0-F188-434F-913E-33ACB8751A5D.html["Scopri di più su IPspaces"^].
++
+--
+Quando si imposta il backup sul cloud, viene richiesto di utilizzare IPSpace. È necessario scegliere l'IPSpace a cui ciascun LIF è associato. Potrebbe trattarsi dell'IPSpace "predefinito" o di un IPSpace personalizzato creato.
+
+--
+Aree Azure supportate:: Il backup su cloud è supportato in tutte le regioni di Azure https://cloud.netapp.com/cloud-volumes-global-regions["dove sono supportati i volumi cloud"^].
+Requisiti di licenza:: Per le licenze di Backup to Cloud PAYGO, è necessario sottoscrivere il https://azuremarketplace.microsoft.com/en-us/marketplace/apps/netapp.cloud-manager?tab=Overview["Offerta di backup di Azure Marketplace Cloud Manager"^] È necessario prima di attivare il backup nel cloud. La fatturazione per il backup su cloud viene effettuata tramite questo abbonamento.
++
+--
+Per le licenze BYOL di Backup su cloud, è necessario il numero di serie di NetApp che consente di utilizzare il servizio per la durata e la capacità della licenza. Vedere link:task_managing_licenses.html#adding-and-updating-your-backup-byol-license["Aggiunta e aggiornamento della licenza BYOL di backup"^].
+
+Inoltre, è necessario disporre di un abbonamento a Microsoft Azure per lo spazio di storage in cui verranno collocati i backup.
+
+--
+
+
+
+
+== Abilitazione del backup nel cloud
+
+Abilita il backup nel cloud in qualsiasi momento direttamente dall'ambiente di lavoro.
+
+.Fasi
+. Selezionare l'ambiente di lavoro e fare clic su *Activate* accanto al servizio Backup to Cloud nel pannello a destra.
++
+image:screenshot_backup_to_s3_icon.gif["Una schermata che mostra il pulsante Backup to Cloud Activate (Esegui backup su cloud) disponibile dopo aver selezionato un ambiente di lavoro."]
+
+. Selezionare il provider, quindi immettere i dati del provider:
++
+.. L'abbonamento Azure utilizzato per memorizzare i backup.
+.. La regione di Azure.
+.. Il gruppo di risorse - è possibile creare un nuovo gruppo di risorse o selezionare un gruppo di risorse esistente.
+.. IPSpace nel cluster ONTAP in cui risiedono i volumi di cui si desidera eseguire il backup.
+.. Quindi fare clic su *continua*.
++
+image:screenshot_backup_onprem_to_azure.png["Una schermata che mostra i dettagli del cloud provider durante il backup dei volumi da un cluster on-premise a un Tier Azure Blob"]
+
++
+Tenere presente che non è possibile modificare l'abbonamento o il gruppo di risorse dopo l'avvio dei servizi.
+
+
+
+. Nella pagina _define Policy_, selezionare il valore di pianificazione e conservazione del backup e fare clic su *continua*.
++
+image:screenshot_backup_onprem_policy.png["Una schermata che mostra le impostazioni di Backup nel cloud in cui è possibile scegliere la pianificazione e il periodo di conservazione del backup."]
+
++
+Vedere link:concept_backup_to_cloud.html#the-schedule-is-daily-weekly-monthly-or-a-combination["l'elenco dei criteri esistenti"^].
+
+. Selezionare i volumi di cui si desidera eseguire il backup e fare clic su *Activate* (attiva).
++
+image:screenshot_backup_select_onprem_volumes.png["Una schermata che mostra la selezione dei volumi di cui verrà eseguito il backup."]
+
+
+
+.Risultato
+Backup su cloud inizia a eseguire i backup iniziali di ciascun volume selezionato.
+
+.Quali sono le prossime novità?
+link:task_managing_backups.html["È possibile gestire i backup modificando la pianificazione del backup, ripristinando i volumi e molto altro ancora"^].

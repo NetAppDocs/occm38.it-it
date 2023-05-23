@@ -1,0 +1,44 @@
+---
+sidebar: sidebar 
+permalink: concept_evaluating.html 
+keywords: free trial, evaluation, evaluate, eval license, evaluation license, 30-day trial, 30 day trial, 30 day free trial 
+summary: 'È possibile valutare Cloud Volumes ONTAP prima di pagare il software. Il modo più comune è quello di lanciare LA versione PAYGO del tuo primo sistema Cloud Volumes ONTAP per ottenere una prova gratuita di 30 giorni. Una licenza BYOL di valutazione è anche un"opzione.' 
+---
+= Valutazione
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+È possibile valutare Cloud Volumes ONTAP prima di pagare il software. Il modo più comune è quello di lanciare LA versione PAYGO del tuo primo sistema Cloud Volumes ONTAP per ottenere una prova gratuita di 30 giorni. Una licenza BYOL di valutazione è anche un'opzione.
+
+Se hai bisogno di assistenza per la prova di concetto, contatta https://cloud.netapp.com/contact-cds["Il team di vendita"^] oppure contattatelo tramite l'opzione di chat disponibile all'interno del sito https://cloud.netapp.com["NetApp Cloud Central"^] E da Cloud Manager.
+
+
+
+== 30 giorni di prova gratuita per PAYGO
+
+È disponibile una versione di prova gratuita di 30 giorni se si prevede di pagare per Cloud Volumes ONTAP a consumo. Puoi iniziare una prova gratuita di 30 giorni di Cloud Volumes ONTAP da Cloud Manager creando il tuo primo sistema Cloud Volumes ONTAP nell'account del pagante.
+
+Non sono previsti costi di licenza software oraria per l'istanza, ma i costi di infrastruttura del provider cloud continuano a essere applicati.
+
+Una versione di prova gratuita viene convertita automaticamente in un abbonamento oraria a pagamento alla scadenza. Se si termina l'istanza entro il limite di tempo, l'istanza successiva che si implementa non fa parte della versione di prova gratuita (anche se viene implementata entro 30 giorni).
+
+Le versioni di prova pay-as-you-go vengono assegnate tramite un cloud provider e non sono estendibili in alcun modo.
+
+
+
+== Licenze di valutazione per BYOL
+
+Una licenza BYOL di valutazione è un'opzione per i clienti che prevedono di pagare per Cloud Volumes ONTAP acquistando una licenza denominata da NetApp. Puoi ottenere una licenza di valutazione dal tuo account team, dal tuo Sales Engineer o dal tuo partner.
+
+La chiave di valutazione è valida per 30 giorni e può essere utilizzata più volte, ciascuna per 30 giorni (indipendentemente dal giorno di creazione).
+
+Alla fine di 30 giorni, si verificheranno arresti giornalieri, quindi è meglio pianificare in anticipo. È possibile applicare una nuova licenza BYOL alla licenza di valutazione per un aggiornamento in-place (ciò richiede il riavvio dei sistemi a nodo singolo). I dati ospitati vengono eliminati *non* al termine del periodo di prova.
+
+
+TIP: Non è possibile aggiornare il software Cloud Volumes ONTAP quando si utilizza una licenza di valutazione.

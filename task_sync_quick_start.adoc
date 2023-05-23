@@ -1,0 +1,54 @@
+---
+sidebar: sidebar 
+permalink: task_sync_quick_start.html 
+keywords: quick start, overview, deploying, getting started, get started, signing up, free trial 
+summary: La guida introduttiva al servizio Cloud Sync include alcuni passaggi. 
+---
+= Avvio rapido per Cloud Sync
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+La guida introduttiva al servizio Cloud Sync include alcuni passaggi.
+
+
+
+==== image:number1.png["numero 1"] Preparare l'origine e la destinazione
+
+[role="quick-margin-para"]
+Verificare che l'origine e la destinazione siano supportate e configurate. Il requisito più importante è verificare la connettività tra il data broker e le posizioni di origine e destinazione. link:reference_sync_requirements.html["Scopri di più"].
+
+
+
+==== image:number2.png["numero 2"] Preparare una posizione per il data broker di NetApp
+
+[role="quick-margin-para"]
+Il software NetApp data broker sincronizza i dati da un'origine a un'area di destinazione (chiamata _relazione di sincronizzazione_). Puoi eseguire il data broker in AWS, Azure, Google Cloud Platform o on-premise. Il broker di dati necessita di una connessione Internet in uscita sulla porta 443 in modo che possa comunicare con il servizio Cloud Sync e contattare altri servizi e repository. link:reference_sync_networking.html["Visualizzare l'elenco degli endpoint"].
+
+[role="quick-margin-para"]
+Cloud Sync ti guida attraverso il processo di installazione quando crei una relazione di sincronizzazione, a questo punto puoi implementare il data broker nel cloud o scaricare uno script di installazione per il tuo host Linux.
+
+[role="quick-margin-list"]
+* link:task_sync_installing_aws.html["Esaminare l'installazione di AWS"]
+* link:task_sync_installing_azure.html["Esaminare l'installazione di Azure"]
+* link:task_sync_installing_gcp.html["Esaminare l'installazione di GCP"]
+* link:task_sync_installing_linux.html["Esaminare l'installazione dell'host Linux"]
+
+
+
+
+==== image:number3.png["number3"] Crea la tua prima relazione di sincronizzazione
+
+[role="quick-margin-para"]
+Accedere a. https://cloudmanager.netapp.com/["Cloud Manager"^], Fare clic su *Sync*, quindi trascinare le selezioni per l'origine e la destinazione. Seguire le istruzioni per completare la configurazione. link:task_sync_creating_relationships.html["Scopri di più"].
+
+
+
+==== image:number4.png["number4"] Paga le tue relazioni di sincronizzazione al termine della prova gratuita
+
+[role="quick-margin-para"]
+Iscriviti ad AWS o Azure per pagare a consumo o per pagare annualmente. Oppure acquistare le licenze direttamente da NetApp. Per configurarla, accedere alla pagina Impostazioni di licenza di Cloud Sync. link:task_sync_licensing.html["Scopri di più"].

@@ -1,0 +1,140 @@
+---
+sidebar: sidebar 
+permalink: task_sync_nfs_encryption.html 
+keywords: encryption, in flight, data in flight, in-flight, data-in-flight, nfs, initiator, listener, port 
+summary: Se la tua azienda ha policy di sicurezza rigorose, sincronizza i dati tra server NFS in reti diverse utilizzando la crittografia data-in-flight. 
+---
+= Sincronizzazione dei dati NFS con crittografia data-in-flight
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+Se la tua azienda ha policy di sicurezza rigorose, puoi sincronizzare i dati NFS utilizzando la crittografia data-in-flight. Questa funzionalità è supportata da un server NFS a un altro server NFS e da Azure NetApp Files a Azure NetApp Files.
+
+Ad esempio, è possibile sincronizzare i dati tra due server NFS che si trovano in reti diverse. In alternativa, potrebbe essere necessario trasferire in modo sicuro i dati su Azure NetApp Files tra sottoreti o regioni.
+
+
+
+== Come funziona la crittografia dei dati in volo
+
+La crittografia Data-in-flight crittografa i dati NFS quando vengono inviati in rete tra due broker di dati. La seguente immagine mostra una relazione tra due server NFS e due broker di dati:
+
+image:diagram_nfs_encryption.gif["Diagramma che mostra due server NFS e due broker di dati. I dati vengono trasmessi dal server NFS di origine a un broker di dati di origine, in cui i dati vengono crittografati. I dati vengono quindi inviati al data broker di destinazione e quindi al server NFS di destinazione."]
+
+Un data broker funziona come _initiator_. Quando è il momento di sincronizzare i dati, invia una richiesta di connessione all'altro data broker, che è il _listener_. Il data broker ascolta le richieste sulla porta 443. Se necessario, è possibile utilizzare un'altra porta, ma assicurarsi che la porta non sia utilizzata da un altro servizio.
+
+Ad esempio, se si sincronizzano i dati da un server NFS on-premise a un server NFS basato sul cloud, è possibile scegliere quale broker di dati ascoltare le richieste di connessione e quale inviarle.
+
+Ecco come funziona la crittografia in-flight:
+
+. Dopo aver creato la relazione di sincronizzazione, l'iniziatore avvia una connessione crittografata con l'altro data broker.
+. Il broker dei dati di origine crittografa i dati dall'origine utilizzando TLS 1.3.
+. Quindi, invia i dati in rete al data broker di destinazione.
+. Il broker di dati di destinazione decrta i dati prima di inviarli alla destinazione.
+. Dopo la copia iniziale, il servizio sincronizza tutti i dati modificati ogni 24 ore. Se sono presenti dati da sincronizzare, il processo inizia con l'iniziatore che apre una connessione crittografata con l'altro data broker.
++
+Se preferisci sincronizzare i dati più frequentemente, link:task_sync_managing_relationships.html#changing-the-settings-for-a-sync-relationship["è possibile modificare la pianificazione dopo aver creato la relazione"].
+
+
+
+
+
+== Versioni NFS supportate
+
+* Per i server NFS, la crittografia data-in-flight è supportata con le versioni NFS 3, 4.0, 4.1 e 4.2.
+* Per Azure NetApp Files, la crittografia data-in-flight è supportata con NFS versioni 3 e 4.1.
+
+
+
+
+== Cosa ti serve per iniziare
+
+Assicurarsi di disporre di quanto segue:
+
+* Due server NFS che si incontrano link:reference_sync_requirements.html#source-and-target-requirements["requisiti di origine e destinazione"] O Azure NetApp Files in due sottoreti o regioni.
+* Gli indirizzi IP o i nomi di dominio completi dei server.
+* Posizioni di rete per due broker di dati.
++
+È possibile selezionare un data broker esistente, ma deve funzionare come iniziatore. Il data broker listener deve essere un _new_ data broker.
+
++
+Se non hai ancora implementato un data broker, esamina i requisiti del data broker. Poiché si dispone di policy di sicurezza rigorose, assicurarsi di esaminare i requisiti di rete, che includono il traffico in uscita dalla porta 443 e da link:reference_sync_networking.html["endpoint internet"] che il data broker contatta.
+
++
+** link:task_sync_installing_aws.html["Esaminare l'installazione di AWS"]
+** link:task_sync_installing_azure.html["Esaminare l'installazione di Azure"]
+** link:task_sync_installing_gcp.html["Esaminare l'installazione di GCP"]
+** link:task_sync_installing_linux.html["Esaminare l'installazione dell'host Linux"]
+
+
+
+
+
+
+== Sincronizzazione dei dati NFS con crittografia data-in-flight
+
+Creare una nuova relazione di sincronizzazione tra due server NFS o tra Azure NetApp Files, attivare l'opzione di crittografia in-flight e seguire le istruzioni.
+
+.Fasi
+. Fare clic su *Create New Sync* (Crea nuova sincronizzazione).
+. Trascinare *server NFS* nelle posizioni di origine e destinazione o *Azure NetApp Files* nelle posizioni di origine e destinazione e selezionare *Sì* per attivare la crittografia dei dati in volo.
++
+La seguente immagine mostra ciò che si desidera selezionare per sincronizzare i dati tra due server NFS:
+
++
+image:screenshot_nfs_encryption.gif["Una schermata che mostra una relazione di sincronizzazione NFS-NFS con crittografia data-in-flight attivata."]
+
++
+La seguente immagine mostra ciò che si desidera selezionare per sincronizzare i dati tra Azure NetApp Files:
+
++
+image:screenshot_anf_encryption.gif["Una schermata che mostra una relazione di sincronizzazione tra Azure NetApp Files e Azure NetApp Files con crittografia data-in-flight attivata."]
+
+. Seguire le istruzioni per creare la relazione:
++
+.. *Server NFS*/*Azure NetApp Files*: Scegliere la versione di NFS e specificare una nuova origine NFS oppure selezionare un server esistente.
+.. *Definisci funzionalità Data Broker*: Definire quale broker di dati _ascolta_ per le richieste di connessione su una porta e quale _avvia_ la connessione. Scegli la tua scelta in base ai tuoi requisiti di rete.
+.. *Data Broker*: Seguire le istruzioni per aggiungere un nuovo data broker di origine o selezionare un data broker esistente.
++
+Se il broker di dati di origine agisce come listener, deve essere un nuovo broker di dati.
+
++
+Se è necessario un nuovo data broker, Cloud Sync richiede le istruzioni per l'installazione. Puoi implementare il data broker nel cloud o scaricare uno script di installazione per il tuo host Linux.
+
++
+image:screenshot_create_data_broker.gif["Una schermata che mostra l'opzione di selezionare un data broker in AWS, Azure, Google Cloud Platform o un host Linux esistente."]
+
+.. *Directory*: Scegliere le directory che si desidera sincronizzare selezionando tutte le directory oppure eseguendo il drill-down e selezionando una sottodirectory.
++
+Fare clic su *Filter Source Objects* (Filtra oggetti origine) per modificare le impostazioni che definiscono la modalità di sincronizzazione e gestione dei file e delle cartelle di origine nella posizione di destinazione.
+
++
+image:screenshot_directories.gif["Una schermata che mostra l'opzione per selezionare una directory di primo livello, eseguire il drill-down e selezionare l'opzione Filter Source Objects (Filtra oggetti di origine)."]
+
+.. *Server NFS di destinazione*/*Azure NetApp Files di destinazione*: Scegliere la versione di NFS, quindi inserire una nuova destinazione NFS o selezionare un server esistente.
+.. *Target Data Broker*: Seguire le istruzioni per aggiungere un nuovo broker di dati di origine o selezionare un broker di dati esistente.
++
+Se il data broker di destinazione agisce come listener, deve essere un nuovo data broker.
+
++
+Ecco un esempio del prompt quando il broker di dati di destinazione funziona come listener. Notare l'opzione per specificare la porta.
+
++
+image:screenshot_nfs_encryption_listener.gif["Una schermata che mostra l'opzione di specificare una porta sul data broker del listener."]
+
+.. *Directory di destinazione*: Selezionare una directory di primo livello oppure eseguire il drill-down per selezionare una sottodirectory esistente o per creare una nuova cartella all'interno di un'esportazione.
+.. *Impostazioni*: Consente di definire la modalità di sincronizzazione e gestione dei file e delle cartelle di origine nella posizione di destinazione.
+.. *Revisione*: Esaminare i dettagli della relazione di sincronizzazione, quindi fare clic su *Crea relazione*.
++
+image:screenshot_nfs_encryption_review.gif["Una schermata che mostra la schermata di revisione. Mostra i server NFS, i broker di dati e le informazioni di rete relative a ciascuno di essi."]
+
+
+
+
+
+.Risultato
+Cloud Sync inizia a creare la nuova relazione di sincronizzazione. Al termine, fare clic su *View in Dashboard* (Visualizza in Dashboard) per visualizzare i dettagli sulla nuova relazione.

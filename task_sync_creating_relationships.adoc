@@ -1,0 +1,104 @@
+---
+sidebar: sidebar 
+permalink: task_sync_creating_relationships.html 
+keywords: sync, relationship, create, tags, settings, create a relationship, creating relationships, bucket setup, tags 
+summary: 'Quando si crea una relazione di sincronizzazione, il servizio Cloud Sync copia i file dall"origine alla destinazione. Dopo la copia iniziale, il servizio sincronizza tutti i dati modificati ogni 24 ore.' 
+---
+= Creazione di una relazione di sincronizzazione
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Quando si crea una relazione di sincronizzazione, il servizio Cloud Sync copia i file dall'origine alla destinazione. Dopo la copia iniziale, il servizio sincronizza tutti i dati modificati ogni 24 ore.
+
+I passaggi riportati di seguito forniscono un esempio che mostra come impostare una relazione di sincronizzazione da un server NFS a un bucket S3.
+
+.Fasi
+. In Cloud Manager, fare clic su *Sync*.
+. Nella pagina *Definisci relazione di sincronizzazione*, scegliere un'origine e una destinazione.
++
+I passaggi seguenti forniscono un esempio di come creare una relazione di sincronizzazione da un server NFS a un bucket S3.
+
++
+image:screenshot_nfs_to_s3.gif["Una schermata che mostra NFS come origine e S3 come destinazione in una nuova relazione di sincronizzazione."]
+
+. Nella pagina *NFS Server*, inserire l'indirizzo IP o il nome di dominio completo del server NFS che si desidera sincronizzare con AWS.
+. Nella pagina *Data Broker*, seguire le istruzioni per creare una macchina virtuale per il data broker in AWS, Azure o Google Cloud Platform, oppure per installare il software per il data broker su un host Linux esistente.
++
+Per ulteriori informazioni, consultare le seguenti pagine:
+
++
+** link:task_sync_installing_aws.html["Installazione del data broker in AWS"]
+** link:task_sync_installing_azure.html["Installazione del data broker in Azure"]
+** link:task_sync_installing_gcp.html["Installazione del data broker in GCP"]
+** link:task_sync_installing_linux.html["Installazione del data broker su un host Linux"]
+
+
+. Dopo aver installato il data broker, fare clic su *Continue* (continua).
++
+La seguente immagine mostra un data broker implementato correttamente in AWS:
+
++
+image:screenshot_created_instance.gif["Questa schermata mostra un'istanza implementata correttamente. L'interfaccia mostra i dettagli sull'istanza, inclusa la rete AWS."]
+
+. [[filter]]nella pagina *Directory*, selezionare una directory o una sottodirectory di livello superiore.
++
+Se Cloud Sync non riesce a recuperare le esportazioni, fare clic su *Aggiungi esportazione manualmente* e immettere il nome di un'esportazione NFS.
+
++
+
+NOTE: Se si desidera sincronizzare più di una directory sul server NFS, è necessario creare ulteriori relazioni di sincronizzazione al termine dell'operazione.
+
+. Nella pagina *bucket AWS S3*, selezionare un bucket:
++
+** Eseguire il drill-down per selezionare una cartella esistente all'interno del bucket o per selezionare una nuova cartella creata all'interno del bucket.
+** Fare clic su *Aggiungi all'elenco* per selezionare un bucket S3 non associato all'account AWS. link:reference_sync_requirements.html#s3["Al bucket S3 devono essere applicate autorizzazioni specifiche"].
+
+
+. Nella pagina *Bucket Setup*, impostare il bucket:
++
+** Scegliere se attivare la crittografia del bucket S3, quindi selezionare una chiave AWS KMS, immettere l'ARN di una chiave KMS o selezionare la crittografia AES-256.
+** Selezionare una classe di storage S3. link:reference_sync_requirements.html#storage-classes["Visualizzare le classi di storage supportate"].
++
+image:screenshot_bucket_setup.gif["Questa schermata mostra la pagina Bucket Setup, che consente di scegliere Sì o No per la crittografia e di selezionare una classe di storage S3 specifica per i dati sincronizzati."]
+
+
+
+. Nella pagina *Impostazioni*, definire la modalità di sincronizzazione e gestione dei file e delle cartelle di origine nella posizione di destinazione:
++
+Pianificazione:: Scegliere una pianificazione ricorrente per le sincronizzazioni future o disattivare la pianificazione della sincronizzazione. È possibile pianificare una relazione per sincronizzare i dati ogni 1 minuto.
+Tentativi:: Definire il numero di tentativi di sincronizzazione di un file da parte di Cloud Sync prima di ignorarlo.
+File modificati di recente:: Scegliere di escludere i file modificati di recente prima della sincronizzazione pianificata.
+Elimina file in origine:: Scegliere di eliminare i file dalla posizione di origine dopo che Cloud Sync copia i file nella posizione di destinazione. Questa opzione include il rischio di perdita dei dati perché i file di origine vengono cancellati dopo la copia.
++
+--
+Se si attiva questa opzione, è necessario modificare anche un parametro nel file local.json sul data broker. Aprire il file e modificare il parametro denominato _workers.transferrer.delete-on-source_ in *true*.
+
+--
+Eliminare i file di destinazione:: Scegliere di eliminare i file dalla posizione di destinazione, se sono stati eliminati dall'origine. Per impostazione predefinita, non elimina mai i file dalla posizione di destinazione.
+Tagging degli oggetti:: Quando AWS S3 è la destinazione in una relazione di sincronizzazione, Cloud Sync contrassegna gli oggetti S3 con metadati rilevanti per l'operazione di sincronizzazione. È possibile disattivare la tagging degli oggetti S3, se non si desidera, nell'ambiente in uso. La disattivazione del tagging non ha alcun impatto su Cloud Sync: Cloud Sync memorizza i metadati di sincronizzazione in un modo diverso.
+Tipi di file:: Definire i tipi di file da includere in ogni sincronizzazione: File, directory e collegamenti simbolici.
+Escludi estensioni file:: Specificare le estensioni dei file da escludere dalla sincronizzazione digitando l'estensione del file e premendo *Invio*. Ad esempio, digitare _log_ o _.log_ per escludere i file *.log. Non è necessario un separatore per più interni. Il seguente video fornisce una breve demo:
++
+--
+video::video_file_extensions.mp4[width=840,height=240]
+--
+Dimensione del file:: Scegliere di sincronizzare tutti i file indipendentemente dalle dimensioni o solo i file che si trovano in un intervallo di dimensioni specifico.
+Data di modifica:: Scegliere tutti i file indipendentemente dalla data dell'ultima modifica, i file modificati dopo una data specifica, prima di una data specifica o tra un intervallo di tempo.
+
+
+. Nella pagina *Relationship Tags*, inserire fino a 9 tag di relazione, quindi fare clic su *Continue*.
++
+Il servizio Cloud Sync assegna i tag a ciascun oggetto sincronizzato con il bucket S3.
+
+. Esaminare i dettagli della relazione di sincronizzazione, quindi fare clic su *Crea relazione*.
+
+
+*Risultato*
+
+Cloud Sync avvia la sincronizzazione dei dati tra l'origine e la destinazione.

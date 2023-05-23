@@ -1,0 +1,104 @@
+---
+sidebar: sidebar 
+permalink: task_getting_started_gcp.html 
+keywords: google cloud platform, gcp, deploy cloud manager, launch cloud manager, create cloud manager, getting started, networking, gcp networking, service account, tiering, data tiering, bucket, fabricpool, storage access key, gcp role, role, iam role, permissions, gcp permissions 
+summary: Inizia a utilizzare Cloud Volumes ONTAP per GCP in pochi passaggi. 
+---
+= Introduzione a Cloud Volumes ONTAP per Google Cloud
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Inizia a utilizzare Cloud Volumes ONTAP per GCP in pochi passaggi.
+
+
+
+==== image:number1.png["Numero 1"] Creare un connettore
+
+[role="quick-margin-para"]
+Se non si dispone di un link:concept_connectors.html["Connettore"] Tuttavia, un amministratore dell'account deve crearne uno. link:task_creating_connectors_gcp.html["Scopri come creare un connettore in GCP"].
+
+[role="quick-margin-para"]
+Quando crei il tuo primo ambiente di lavoro Cloud Volumes ONTAP, Cloud Manager ti chiede di implementare un connettore se non ne hai ancora uno.
+
+
+
+==== image:number2.png["Numero 2"] Pianificare la configurazione
+
+[role="quick-margin-para"]
+Cloud Manager offre pacchetti preconfigurati che soddisfano i tuoi requisiti di carico di lavoro, oppure puoi creare la tua configurazione. Se si sceglie una configurazione personalizzata, è necessario comprendere le opzioni disponibili. link:task_planning_your_config_gcp.html["Scopri di più"].
+
+
+
+==== image:number3.png["Numero 3"] Configurare la rete
+
+[role="quick-margin-list"]
+. Assicurarsi che il VPC e le subnet supportino la connettività tra il connettore e Cloud Volumes ONTAP.
+. Abilitare l'accesso a Internet in uscita dal VPC di destinazione in modo che il connettore e Cloud Volumes ONTAP possano contattare diversi endpoint.
++
+Questo passaggio è importante perché il connettore non è in grado di gestire Cloud Volumes ONTAP senza accesso a Internet in uscita. Se è necessario limitare la connettività in uscita, fare riferimento all'elenco degli endpoint per link:reference_networking_gcp.html["Il connettore e Cloud Volumes ONTAP"].
+
+
+
+[role="quick-margin-para"]
+link:reference_networking_gcp.html["Scopri di più sui requisiti di rete"].
+
+
+
+==== image:number4.png["Numero 4"] Configurare GCP per il tiering dei dati
+
+[role="quick-margin-para"]
+È necessario soddisfare due requisiti per tierare i dati cold da Cloud Volumes ONTAP a uno storage a oggetti a basso costo (un bucket di storage cloud di Google):
+
+[role="quick-margin-list"]
+. https://cloud.google.com/vpc/docs/configure-private-google-access["Configurare la subnet Cloud Volumes ONTAP per l'accesso privato a Google"^].
+. https://cloud.google.com/iam/docs/creating-managing-service-accounts#creating_a_service_account["Impostare un account di servizio per il tiering dei dati"^]:
++
+** Assegnare il ruolo predefinito _Storage Admin_ all'account del servizio di tiering.
+** Aggiungere l'account del servizio Connector come _Service account User_ all'account del servizio di tiering.
++
+È possibile fornire il ruolo dell'utente https://cloud.google.com/iam/docs/creating-managing-service-accounts#creating_a_service_account["nel passaggio 3 della procedura guidata quando si crea l'account del servizio di tiering"], o. https://cloud.google.com/iam/docs/granting-roles-to-service-accounts#granting_access_to_a_user_for_a_service_account["assegnare il ruolo dopo la creazione dell'account di servizio"^].
+
++
+Sarà necessario selezionare l'account del servizio di tiering in un secondo momento quando si crea un ambiente di lavoro Cloud Volumes ONTAP.
+
++
+Se non si attiva il tiering dei dati e si seleziona un account di servizio quando si crea il sistema Cloud Volumes ONTAP, è necessario spegnere il sistema e aggiungere l'account di servizio a Cloud Volumes ONTAP dalla console GCP.
+
+
+
+
+
+
+
+==== image:number5.png["Numero 5"] Abilitare le API di Google Cloud
+
+[role="quick-margin-para"]
+https://cloud.google.com/apis/docs/getting-started#enabling_apis["Abilita le seguenti API di Google Cloud nel tuo progetto"^]. Queste API sono necessarie per implementare il connettore e Cloud Volumes ONTAP.
+
+[role="quick-margin-list"]
+* API di Cloud Deployment Manager V2
+* API Cloud Logging
+* API Cloud Resource Manager
+* API di Compute Engine
+* API IAM (Identity and Access Management)
+
+
+
+
+==== image:number6.png["Numero 6"] Avviare Cloud Volumes ONTAP utilizzando Cloud Manager
+
+[role="quick-margin-para"]
+Fare clic su *Add Working Environment* (Aggiungi ambiente di lavoro), selezionare il tipo di sistema che si desidera implementare e completare la procedura guidata. link:task_deploying_gcp.html["Leggi le istruzioni dettagliate"].
+
+.Link correlati
+* link:concept_evaluating.html["Valutazione"]
+* link:task_creating_connectors_gcp.html["Creazione di un connettore da Cloud Manager"]
+* link:task_installing_linux.html["Installazione del software del connettore su un host Linux"]
+* link:reference_permissions.html#what-cloud-manager-does-with-gcp-permissions["Cosa fa Cloud Manager con le autorizzazioni GCP"]
+

@@ -1,0 +1,64 @@
+---
+sidebar: sidebar 
+permalink: reference_legal_notices.html 
+keywords: copyrights, notice, trademarks, patents, privacy, open source 
+summary: 'Le note legali forniscono l"accesso a dichiarazioni di copyright, marchi, brevetti e altro ancora.' 
+---
+= Note legali
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Le note legali forniscono l'accesso a dichiarazioni di copyright, marchi, brevetti e altro ancora.
+
+
+
+== Copyright
+
+http://www.netapp.com/us/legal/copyright.aspx[]
+
+
+
+== Marchi
+
+NETAPP, il logo NETAPP e i marchi elencati nella pagina dei marchi NetApp sono marchi di NetApp, Inc. Altri nomi di società e prodotti potrebbero essere marchi dei rispettivi proprietari.
+
+http://www.netapp.com/us/legal/netapptmlist.aspx[]
+
+
+
+== Brevetti
+
+Un elenco aggiornato dei brevetti di proprietà di NetApp è disponibile all'indirizzo:
+
+https://www.netapp.com/us/media/patents-page.pdf[]
+
+
+
+== Direttiva sulla privacy
+
+https://www.netapp.com/us/legal/privacypolicy/index.aspx[]
+
+
+
+== Open source
+
+I file di avviso forniscono informazioni sul copyright e sulle licenze di terze parti utilizzate nel software NetApp.
+
+* link:media/notice_cloud_manager_3.8.7.pdf["Avviso per Cloud Manager 3.8.7"^]
+* link:media/notice_cloud_manager_3.8.6.pdf["Avviso per Cloud Manager 3.8.6"^]
+* link:media/notice_cloud_manager_3.8.5.pdf["Avviso per Cloud Manager 3.8.5"^]
+* link:media/notice_cloud_manager_3.8.4.pdf["Avviso per Cloud Manager 3.8.4"^]
+* link:media/notice_cloud_manager_3.8.3.pdf["Avviso per Cloud Manager 3.8.3"^]
+* link:media/notice_cloud_manager_3.8.2.pdf["Avviso per Cloud Manager 3.8.2"^]
+* link:media/notice_cloud_manager_3.8.1.pdf["Avviso per Cloud Manager 3.8.1"^]
+* link:media/notice_cloud_manager_3.8.pdf["Avviso per Cloud Manager 3.8"^]
+* link:media/notice_cloud_backup_service.pdf["Avviso per Cloud Backup Service"^]
+* link:media/notice_global_file_cache.pdf["Avviso per Global file cache"^]
+* link:media/notice_cloud_compliance.pdf["Avviso per la conformità del cloud"^]
+

@@ -1,0 +1,67 @@
+---
+sidebar: sidebar 
+permalink: task_responding_to_dsar.html 
+keywords: dsar, data subject access request, search, search for name, report, gdpr, data privacy laws, data subject, compliance 
+summary: 'Rispondere a una richiesta di accesso soggetto a dati (DSAR) cercando il nome completo o l"identificatore noto di un soggetto (ad esempio un indirizzo e-mail) e scaricando un report. Il report è stato progettato per aiutare l"organizzazione a rispettare il GDPR o leggi simili sulla privacy dei dati.' 
+---
+= Risposta a una richiesta di accesso soggetto a dati
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Rispondere a una richiesta di accesso soggetto a dati (DSAR) cercando il nome completo o l'identificatore noto di un soggetto (ad esempio un indirizzo e-mail) e scaricando un report. Il report è stato progettato per aiutare l'organizzazione a rispettare il GDPR o leggi simili sulla privacy dei dati.
+
+
+NOTE: NetApp non può garantire una precisione del 100% dei dati personali e dei dati personali sensibili identificati dalla Cloud Compliance. È sempre necessario convalidare le informazioni esaminando i dati.
+
+
+
+== Che cos'è una richiesta di accesso ai dati?
+
+Le normative sulla privacy, come il GDPR europeo, concedono ai soggetti interessati (come clienti o dipendenti) il diritto di accedere ai propri dati personali. Quando un soggetto interessato richiede queste informazioni, queste vengono denominate DSAR (data subject access request). Le organizzazioni devono rispondere a queste richieste "senza ritardi indebito" e al più tardi entro un mese dalla ricezione.
+
+
+
+== In che modo la Cloud Compliance può aiutarti a rispondere a una DSAR?
+
+Quando esegui una ricerca dell'oggetto dati, Cloud Compliance trova tutti i file che contengono il nome o l'identificatore della persona. Cloud Compliance verifica i dati pre-indicizzati più recenti per il nome o l'identificatore. Non avvia una nuova scansione.
+
+Una volta completata la ricerca, è possibile scaricare l'elenco di file per un report Data Subject Access Request. Il report aggrega le informazioni dei dati e le inserisce in termini legali che è possibile inviare alla persona.
+
+
+
+== Ricerca di dati e download di report
+
+Cercare il nome completo o l'identificatore noto del soggetto interessato, quindi scaricare un report elenco file o un report DSAR. È possibile eseguire la ricerca in base a. link:task_controlling_private_data.html#types-of-personal-data["qualsiasi tipo di informazione personale"^].
+
+Quando si ricercano i nomi dei soggetti dati, è supportato solo l'inglese. Il supporto per altre lingue verrà aggiunto in un secondo momento.
+
+
+NOTE: La ricerca dei dati non è attualmente supportata nei database.
+
+.Fasi
+. Nella parte superiore di Cloud Manager, fare clic su *Cloud Compliance*.
+. Fare clic su *Data subjects*.
+. Cercare il nome completo o l'identificativo noto dell'interessato.
++
+Ecco un esempio che mostra una ricerca per il nome _john Doe_:
+
++
+image:screenshot_dsar_search.gif["Una schermata che mostra una ricerca del nome \"John Doe\" per una DSAR."]
+
+. Scegliere una delle opzioni disponibili:
++
+** *Download del report DSAR*: Una risposta formale alla richiesta di accesso che è possibile inviare al soggetto interessato. Questo report contiene informazioni generate automaticamente in base ai dati rilevati dalla Cloud Compliance nell'oggetto dei dati ed è progettato per essere utilizzato come modello. Completare il modulo e esaminarlo internamente prima di inviarlo al soggetto interessato.
+** *Investigate Results*: Pagina che consente di analizzare i dati ricercando, ordinando, espandendo i dettagli di un file specifico e scaricando l'elenco dei file.
++
+
+NOTE: Se sono presenti più di 10,000 risultati, nell'elenco dei file vengono visualizzati solo i primi 10,000 risultati.
+
+
+
+

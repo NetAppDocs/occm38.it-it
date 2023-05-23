@@ -1,0 +1,44 @@
+---
+sidebar: sidebar 
+permalink: reference_cloud_mgr_reqs.html 
+keywords: configurations, ec2, vm, ports, ram, operating system, os, host, requirement, requirements, hypervisor, disk, space, mysql, centos, rhel, red hat, cpu, disk space, 3306 
+summary: Il software del connettore deve essere eseguito su un host che soddisfi i requisiti specifici del sistema operativo, della RAM, dei requisiti delle porte e così via. 
+---
+= Requisiti host del connettore
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Il software del connettore deve essere eseguito su un host che soddisfi i requisiti specifici del sistema operativo, della RAM, dei requisiti delle porte e così via.
+
+È richiesto un host dedicato:: Il connettore non è supportato su un host condiviso con altre applicazioni. L'host deve essere un host dedicato.
+CPU:: 4 core o 4 vCPU
+RAM:: 14 GB
+Tipo di istanza AWS EC2:: Un tipo di istanza che soddisfa i requisiti di CPU e RAM indicati in precedenza. Si consiglia di utilizzare t3.xlarge e quel tipo di istanza quando si implementa il connettore direttamente da Cloud Manager.
+Dimensione delle macchine virtuali Azure:: Un tipo di istanza che soddisfa i requisiti di CPU e RAM indicati in precedenza. Si consiglia di utilizzare DS3 v2 e le dimensioni delle macchine virtuali quando si implementa il connettore direttamente da Cloud Manager.
+Tipo di macchina GCP:: Un tipo di istanza che soddisfa i requisiti di CPU e RAM indicati in precedenza. Si consiglia di utilizzare n1-standard-4 e questo tipo di macchina quando si implementa il connettore direttamente da Cloud Manager.
+Sistemi operativi supportati::
++
+--
+* CentOS 7.6
+* CentOS 7.7
+* Red Hat Enterprise Linux 7.6
+* Red Hat Enterprise Linux 7.7
++
+Il sistema Red Hat Enterprise Linux deve essere registrato con Red Hat Subscription Management. Se non è registrato, il sistema non può accedere ai repository per aggiornare il software di terze parti richiesto durante l'installazione del connettore.
+
++
+Il connettore è supportato dalle versioni in lingua inglese di questi sistemi operativi.
+
+
+
+--
+Hypervisor:: Un hypervisor bare metal o in hosting certificato per l'esecuzione di CentOS o Red Hat Enterprise Linuxhttps://access.redhat.com/certified-hypervisors["Soluzione Red Hat: Quali hypervisor sono certificati per eseguire Red Hat Enterprise Linux?"^]
+Spazio su disco in /opz:: Devono essere disponibili 100 GB di spazio
+Accesso a Internet in uscita:: L'accesso a Internet in uscita è necessario per installare il connettore e per gestire le risorse e i processi all'interno dell'ambiente di cloud pubblico. Per un elenco degli endpoint, vedere link:reference_networking_cloud_manager.html["Requisiti di rete per il connettore"].
+

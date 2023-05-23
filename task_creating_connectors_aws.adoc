@@ -1,0 +1,88 @@
+---
+sidebar: sidebar 
+permalink: task_creating_connectors_aws.html 
+keywords: create connector in aws, create connector in azure, create connector in gcp, launch connector in aws, launch connector in azure, launch connector in gcp, deploy connector in aws, deploy connector in azure, deploy connector in gcp 
+summary: 'Un account Admin deve implementare un connettore prima di poter utilizzare la maggior parte delle funzionalità di Cloud Manager. Il connettore consente a Cloud Manager di gestire risorse e processi all"interno del tuo ambiente di cloud pubblico.' 
+---
+= Creazione di un connettore in AWS da Cloud Manager
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Un account Admin deve implementare un _connettore_ prima di poter utilizzare la maggior parte delle funzionalità di Cloud Manager. link:concept_connectors.html["Scopri quando è necessario un connettore"]. Il connettore consente a Cloud Manager di gestire risorse e processi all'interno del tuo ambiente di cloud pubblico.
+
+Questa pagina descrive come creare un connettore in AWS direttamente da Cloud Manager. È inoltre possibile scegliere di link:task_launching_aws_mktp.html["Creare il connettore da AWS Marketplace"], o a. link:task_installing_linux.html["scaricare il software e installarlo sul proprio host"].
+
+Questi passaggi devono essere completati da un utente che ha il ruolo di amministratore dell'account. Un amministratore dell'area di lavoro non può creare un connettore.
+
+
+TIP: Quando crei il tuo primo ambiente di lavoro Cloud Volumes ONTAP, Cloud Manager ti chiederà di creare un connettore se non ne hai ancora uno.
+
+
+
+== Impostazione delle autorizzazioni AWS per creare un connettore
+
+Prima di poter implementare un connettore da Cloud Manager, è necessario assicurarsi che l'account AWS disponga delle autorizzazioni corrette.
+
+.Fasi
+. Scaricare la policy di Connector IAM dal seguente percorso:
++
+https://mysupport.netapp.com/site/info/cloud-manager-policies["NetApp Cloud Manager: Policy AWS, Azure e GCP"^]
+
+. Dalla console AWS IAM, creare una policy personalizzata copiando e incollando il testo dal criterio IAM del connettore.
+. Collegare il criterio creato nel passaggio precedente all'utente IAM che creerà il connettore da Cloud Manager.
+
+
+.Risultato
+L'utente AWS dispone ora delle autorizzazioni necessarie per creare il connettore da Cloud Manager. Quando richiesto da Cloud Manager, devi specificare le chiavi di accesso AWS per questo utente.
+
+
+
+== Creazione di un connettore in AWS
+
+Cloud Manager consente di creare un connettore in AWS direttamente dalla relativa interfaccia utente.
+
+.Di cosa hai bisogno
+* Una chiave di accesso AWS e una chiave segreta per un utente IAM che dispone di https://mysupport.netapp.com/site/info/cloud-manager-policies["autorizzazioni richieste"^].
+* VPC, subnet e coppia di chiavi nella regione AWS desiderata.
+
+
+.Fasi
+. Se si sta creando il primo ambiente di lavoro, fare clic su *Aggiungi ambiente di lavoro* e seguire le istruzioni. In caso contrario, fare clic sull'elenco a discesa *Connector* e selezionare *Add Connector* (Aggiungi connettore).
++
+image:screenshot_connector_add.gif["Una schermata che mostra l'icona del connettore nell'intestazione e l'azione Add Connector."]
+
+. Fare clic su *Let's Start*.
+. Scegli *Amazon Web Services* come tuo cloud provider.
++
+Tenere presente che il connettore deve disporre di una connessione di rete con il tipo di ambiente di lavoro che si sta creando e con i servizi che si intende abilitare.
+
++
+link:reference_networking_cloud_manager.html["Scopri di più sui requisiti di rete per il connettore"].
+
+. Consulta le informazioni necessarie e fai clic su *continua*.
+. Fornire le informazioni richieste:
++
+** *AWS Credentials*: Immettere un nome per l'istanza e specificare la chiave di accesso AWS e la chiave segreta che soddisfano i requisiti di autorizzazione.
+** *Location*: Specificare una regione AWS, un VPC e una subnet per l'istanza.
+** *Rete*: Selezionare la coppia di chiavi da utilizzare con l'istanza, se attivare un indirizzo IP pubblico e, facoltativamente, specificare una configurazione proxy.
+** *Security Group*: Scegliere se creare un nuovo gruppo di sicurezza o se selezionare un gruppo di sicurezza esistente che consenta l'accesso HTTP, HTTPS e SSH in entrata.
++
+
+NOTE: Non c'è traffico in entrata verso il connettore, a meno che non venga avviato. HTTP e HTTPS forniscono l'accesso a link:concept_connectors.html#the-local-user-interface["UI locale"], che utilizzerai in rare circostanze. SSH è necessario solo se è necessario connettersi all'host per la risoluzione dei problemi.
+
+
+
+. Fare clic su *Create* (Crea).
++
+L'istanza dovrebbe essere pronta in circa 7 minuti. Si consiglia di rimanere sulla pagina fino al completamento del processo.
+
+
+
+.Al termine
+È necessario associare un connettore alle aree di lavoro in modo che gli amministratori dell'area di lavoro possano utilizzare tali connettori per creare sistemi Cloud Volumes ONTAP. Se si dispone solo di account Admins, non è necessario associare il connettore alle aree di lavoro. Gli amministratori degli account hanno la possibilità di accedere a tutte le aree di lavoro in Cloud Manager per impostazione predefinita. link:task_setting_up_cloud_central_accounts.html#associating-connectors-with-workspaces["Scopri di più"].

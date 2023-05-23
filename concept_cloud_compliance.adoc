@@ -1,0 +1,163 @@
+---
+sidebar: sidebar 
+permalink: concept_cloud_compliance.html 
+keywords: artificial intelligence, ai, compliance, cloud compliance, dsar, personal data, personal information, sensitive, personal sensitive data, gdpr, hipaa, scans, scanning, azure netapp files, cloud volumes ontap, Amazon S3, database 
+summary: 'Cloud Compliance è un servizio di privacy e conformità dei dati per Cloud Manager che esegue la scansione di volumi, bucket Amazon S3 e database per identificare i dati personali e sensibili presenti in tali file. Utilizzando la tecnologia basata sull"intelligenza artificiale (ai), Cloud Compliance aiuta le organizzazioni a comprendere il contesto dei dati e a identificare i dati sensibili.' 
+---
+= Scopri di più sulla conformità al cloud
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Cloud Compliance è un servizio di privacy e conformità dei dati per Cloud Manager che esegue la scansione di volumi, bucket Amazon S3 e database per identificare i dati personali e sensibili presenti in tali file. Utilizzando la tecnologia basata sull'intelligenza artificiale (ai), Cloud Compliance aiuta le organizzazioni a comprendere il contesto dei dati e a identificare i dati sensibili.
+
+https://cloud.netapp.com/cloud-compliance["Scopri i casi di utilizzo per la conformità al cloud"^].
+
+
+
+== Caratteristiche
+
+Cloud Compliance offre diversi strumenti che possono aiutarti con le tue attività di compliance. Puoi utilizzare la conformità al cloud per:
+
+* Identificare le informazioni personali identificabili (PII)
+* Identificare un ampio ambito di informazioni sensibili come richiesto dalle normative sulla privacy GDPR, CCPA, PCI e HIPAA
+* Rispondere alle richieste di accesso dei soggetti a dati (DSAR)
+
+
+
+
+== Ambienti di lavoro e origini dati supportati
+
+Cloud Compliance può eseguire la scansione dei dati dai seguenti tipi di origini dati:
+
+* Cloud Volumes ONTAP in AWS
+* Cloud Volumes ONTAP in Azure
+* Azure NetApp Files
+* Amazon S3
+* Database che risiedono ovunque (non è necessario che il database risieda in un ambiente di lavoro)
+
+
+*Nota:* per Azure NetApp Files, la conformità del cloud può eseguire la scansione di tutti i volumi che si trovano nella stessa regione di Cloud Manager.
+
+
+
+== Costo
+
+* Il costo per l'utilizzo della conformità cloud dipende dalla quantità di dati che si sta scansionando. A partire dal 7 ottobre 2020, i primi 1 TB di dati che Cloud Compliance analizza in uno spazio di lavoro di Cloud Manager sono gratuiti. Sono inclusi i dati provenienti da volumi Cloud Volumes ONTAP, volumi Azure NetApp Files, bucket Amazon S3 e schemi di database. Per continuare a eseguire la scansione dei dati dopo tale data, è necessario un abbonamento ad AWS o Azure Marketplace. Vedere https://cloud.netapp.com/cloud-compliance#pricing["prezzi"^] per ulteriori informazioni.
++
+link:task_deploy_cloud_compliance.html#subscribing-to-the-cloud-compliance-service["Scopri come iscriverti"^].
+
+* L'installazione di Cloud Compliance richiede l'implementazione di un'istanza di cloud, con conseguente addebito da parte del cloud provider in cui viene implementata. Vedere <<L'istanza di Cloud Compliance,il tipo di istanza implementata per ciascun cloud provider>>
+* La conformità al cloud richiede l'implementazione di un connettore. In molti casi hai già un connettore a causa di altri servizi e storage utilizzati in Cloud Manager. L'istanza del connettore comporta addebiti da parte del cloud provider in cui viene implementata. Vedere link:reference_cloud_mgr_reqs.html["tipo di istanza implementata per ciascun cloud provider"^].
+
+
+
+
+=== Costi di trasferimento dei dati
+
+I costi di trasferimento dei dati dipendono dalla configurazione. Se l'istanza di Cloud Compliance e l'origine dati si trovano nella stessa zona di disponibilità e nella stessa regione, non ci sono costi di trasferimento dei dati. Tuttavia, se l'origine dati, come un cluster Cloud Volumes ONTAP o un bucket S3, si trova in una _area o regione di disponibilità diversa, il tuo cloud provider addebiterà i costi di trasferimento dei dati. Per ulteriori informazioni, consulta i seguenti link:
+
+* https://aws.amazon.com/ec2/pricing/on-demand/["AWS: Prezzi Amazon EC2"^]
+* https://azure.microsoft.com/en-us/pricing/details/bandwidth/["Microsoft Azure: Dettagli sui prezzi della larghezza di banda"^]
+
+
+
+
+== Come funziona Cloud Compliance
+
+Ad alto livello, la conformità al cloud funziona come segue:
+
+. Implementa un'istanza di Cloud Compliance in Cloud Manager.
+. È possibile attivarlo su uno o più ambienti di lavoro o sui database.
+. Cloud Compliance esegue la scansione dei dati utilizzando un processo di apprendimento ai.
+. In Cloud Manager, fai clic su *Compliance* e utilizza la dashboard e gli strumenti di reporting forniti per aiutarti nelle tue attività di compliance.
+
+
+
+
+== L'istanza di Cloud Compliance
+
+Quando si attiva Cloud Compliance, Cloud Manager implementa un'istanza di Cloud Compliance nella stessa sottorete del connettore. link:concept_connectors.html["Scopri di più sui connettori."^]
+
+
+NOTE: Se il connettore è installato on-premise, implementa l'istanza di conformità cloud nello stesso VPC o VNET del primo sistema Cloud Volumes ONTAP nella richiesta.
+
+image:diagram_cloud_compliance_instance.png["Un diagramma che mostra un'istanza di Cloud Manager e un'istanza di Cloud Compliance in esecuzione nel cloud provider."]
+
+Tenere presente quanto segue a proposito dell'istanza:
+
+* In Azure, Cloud Compliance viene eseguito su una macchina virtuale Standard_D16s_v3 con un disco da 512 GB.
+* In AWS, Cloud Compliance viene eseguito su un'istanza m5.4xLarge con un disco GP2 da 500 GB.
++
+Nelle regioni in cui m5.4xlarge non è disponibile, Cloud Compliance viene eseguito su un'istanza m4.4xlarge.
+
++
+
+NOTE: La modifica o il ridimensionamento del tipo di istanza/VM non è supportato. È necessario utilizzare le dimensioni fornite.
+
+* L'istanza è denominata _CloudCompliance_ con un hash generato (UUID) concatenato ad essa. Ad esempio: _CloudCompliance-16b6564-38ad-4080-9a92-36f5fd2f71c7_
+* Viene implementata una sola istanza di Cloud Compliance per connettore.
+* Gli aggiornamenti del software Cloud Compliance sono automatizzati e non dovrai preoccuparti di questo.
+
+
+
+TIP: L'istanza deve rimanere sempre in esecuzione perché Cloud Compliance esegue continuamente la scansione dei dati.
+
+
+
+== Come funzionano le scansioni
+
+Dopo aver attivato Cloud Compliance e selezionato i volumi, i bucket o gli schemi di database da sottoporre a scansione, inizia immediatamente la scansione dei dati per identificare i dati personali e sensibili. Mappa i dati dell'organizzazione, classifica ciascun file e identifica ed estrae entità e modelli predefiniti nei dati. Il risultato della scansione è un indice di informazioni personali, informazioni personali sensibili e categorie di dati.
+
+Cloud Compliance si connette ai dati come qualsiasi altro client montando volumi NFS e CIFS. Ai volumi NFS viene automaticamente eseguito l'accesso in sola lettura, mentre è necessario fornire le credenziali Active Directory per eseguire la scansione dei volumi CIFS.
+
+image:diagram_cloud_compliance_scan.png["Un diagramma che mostra un'istanza di Cloud Manager e un'istanza di Cloud Compliance in esecuzione nel cloud provider. L'istanza Cloud Compliance si connette ai volumi NFS e CIFS, ai bucket S3 e ai database per eseguirne la scansione."]
+
+Dopo la scansione iniziale, Cloud Compliance esegue una scansione continua di ciascun volume per rilevare le modifiche incrementali (per questo motivo è importante mantenere l'istanza in esecuzione).
+
+È possibile attivare e disattivare le scansioni in link:task_getting_started_compliance.html#enabling-and-disabling-compliance-scans-on-volumes["livello del volume"^]in corrispondenza di link:task_scanning_s3.html#enabling-and-disabling-compliance-scans-on-s3-buckets["livello della benna"^]e in link:task_scanning_databases.html#enabling-and-disabling-compliance-scans-on-database-schemas["livello di schema del database"^].
+
+
+
+== Informazioni indicizzati dalla Cloud Compliance
+
+Cloud Compliance raccoglie, indicizza e assegna le categorie ai dati non strutturati (file). I dati indicizzati dalla Cloud Compliance includono:
+
+Metadati standard:: Cloud Compliance raccoglie i metadati standard relativi ai file: Il tipo, le dimensioni, le date di creazione e modifica e così via.
+Dati personali:: Informazioni personali come indirizzi e-mail, numeri di identificazione o numeri di carta di credito. link:task_controlling_private_data.html#personal-data["Scopri di più sui dati personali"^].
+Dati personali sensibili:: Tipi speciali di informazioni sensibili, come dati sanitari, origine etnica o opinioni politiche, come definito dal GDPR e da altre normative sulla privacy. link:task_controlling_private_data.html#sensitive-personal-data["Scopri di più sui dati personali sensibili"^].
+Categorie:: Cloud Compliance prende i dati sottoposti a scansione e li divide in diversi tipi di categorie. Le categorie sono argomenti basati sull'analisi ai del contenuto e dei metadati di ciascun file. link:task_controlling_private_data.html#categories["Scopri di più sulle categorie"^].
+Riconoscimento entità nome:: Cloud Compliance utilizza l'ai per estrarre i nomi delle persone fisiche dai documenti. link:task_responding_to_dsar.html["Scopri come rispondere alle richieste di accesso ai soggetti dati"^].
+
+
+
+
+== Panoramica delle reti
+
+Cloud Manager implementa l'istanza Cloud Compliance con un gruppo di sicurezza che abilita le connessioni HTTP in entrata dall'istanza del connettore.
+
+Quando si utilizza Cloud Manager in modalità SaaS, la connessione a Cloud Manager viene servita su HTTPS e i dati privati inviati tra il browser e l'istanza di conformità cloud sono protetti con crittografia end-to-end, il che significa che NetApp e terze parti non possono leggerli.
+
+Se per qualsiasi motivo è necessario utilizzare l'interfaccia utente locale invece dell'interfaccia utente SaaS, è comunque possibile link:task_managing_connectors.html#accessing-the-local-ui["Accedere all'interfaccia utente locale"^].
+
+Le regole in uscita sono completamente aperte. L'accesso a Internet è necessario per installare e aggiornare il software Cloud Compliance e per inviare metriche di utilizzo.
+
+Se hai requisiti di rete rigorosi, link:task_deploy_cloud_compliance.html#reviewing-prerequisites["Scopri gli endpoint che la Cloud Compliance contatta"^].
+
+
+
+== Accesso dell'utente alle informazioni di conformità
+
+Il ruolo assegnato a ciascun utente offre diverse funzionalità all'interno di Cloud Manager e nell'ambito della Cloud Compliance:
+
+* *Gli account Admins* possono gestire le impostazioni di conformità e visualizzare le informazioni di conformità per tutti gli ambienti di lavoro.
+* *Workspace Admins* è in grado di gestire le impostazioni di conformità e visualizzare le informazioni di conformità solo per i sistemi ai quali sono autorizzati ad accedere. Se un amministratore dell'area di lavoro non riesce ad accedere a un ambiente di lavoro in Cloud Manager, non può visualizzare alcuna informazione di conformità per l'ambiente di lavoro nella scheda Compliance.
+* Gli utenti con il ruolo *Cloud Compliance Viewer* possono solo visualizzare le informazioni di conformità e generare report per i sistemi ai quali sono autorizzati ad accedere. Questi utenti non possono attivare/disattivare la scansione di volumi, bucket o schemi di database.
+
+
+link:reference_user_roles.html["Scopri di più sui ruoli di Cloud Manager"^] e come fare link:task_managing_cloud_central_accounts.html#adding-users["aggiungere utenti con ruoli specifici"^].

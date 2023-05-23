@@ -1,0 +1,67 @@
+---
+sidebar: sidebar 
+permalink: concept_compute.html 
+keywords: concepts, how cloud analyzer works, compute, compute costs, compute savings 
+summary: 'Sfruttando il servizio Cloud Analyzer di Spot, Cloud Manager può fornire un"analisi dei costi di alto livello delle spese di calcolo del cloud e identificare i potenziali risparmi.' 
+---
+= Scopri di più sul servizio di calcolo
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Sfruttando https://spot.io/products/cloud-analyzer/["Servizio Cloud Analyzer di Spot"^], Cloud Manager può fornire un'analisi dei costi di alto livello delle spese di calcolo del cloud e identificare i potenziali risparmi.
+
+Cloud Analyzer è una soluzione per la gestione dell'infrastruttura cloud che utilizza analytics avanzati per fornire visibilità e informazioni sui costi del cloud. Ti mostra dove puoi ottimizzare questi costi e ti consente di implementare l'ottimizzazione utilizzando il portfolio di prodotti di ottimizzazione continua di Spot in pochi clic.
+
+
+
+== Caratteristiche
+
+* Un'analisi dei costi che mostra il costo corrente del mese, i costi mensili previsti e i risparmi persi
+* Una vista dell'efficienza della spesa per account, inclusi i risparmi aggiuntivi stimati
+* Un link a Spot's Cloud Analyzer per ulteriori dettagli sulla spesa per tutti gli account
+
+
+
+
+== Cloud provider supportati
+
+Questo servizio è supportato da AWS.
+
+
+
+== Costo
+
+L'utilizzo di questo servizio tramite Cloud Manager è gratuito.
+
+
+
+== Come funziona Cloud Analyzer con Cloud Manager
+
+Ad alto livello, l'integrazione di Cloud Analyzer con Cloud Manager funziona come segue:
+
+. Fai clic su *Compute* (Calcola) e connetti il tuo account master payer AWS.
+. NetApp configura il tuo ambiente come segue:
++
+.. Crea un'organizzazione nella piattaforma Spot.
+.. Invia un'e-mail di benvenuto a Spot.
++
+Puoi accedere al servizio Spot utilizzando le stesse credenziali di single-sign-on utilizzate con Cloud Central e Cloud Manager.
+
+.. Cloud Analyzer avvia l'elaborazione dei dati dell'account AWS.
+
+
+. In Cloud Manager, la pagina di calcolo viene aggiornata e le informazioni vengono utilizzate per ottenere informazioni sui costi del cloud passati, attuali e futuri.
+. Fai clic su *Ottieni analisi completa* in qualsiasi momento per accedere a Spot's Cloud Analyzer, che offre un'analisi completa della spesa nel cloud e delle opportunità di risparmio.
+
+
+
+
+== Sicurezza dei dati
+
+I dati Cloud Analyzer vengono crittografati a riposo e non vengono memorizzate credenziali per alcun account.

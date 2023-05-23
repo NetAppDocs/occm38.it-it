@@ -1,0 +1,123 @@
+---
+sidebar: sidebar 
+permalink: task_creating_connectors_gcp.html 
+keywords: create connector in GCP, create connector in azure, create connector in gcp, launch connector in GCP, launch connector in azure, launch connector in gcp, deploy connector in GCP, deploy connector in azure, deploy connector in gcp 
+summary: 'Un account Admin deve implementare un connettore prima di poter utilizzare la maggior parte delle funzionalità di Cloud Manager. Il connettore consente a Cloud Manager di gestire risorse e processi all"interno del tuo ambiente di cloud pubblico.' 
+---
+= Creazione di un connettore in GCP da Cloud Manager
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Un account Admin deve implementare un _connettore_ prima di poter utilizzare la maggior parte delle funzionalità di Cloud Manager. link:concept_connectors.html["Scopri quando è necessario un connettore"]. Il connettore consente a Cloud Manager di gestire risorse e processi all'interno del tuo ambiente di cloud pubblico.
+
+Questa pagina descrive come creare un connettore in GCP direttamente da Cloud Manager. È inoltre possibile scegliere di link:task_installing_linux.html["scaricare il software e installarlo sul proprio host"].
+
+Questi passaggi devono essere completati da un utente che ha il ruolo di amministratore dell'account. Un amministratore dell'area di lavoro non può creare un connettore.
+
+
+TIP: Quando crei il tuo primo ambiente di lavoro Cloud Volumes ONTAP, Cloud Manager ti chiederà di creare un connettore se non ne hai ancora uno.
+
+
+
+== Impostazione delle autorizzazioni GCP per creare un connettore
+
+Prima di poter implementare un connettore da Cloud Manager, è necessario assicurarsi che l'account GCP disponga delle autorizzazioni corrette e che sia impostato un account di servizio per la macchina virtuale del connettore.
+
+.Fasi
+. Assicurarsi che l'utente GCP che implementa Cloud Manager da NetApp Cloud Central disponga delle autorizzazioni in https://occm-sample-policies.s3.amazonaws.com/Setup_As_Service_3.7.3_GCP.yaml["Policy di implementazione del connettore per GCP"^].
++
+https://cloud.google.com/iam/docs/creating-custom-roles#iam-custom-roles-create-gcloud["È possibile creare un ruolo personalizzato utilizzando il file YAML"^] quindi allegarlo all'utente. Per creare il ruolo, dovrai utilizzare la riga di comando di gcloud.
+
+. Impostare un account di servizio che disponga delle autorizzazioni necessarie per creare e gestire i sistemi Cloud Volumes ONTAP nei progetti.
++
+Questo account del servizio verrà associato alla macchina virtuale del connettore quando lo si crea da Cloud Manager.
+
++
+.. https://cloud.google.com/iam/docs/creating-custom-roles#iam-custom-roles-create-gcloud["Creare un ruolo in GCP"^] che include le autorizzazioni definite in https://occm-sample-policies.s3.amazonaws.com/Policy_for_Cloud_Manager_3.8.0_GCP.yaml["Policy di Cloud Manager per GCP"^]. Anche in questo caso, è necessario utilizzare la riga di comando di gcloud.
++
+Le autorizzazioni contenute in questo file YAML sono diverse da quelle del passaggio 2a.
+
+.. https://cloud.google.com/iam/docs/creating-managing-service-accounts#creating_a_service_account["Creare un account di servizio GCP e applicare il ruolo personalizzato appena creato"^].
+.. Se si desidera implementare Cloud Volumes ONTAP in altri progetti, https://cloud.google.com/iam/docs/granting-changing-revoking-access#granting-console["Concedere l'accesso aggiungendo l'account di servizio con il ruolo Cloud Manager a quel progetto"^]. Dovrai ripetere questo passaggio per ogni progetto.
+
+
+
+
+.Risultato
+L'utente GCP dispone ora delle autorizzazioni necessarie per creare il connettore da Cloud Manager e l'account del servizio per la macchina virtuale del connettore è impostato.
+
+
+
+== Abilitazione delle API di Google Cloud
+
+Per implementare il connettore e Cloud Volumes ONTAP sono necessarie diverse API.
+
+.Fase
+. https://cloud.google.com/apis/docs/getting-started#enabling_apis["Abilita le seguenti API di Google Cloud nel tuo progetto"^].
++
+** API di Cloud Deployment Manager V2
+** API Cloud Logging
+** API Cloud Resource Manager
+** API di Compute Engine
+** API IAM (Identity and Access Management)
+
+
+
+
+
+
+== Creazione di un connettore in GCP
+
+Cloud Manager consente di creare un connettore in GCP direttamente dalla sua interfaccia utente.
+
+.Di cosa hai bisogno
+* Il https://mysupport.netapp.com/site/info/cloud-manager-policies["autorizzazioni richieste"^] Per il tuo account Google Cloud.
+* Un progetto Google Cloud.
+* Account di servizio che dispone delle autorizzazioni necessarie per creare e gestire Cloud Volumes ONTAP.
+* Un VPC e una subnet nell'area di Google Cloud desiderata.
+
+
+.Fasi
+. Se si sta creando il primo ambiente di lavoro, fare clic su *Aggiungi ambiente di lavoro* e seguire le istruzioni. In caso contrario, fare clic sull'elenco a discesa *Connector* e selezionare *Add Connector* (Aggiungi connettore).
++
+image:screenshot_connector_add.gif["Una schermata che mostra l'icona del connettore nell'intestazione e l'azione Add Connector."]
+
+. Fare clic su *Let's Start*.
+. Scegli *Google Cloud Platform* come tuo cloud provider.
++
+Tenere presente che il connettore deve disporre di una connessione di rete con il tipo di ambiente di lavoro che si sta creando e con i servizi che si intende abilitare.
+
++
+link:reference_networking_cloud_manager.html["Scopri di più sui requisiti di rete per il connettore"].
+
+. Consulta le informazioni necessarie e fai clic su *continua*.
+. Se richiesto, accedere all'account Google, che dovrebbe disporre delle autorizzazioni necessarie per creare l'istanza della macchina virtuale.
++
+Il modulo è di proprietà e ospitato da Google. Le tue credenziali non vengono fornite a NetApp.
+
+. Fornire le informazioni richieste:
++
+** *Basic Settings* (Impostazioni di base): Immettere un nome per l'istanza della macchina virtuale e specificare un account di progetto e servizio con le autorizzazioni richieste.
+** *Location*: Specificare una regione, una zona, un VPC e una subnet per l'istanza.
+** *Network* (rete): Scegliere se attivare un indirizzo IP pubblico e, facoltativamente, specificare una configurazione proxy.
+** *Firewall Policy*: Scegliere se creare una nuova policy firewall o se selezionare una policy firewall esistente che consenta l'accesso HTTP, HTTPS e SSH in entrata.
++
+
+NOTE: Non c'è traffico in entrata verso il connettore, a meno che non venga avviato. HTTP e HTTPS forniscono l'accesso a link:concept_connectors.html#the-local-user-interface["UI locale"], che utilizzerai in rare circostanze. SSH è necessario solo se è necessario connettersi all'host per la risoluzione dei problemi.
+
+
+
+. Fare clic su *Create* (Crea).
++
+L'istanza dovrebbe essere pronta in circa 7 minuti. Si consiglia di rimanere sulla pagina fino al completamento del processo.
+
+
+
+.Al termine
+È necessario associare un connettore alle aree di lavoro in modo che gli amministratori dell'area di lavoro possano utilizzare tali connettori per creare sistemi Cloud Volumes ONTAP. Se si dispone solo di account Admins, non è necessario associare il connettore alle aree di lavoro. Gli amministratori degli account hanno la possibilità di accedere a tutte le aree di lavoro in Cloud Manager per impostazione predefinita. link:task_setting_up_cloud_central_accounts.html#associating-connectors-with-workspaces["Scopri di più"].

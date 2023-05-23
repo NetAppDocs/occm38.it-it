@@ -1,0 +1,75 @@
+---
+sidebar: sidebar 
+permalink: task_getting_started_aws.html 
+keywords: amazon web services, aws, netapp, data fabric, hybrid cloud, cloud, public cloud, networking, vpc, quick, getting started, install, installing, deploy, deploying, setup, setting up, launching, requirements, prerequisites, cloud central, get started, network, vpn, multi-cloud, tier, tiering, storage tier, data tier, vpc endpoint, endpoint, S3, subscribe, subscribing, marketplace, granting, permissions, policy, iam policy, ec2 console, ami, mediator, connectivity, internet, outbound, endpoint, connection, networks, replicating, ec2 service, policies, attach, iam user, access key, secret key, keys, sign up, cloud manager, cloud volumes ontap, cloud ontap, create 
+summary: Inizia a utilizzare Cloud Volumes ONTAP per AWS in pochi passaggi. 
+---
+= Introduzione a Cloud Volumes ONTAP per AWS
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Inizia a utilizzare Cloud Volumes ONTAP per AWS in pochi passaggi.
+
+
+
+==== image:number1.png["Numero 1"] Creare un connettore
+
+[role="quick-margin-para"]
+Se non si dispone di un link:concept_connectors.html["Connettore"] Tuttavia, un amministratore dell'account deve crearne uno. link:task_creating_connectors_aws.html["Scopri come creare un connettore in AWS"].
+
+[role="quick-margin-para"]
+Quando crei il tuo primo ambiente di lavoro Cloud Volumes ONTAP, Cloud Manager ti chiede di implementare un connettore se non ne hai ancora uno.
+
+
+
+==== image:number2.png["Numero 2"] Pianificare la configurazione
+
+[role="quick-margin-para"]
+Cloud Manager offre pacchetti preconfigurati che soddisfano i tuoi requisiti di carico di lavoro, oppure puoi creare la tua configurazione. Se si sceglie una configurazione personalizzata, è necessario comprendere le opzioni disponibili. link:task_planning_your_config.html["Scopri di più"].
+
+
+
+==== image:number3.png["Numero 3"] Configurare la rete
+
+[role="quick-margin-list"]
+. Assicurarsi che il VPC e le subnet supportino la connettività tra il connettore e Cloud Volumes ONTAP.
+. Abilitare l'accesso a Internet in uscita dal VPC di destinazione in modo che il connettore e Cloud Volumes ONTAP possano contattare diversi endpoint.
++
+Questo passaggio è importante perché il connettore non è in grado di gestire Cloud Volumes ONTAP senza accesso a Internet in uscita. Se è necessario limitare la connettività in uscita, fare riferimento all'elenco degli endpoint per link:reference_networking_aws.html["Il connettore e Cloud Volumes ONTAP"].
+
+. Impostare un endpoint VPC sul servizio S3.
++
+È necessario un endpoint VPC se si desidera eseguire il tiering dei dati cold da Cloud Volumes ONTAP a uno storage a oggetti a basso costo.
+
+
+
+[role="quick-margin-para"]
+link:reference_networking_aws.html["Scopri di più sui requisiti di rete"].
+
+
+
+==== image:number4.png["Numero 4"] Configurare AWS KMS
+
+[role="quick-margin-para"]
+Se si desidera utilizzare la crittografia Amazon con Cloud Volumes ONTAP, è necessario assicurarsi che esista una chiave master cliente (CMK) attiva. È inoltre necessario modificare il criterio delle chiavi per ogni CMK aggiungendo il ruolo IAM che fornisce le autorizzazioni al connettore come _utente chiave_. link:task_setting_up_kms.html["Scopri di più"].
+
+
+
+==== image:number5.png["Numero 5"] Avviare Cloud Volumes ONTAP utilizzando Cloud Manager
+
+[role="quick-margin-para"]
+Fare clic su *Add Working Environment* (Aggiungi ambiente di lavoro), selezionare il tipo di sistema che si desidera implementare e completare la procedura guidata. link:task_deploying_otc_aws.html["Leggi le istruzioni dettagliate"].
+
+.Link correlati
+* link:concept_evaluating.html["Valutazione"]
+* link:task_creating_connectors_aws.html["Creazione di un connettore da Cloud Manager"]
+* link:task_launching_aws_mktp.html["Avvio di un connettore da AWS Marketplace"]
+* link:task_installing_linux.html["Installazione del software del connettore su un host Linux"]
+* link:reference_permissions.html#what-cloud-manager-does-with-aws-permissions["Cosa fa Cloud Manager con le autorizzazioni AWS"]
+

@@ -1,0 +1,76 @@
+---
+sidebar: sidebar 
+permalink: concept_overview.html 
+keywords: overview, concepts, features, use case, days, 14 days 
+summary: Cloud Manager consente agli esperti IT e agli architetti del cloud di gestire centralmente la propria infrastruttura multi-cloud ibrida utilizzando le soluzioni cloud di NetApp. 
+---
+= Scopri di più su Cloud Manager
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+Cloud Manager consente agli esperti IT e agli architetti del cloud di gestire centralmente la propria infrastruttura multi-cloud ibrida utilizzando le soluzioni cloud di NetApp.
+
+
+
+== Caratteristiche
+
+Cloud Manager è una piattaforma di gestione di livello Enterprise basata su SaaS che ti mantiene in controllo sui tuoi dati, indipendentemente da dove si trovano.
+
+* Configurazione e utilizzo https://cloud.netapp.com/ontap-cloud["Cloud Volumes ONTAP"^] per una gestione dei dati efficiente e multiprotocollo tra i cloud.
+* Configurazione e utilizzo dei servizi di file storage: https://cloud.netapp.com/azure-netapp-files["Azure NetApp Files"^], https://cloud.netapp.com/cloud-volumes-service-for-aws["Cloud Volumes Service per AWS"^], e. https://cloud.netapp.com/cloud-volumes-service-for-gcp["Cloud Volumes Service per Google Cloud"^].
+* Scopri e gestisci i tuoi cluster ONTAP on-premise creando volumi, eseguendo il backup nel cloud, replicando i dati nel cloud ibrido e tiering dei dati cold nel cloud.
+* Abilita servizi cloud integrati e software come https://cloud.netapp.com/cloud-compliance["Conformità al cloud"^], https://cloud.netapp.com/cloud-insights["Cloud Insights"^], https://cloud.netapp.com/cloud-backup-service["Cloud Backup Service"^], https://netapp.io/persistent-storage-provisioner-for-kubernetes/["Trident"^]e molto altro ancora.
+
+
+https://cloud.netapp.com/cloud-manager["Scopri di più su Cloud Manager"^].
+
+
+
+== Provider di storage a oggetti supportati
+
+Cloud Manager consente di gestire lo storage cloud e utilizzare i servizi cloud in Amazon Web Services, Microsoft Azure e Google Cloud.
+
+
+
+== Costo
+
+Il software Cloud Manager è gratuito di NetApp.
+
+Per la maggior parte delle attività, Cloud Manager ti chiede di implementare un connettore nella tua rete cloud, il che comporta addebiti da parte del tuo cloud provider per l'istanza di calcolo e lo storage associato. È possibile eseguire il software Connector on-premise.
+
+
+
+== Come funziona Cloud Manager
+
+Cloud Manager include un'interfaccia basata su SaaS integrata con NetApp Cloud Central e connettori che gestiscono Cloud Volumes ONTAP e altri servizi cloud.
+
+
+
+=== Software-as-a-service
+
+Cloud Manager è accessibile tramite un https://cloudmanager.netapp.com["Interfaccia utente basata su SaaS"^] E API. Questa esperienza SaaS ti consente di accedere automaticamente alle funzionalità più recenti non appena vengono rilasciate e di passare facilmente da un account Cloud Central a un altro.
+
+
+
+=== NetApp Cloud Central
+
+https://cloud.netapp.com["NetApp Cloud Central"^] fornisce una posizione centralizzata per l'accesso e la gestione https://www.netapp.com/us/products/cloud-services/use-cases-for-netapp-cloud-services.aspx["Servizi cloud di NetApp"^]. Con l'autenticazione utente centralizzata, puoi utilizzare lo stesso set di credenziali per accedere a Cloud Manager e ad altri servizi cloud come Cloud Insights.
+
+Quando accedi a Cloud Manager per la prima volta, ti viene richiesto di creare un _account Cloud Central_. Questo account offre multi-tenancy e consente di organizzare utenti e risorse in _aree di lavoro_ isolate.
+
+
+
+=== Connettori
+
+Nella maggior parte dei casi, un account Admin dovrà implementare un _connettore_ nel cloud o nella rete on-premise. Il connettore consente a Cloud Manager di gestire risorse e processi all'interno del tuo ambiente di cloud pubblico.
+
+Un connettore deve rimanere sempre in funzione. È importante per la salute e il funzionamento continui dei servizi che si abilitano.
+
+Ad esempio, un connettore è un componente chiave per lo stato e il funzionamento dei sistemi PAYGO di Cloud Volumes ONTAP. Se un connettore viene spento, i sistemi PAYGO di Cloud Volumes ONTAP si spegneranno dopo aver perso la comunicazione con un connettore per più di 14 giorni.
+
+link:concept_connectors.html["Scopri di più su quando sono necessari i connettori e sul loro funzionamento"].

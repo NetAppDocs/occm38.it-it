@@ -1,0 +1,102 @@
+---
+sidebar: sidebar 
+permalink: reference_sync_networking.html 
+keywords: networking, 443, port, ports, port 443, connections, connectivity, path, paths, vpn 
+summary: Il networking per Cloud Sync include la connettività tra il data broker e le posizioni di origine e destinazione e la comunicazione in uscita dal data broker a Cloud Sync tramite la porta 443. 
+---
+= Panoramica delle reti per Cloud Sync
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Il networking per Cloud Sync include la connettività tra il broker di dati e le posizioni di origine e destinazione e una connessione Internet in uscita dal broker di dati sulla porta 443.
+
+
+
+== Posizione del data broker
+
+Puoi installare il data broker nel cloud o on-premise.
+
+
+
+=== Broker di dati nel cloud
+
+L'immagine seguente mostra il data broker in esecuzione nel cloud, in AWS, GCP o Azure. L'origine e la destinazione possono trovarsi in qualsiasi posizione, a condizione che vi sia una connessione al data broker. Ad esempio, è possibile che si disponga di una connessione VPN dal data center al cloud provider.
+
+
+NOTE: Quando Cloud Sync implementa il data broker in AWS, Azure o GCP, crea un gruppo di sicurezza che abilita la comunicazione in uscita richiesta.
+
+image:diagram_networking_cloud.png["Un diagramma che mostra il servizio Cloud Sync, il broker di dati in esecuzione nel cloud e le connessioni all'origine e alla destinazione."]
+
+
+
+=== Broker di dati on-premise
+
+La seguente immagine mostra il data broker in esecuzione on-premise in un data center. Anche in questo caso, l'origine e la destinazione possono trovarsi in qualsiasi posizione, a condizione che vi sia una connessione al data broker.
+
+image:diagram_networking_onprem.png["Diagramma che mostra il servizio Cloud Sync, il data broker in esecuzione on-premise e le connessioni all'origine e alla destinazione."]
+
+
+
+== Requisiti di rete
+
+* L'origine e la destinazione devono disporre di una connessione di rete al data broker.
++
+Ad esempio, se un server NFS si trova nel data center e il data broker si trova in AWS, è necessaria una connessione di rete (VPN o Direct Connect) dalla rete al VPC.
+
+* Il broker di dati necessita di una connessione Internet in uscita in modo che possa eseguire il polling del servizio Cloud Sync per le attività sulla porta 443.
+* NetApp consiglia di configurare l'origine, la destinazione e il data broker per utilizzare un servizio NTP (Network Time Protocol). La differenza di tempo tra i tre componenti non deve superare i 5 minuti.
+
+
+
+
+== Endpoint di rete
+
+Il data broker NetApp richiede l'accesso a Internet in uscita tramite la porta 443 per comunicare con il servizio Cloud Sync e per contattare altri servizi e repository. Il browser Web locale richiede inoltre l'accesso agli endpoint per determinate azioni. Per limitare la connettività in uscita, fare riferimento al seguente elenco di endpoint durante la configurazione del firewall per il traffico in uscita.
+
+
+
+=== Endpoint del data broker
+
+Il data broker contatta i seguenti endpoint:
+
+[cols="38,62"]
+|===
+| Endpoint | Scopo 
+
+
+| olcentgbl.trafficmanager.net:443 | Per contattare un repository per l'aggiornamento dei pacchetti CentOS per l'host del data broker. Questo endpoint viene contattato solo se si installa manualmente il data broker su un host CentOS. 
+
+
+| rpm.nodesource.com:443 registry.npmjs.org:443 nodejs.org:443 | Per contattare i repository per l'aggiornamento di Node.js, npm e altri pacchetti di terze parti utilizzati nello sviluppo. 
+
+
+| tgz.pm2.io:443 | Per accedere a un repository per l'aggiornamento di PM2, un pacchetto di terze parti utilizzato per monitorare Cloud Sync. 
+
+
+| sqs.us-east-1.amazonaws.com:443 kinesis.us-east-1.amazonaws.com:443 | Per contattare i servizi AWS utilizzati da Cloud Sync per le operazioni (accodamento di file, registrazione di azioni e invio di aggiornamenti al data broker). 
+
+
+| s3._region_.amazonaws.com:443 ad esempio: s3.us-east-2.amazonaws.com:443https://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region["Per un elenco degli endpoint S3, consultare la documentazione di AWS"^] | Per contattare Amazon S3 quando una relazione di sincronizzazione include un bucket S3. 
+
+
+| cf.cloudsync.netapp.com:443 repo.cloudsync.netapp.com:443 | Per contattare il servizio Cloud Sync. 
+
+
+| support.netapp.com:443 | Per contattare il supporto NetApp quando si utilizza una licenza BYOL per le relazioni di sincronizzazione. 
+
+
+| fedoraproject.org:443 | Per installare 7z sulla macchina virtuale del data broker durante l'installazione e gli aggiornamenti. 7z è necessario per inviare messaggi AutoSupport al supporto tecnico NetApp. 
+|===
+
+
+=== Endpoint del browser Web
+
+Il browser Web deve accedere al seguente endpoint per scaricare i registri a scopo di risoluzione dei problemi:
+
+logs.cloudsync.netapp.com:443

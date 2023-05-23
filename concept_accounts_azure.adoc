@@ -1,0 +1,61 @@
+---
+sidebar: sidebar 
+permalink: concept_accounts_azure.html 
+keywords: cloud provider accounts, azure, azure accounts, service principal, multiple accounts, permissions, policy, policies, subscriptions, credentials 
+summary: 'Cloud Manager consente di scegliere le credenziali Azure da utilizzare durante l"implementazione di Cloud Volumes ONTAP. È possibile implementare tutti i sistemi Cloud Volumes ONTAP utilizzando le credenziali iniziali di Azure oppure aggiungere ulteriori credenziali.' 
+---
+= Credenziali e permessi di Azure
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Cloud Manager consente di scegliere le credenziali Azure da utilizzare durante l'implementazione di Cloud Volumes ONTAP. È possibile implementare tutti i sistemi Cloud Volumes ONTAP utilizzando le credenziali iniziali di Azure oppure aggiungere ulteriori credenziali.
+
+
+
+== Credenziali iniziali di Azure
+
+Quando si implementa un connettore da Cloud Manager, è necessario utilizzare un account Azure che disponga delle autorizzazioni necessarie per implementare la macchina virtuale del connettore. Le autorizzazioni richieste sono elencate nella https://mysupport.netapp.com/site/info/cloud-manager-policies["Policy di implementazione del connettore per Azure"^].
+
+Quando Cloud Manager implementa la macchina virtuale del connettore in Azure, abilita una https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview["identità gestita assegnata dal sistema"^] sulla macchina virtuale, crea un ruolo personalizzato e lo assegna alla macchina virtuale. Il ruolo fornisce a Cloud Manager le autorizzazioni per gestire risorse e processi all'interno dell'abbonamento Azure. link:reference_permissions.html#what-cloud-manager-does-with-azure-permissions["Analisi dell'utilizzo delle autorizzazioni da parte di Cloud Manager"].
+
+image:diagram_permissions_initial_azure.png["Un'immagine concettuale che mostra Cloud Central Deploying Cloud Manager in un account e un abbonamento Azure. Viene attivata un'identità gestita assegnata dal sistema e viene assegnato un ruolo personalizzato alla macchina virtuale Cloud Manager."]
+
+Cloud Manager seleziona queste credenziali Azure per impostazione predefinita quando crei un nuovo ambiente di lavoro per Cloud Volumes ONTAP:
+
+image:screenshot_accounts_select_azure.gif["Una schermata che mostra l'opzione Switch account (Cambia account) nella pagina Details  Credentials (Dettagli  credenziali)."]
+
+
+
+== Abbonamenti Azure aggiuntivi per un'identità gestita
+
+L'identità gestita è associata all'abbonamento con cui è stato avviato il connettore. Se si desidera selezionare un abbonamento Azure diverso, è necessario link:task_adding_azure_accounts.html#associating-additional-azure-subscriptions-with-a-managed-identity["associare l'identità gestita a tali sottoscrizioni"].
+
+
+
+== Credenziali Azure aggiuntive
+
+Se si desidera implementare Cloud Volumes ONTAP utilizzando credenziali Azure diverse, è necessario concedere le autorizzazioni richieste da link:task_adding_azure_accounts.html["Creazione e configurazione di un'entità di servizio in Azure Active Directory"] Per ciascun account Azure. L'immagine seguente mostra due account aggiuntivi, ciascuno configurato con un'entità del servizio e un ruolo personalizzato che fornisce le autorizzazioni:
+
+image:diagram_permissions_multiple_azure.png["Immagine concettuale che mostra l'account Azure iniziale, che riceve le autorizzazioni attraverso un ruolo personalizzato e un'identità gestita, e due account aggiuntivi che ricevono le autorizzazioni attraverso un ruolo personalizzato e un'entità del servizio."]
+
+Allora link:task_adding_azure_accounts.html#adding-azure-accounts-to-cloud-manager["Aggiungere le credenziali dell'account a Cloud Manager"] Fornendo dettagli sull'identità del servizio ad.
+
+Dopo aver aggiunto un altro set di credenziali, è possibile passare a queste quando si crea un nuovo ambiente di lavoro:
+
+image:screenshot_accounts_switch_azure.gif["Una schermata che mostra la selezione tra gli account del provider cloud dopo aver fatto clic su Cambia account nella pagina Dettagli  credenziali."]
+
+.E le implementazioni di Marketplace e on-premise?
+****
+Le sezioni precedenti descrivono il metodo di implementazione consigliato per il connettore, che proviene da NetApp Cloud Central. È inoltre possibile implementare un connettore in Azure da link:task_launching_azure_mktp.html["Azure Marketplace"]e puoi farlo link:task_installing_linux.html["Installare il connettore on-premise"].
+
+Se si utilizza Marketplace, le autorizzazioni vengono fornite nello stesso modo. È sufficiente creare e configurare manualmente l'identità gestita per il connettore, quindi fornire le autorizzazioni per eventuali account aggiuntivi.
+
+Per le implementazioni on-premise, non è possibile impostare un'identità gestita per il connettore, ma è possibile fornire autorizzazioni esattamente come per gli account aggiuntivi utilizzando un'entità del servizio.
+
+****

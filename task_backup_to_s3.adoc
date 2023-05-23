@@ -1,0 +1,176 @@
+---
+sidebar: sidebar 
+permalink: task_backup_to_s3.html 
+keywords: backing up, back up, backup, backup cloud volumes ontap, back up cloud volumes ontap, cloud volumes ontap, aws, aws s3, amazon s3, s3 bucket, back up volumes, Backup to Cloud, cloud backup service 
+summary: Completa alcuni passaggi per iniziare a eseguire il backup dei dati da Cloud Volumes ONTAP a Amazon S3. 
+---
+= Backup dei dati su Amazon S3
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Completa alcuni passaggi per iniziare a eseguire il backup dei dati da Cloud Volumes ONTAP a Amazon S3.
+
+
+
+== Avvio rapido
+
+Inizia subito seguendo questi passaggi o scorri verso il basso fino alle restanti sezioni per ottenere informazioni dettagliate.
+
+
+
+==== image:number1.png["Numero 1"] Verificare il supporto per la configurazione
+
+[role="quick-margin-list"]
+* Cloud Volumes ONTAP 9.6 o versione successiva è in esecuzione in AWS.
+* Si è abbonati a. https://aws.amazon.com/marketplace/pp/B07QX2QLXX["Offerta di backup Cloud Manager Marketplace"^], oppure è stato acquistato link:task_managing_licenses.html#adding-and-updating-your-backup-byol-license["e attivato"^] Una licenza BYOL di backup su cloud di NetApp.
+* Il ruolo IAM che fornisce le autorizzazioni a Cloud Manager include le autorizzazioni S3 dell'ultima versione https://mysupport.netapp.com/site/info/cloud-manager-policies["Policy di Cloud Manager"^].
+
+
+
+
+==== image:number2.png["Numero 2"] Abilita Backup su cloud sul tuo sistema nuovo o esistente
+
+[role="quick-margin-list"]
+* Nuovi sistemi: Il backup su cloud è attivato per impostazione predefinita nella procedura guidata dell'ambiente di lavoro. Assicurarsi di mantenere l'opzione attivata.
+* Sistemi esistenti: Selezionare l'ambiente di lavoro e fare clic su *Activate* (attiva) accanto al servizio Backup to Cloud nel pannello di destra, quindi seguire la procedura di installazione guidata.
++
+image:screenshot_backup_to_s3_icon.gif["Una schermata che mostra il pulsante Backup to Cloud Activate (Esegui backup su cloud) disponibile dopo aver selezionato un ambiente di lavoro."]
+
+
+
+
+
+==== image:number3.png["Numero 3"] Definire il criterio di backup
+
+[role="quick-margin-para"]
+Il criterio predefinito esegue il backup dei volumi ogni giorno e conserva le 30 copie di backup più recenti di ciascun volume. Passare a backup settimanali o mensili oppure selezionare una delle policy definite dal sistema che fornisca ulteriori opzioni. È inoltre possibile modificare il numero di copie di backup da conservare.
+
+[role="quick-margin-para"]
+image:screenshot_backup_settings.png["Una schermata che mostra le impostazioni di Backup nel cloud in cui è possibile scegliere la pianificazione e il periodo di conservazione del backup."]
+
+
+
+==== image:number4.png["Numero 4"] Selezionare i volumi di cui si desidera eseguire il backup
+
+[role="quick-margin-para"]
+Identificare i volumi di cui si desidera eseguire il backup nella pagina Select Volumes (Seleziona volumi).
+
+
+
+==== image:number5.png["Numero 5"] Ripristinare i dati, se necessario
+
+[role="quick-margin-para"]
+Dall'elenco di backup, selezionare un volume, selezionare un backup, quindi ripristinare i dati dal backup a un nuovo volume.
+
+[role="quick-margin-para"]
+image:screenshot_backup_to_s3_restore_icon.gif["Una schermata dell'icona di ripristino per un backup dopo aver selezionato un volume."]
+
+
+
+== Requisiti
+
+Leggere i seguenti requisiti per assicurarsi di disporre di una configurazione supportata prima di avviare il backup dei volumi in S3.
+
+Versioni di ONTAP supportate:: Cloud Volumes ONTAP 9.6 e versioni successive.
+Regioni AWS supportate:: Il backup su cloud è supportato in tutte le regioni AWS https://cloud.netapp.com/cloud-volumes-global-regions["Dove è supportato Cloud Volumes ONTAP"^].
+Requisiti di licenza:: Per le licenze PAYGO di backup su cloud, è disponibile un abbonamento a Cloud Manager nel marketplace AWS che consente le implementazioni di Cloud Volumes ONTAP 9.6 e versioni successive (PAYGO) e di backup su cloud. È necessario https://aws.amazon.com/marketplace/pp/B07QX2QLXX["Iscriviti a questo abbonamento a Cloud Manager"^] Prima di attivare il backup nel cloud. La fatturazione per il backup su cloud viene effettuata tramite questo abbonamento.
++
+--
+Per le licenze BYOL di Backup to Cloud, non è necessario un abbonamento AWS Backup to Cloud. È necessario il numero di serie di NetApp che consenta di utilizzare il servizio per la durata e la capacità della licenza. Vedere link:task_managing_licenses.html#adding-and-updating-your-backup-byol-license["Aggiunta e aggiornamento della licenza BYOL di backup"^].
+
+Inoltre, è necessario disporre di un abbonamento AWS per lo spazio di storage in cui verranno collocati i backup.
+
+--
+Autorizzazioni AWS richieste:: Il ruolo IAM che fornisce le autorizzazioni a Cloud Manager deve includere le autorizzazioni S3 dell'ultima versione https://mysupport.netapp.com/site/info/cloud-manager-policies["Policy di Cloud Manager"^].
++
+--
+Di seguito sono riportate le autorizzazioni specifiche della policy:
+
+[source, json]
+----
+{
+            "Sid": "backupPolicy",
+            "Effect": "Allow",
+            "Action": [
+                "s3:DeleteBucket",
+                "s3:GetLifecycleConfiguration",
+                "s3:PutLifecycleConfiguration",
+                "s3:PutBucketTagging",
+                "s3:ListBucketVersions",
+                "s3:GetObject",
+                "s3:ListBucket",
+                "s3:ListAllMyBuckets",
+                "s3:GetBucketTagging",
+                "s3:GetBucketLocation",
+                "s3:GetBucketPolicyStatus",
+                "s3:GetBucketPublicAccessBlock",
+                "s3:GetBucketAcl",
+                "s3:GetBucketPolicy",
+                "s3:PutBucketPublicAccessBlock"
+            ],
+            "Resource": [
+                "arn:aws:s3:::netapp-backup-*"
+            ]
+        },
+----
+--
+
+
+
+
+== Attivazione del backup nel cloud su un nuovo sistema
+
+Backup su cloud è attivato per impostazione predefinita nella procedura guidata dell'ambiente di lavoro. Assicurarsi di mantenere l'opzione attivata.
+
+.Fasi
+. Fare clic su *Crea Cloud Volumes ONTAP*.
+. Selezionare Amazon Web Services come provider cloud, quindi scegliere un singolo nodo o sistema ha.
+. Compila la pagina Dettagli e credenziali.
+. Nella pagina servizi, lasciare attivato il servizio e fare clic su *continua*.
++
+image:screenshot_backup_to_s3.gif["Mostra l'opzione Backup su cloud nella procedura guidata dell'ambiente di lavoro."]
+
+. Completare le pagine della procedura guidata per implementare il sistema.
+
+
+.Risultato
+Il backup su cloud viene attivato sul sistema e consente di eseguire il backup dei volumi ogni giorno, conservando le 30 copie di backup più recenti.
+
+.Quali sono le prossime novità?
+link:task_managing_backups.html["È possibile gestire i backup modificando la pianificazione del backup, ripristinando i volumi e molto altro ancora"^].
+
+
+
+== Abilitazione del backup nel cloud su un sistema esistente
+
+Abilita il backup nel cloud in qualsiasi momento direttamente dall'ambiente di lavoro.
+
+.Fasi
+. Selezionare l'ambiente di lavoro e fare clic su *Activate* accanto al servizio Backup to Cloud nel pannello a destra.
++
+image:screenshot_backup_to_s3_icon.gif["Una schermata che mostra il pulsante Backup in Cloud Settings (Backup in Cloud Settings) disponibile dopo aver selezionato un ambiente di lavoro."]
+
+. Definire la pianificazione del backup e il valore di conservazione e fare clic su *continua*.
++
+image:screenshot_backup_settings.png["Una schermata che mostra le impostazioni di Backup nel cloud in cui è possibile scegliere la pianificazione e la conservazione del backup."]
+
++
+Vedere link:concept_backup_to_cloud.html#the-schedule-is-daily-weekly-monthly-or-a-combination["l'elenco dei criteri esistenti"^].
+
+. Selezionare i volumi di cui si desidera eseguire il backup e fare clic su *Activate* (attiva).
++
+image:screenshot_backup_select_volumes.png["Una schermata che mostra la selezione dei volumi di cui verrà eseguito il backup."]
+
+
+
+.Risultato
+Backup su cloud inizia a eseguire i backup iniziali di ciascun volume selezionato.
+
+.Quali sono le prossime novità?
+link:task_managing_backups.html["È possibile gestire i backup modificando la pianificazione del backup, ripristinando i volumi e molto altro ancora"^].

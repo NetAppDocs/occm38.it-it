@@ -1,0 +1,218 @@
+---
+sidebar: sidebar 
+permalink: task_provisioning_storage.html 
+keywords: storage, provisioning, iscsi, nfs, cifs, volumes, aggregates, provision, create, quotas, nas, san, LUNs, quotas, qtree, add, advanced allocation, create a volume, add a volume, create volumes, add volumes, creating a volume, adding a volume, creating aggregates, adding an aggregate, add an aggregate, create an aggregate, provision volume, provision a volume, provisioning volumes, create a LUN, create LUNs, create LUN, provision LUNs, add volume to second node, add volume to node 2, flexcache, flexcache volumes, create a flexcache volume, provision flexcache, create flexcache volume 
+summary: Puoi eseguire il provisioning di storage NFS, CIFS e iSCSI aggiuntivi per i tuoi sistemi Cloud Volumes ONTAP da Cloud Manager attraverso la gestione di volumi e aggregati. 
+---
+= Provisioning dello storage
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Puoi eseguire il provisioning di storage aggiuntivo per i tuoi sistemi Cloud Volumes ONTAP da Cloud Manager gestendo volumi e aggregati.
+
+
+IMPORTANT: Tutti i dischi e gli aggregati devono essere creati ed eliminati direttamente da Cloud Manager. Non eseguire queste azioni da un altro tool di gestione. In questo modo si può influire sulla stabilità del sistema, ostacolare la possibilità di aggiungere dischi in futuro e potenzialmente generare tariffe ridondanti per i provider di cloud.
+
+
+
+== Creazione di volumi FlexVol
+
+Se hai bisogno di più storage dopo il lancio di un sistema Cloud Volumes ONTAP, puoi creare nuovi volumi FlexVol per NFS, CIFS o iSCSI da Cloud Manager.
+
+.A proposito di questa attività
+Quando si crea un volume iSCSI, Cloud Manager crea automaticamente un LUN. Abbiamo semplificato la creazione di un solo LUN per volume, per cui non è necessario alcun intervento di gestione. Dopo aver creato il volume, <<Connessione di un LUN a un host,Utilizzare IQN per connettersi al LUN dagli host>>.
+
+
+NOTE: È possibile creare ulteriori LUN da System Manager o dall'interfaccia CLI.
+
+.Prima di iniziare
+Se si desidera utilizzare CIFS in AWS, è necessario aver configurato DNS e Active Directory. Per ulteriori informazioni, vedere link:reference_networking_aws.html["Requisiti di rete per Cloud Volumes ONTAP per AWS"].
+
+.Fasi
+. Nella pagina ambienti di lavoro, fare doppio clic sul nome del sistema Cloud Volumes ONTAP su cui si desidera eseguire il provisioning dei volumi FlexVol.
+. Creare un nuovo volume su qualsiasi aggregato o su un aggregato specifico:
++
+[cols="30,70"]
+|===
+| Azione | Fasi 
+
+
+| Crea un nuovo volume e lascia che Cloud Manager scelga l'aggregato contenente | Fare clic su *Add New Volume* (Aggiungi nuovo volume). 
+
+
+| Creare un nuovo volume su un aggregato specifico  a| 
+.. Fare clic sull'icona del menu, quindi fare clic su *Avanzate > allocazione avanzata*.
+.. Fare clic sul menu per un aggregato.
+.. Fare clic su *Create volume* (Crea volume).
+
+
+|===
+. Inserire i dettagli del nuovo volume, quindi fare clic su *continua*.
++
+Alcuni dei campi di questa pagina sono esplicativi. La seguente tabella descrive i campi per i quali potrebbero essere necessarie indicazioni:
+
++
+[cols="25,75"]
+|===
+| Campo | Descrizione 
+
+
+| Dimensione | Le dimensioni massime che è possibile inserire dipendono in gran parte dall'attivazione o meno del thin provisioning, che consente di creare un volume più grande dello storage fisico attualmente disponibile per l'IT. 
+
+
+| Controllo degli accessi (solo per NFS) | Un criterio di esportazione definisce i client nella subnet che possono accedere al volume. Per impostazione predefinita, Cloud Manager inserisce un valore che fornisce l'accesso a tutte le istanze nella subnet. 
+
+
+| Permessi e utenti/gruppi (solo per CIFS) | Questi campi consentono di controllare il livello di accesso a una condivisione per utenti e gruppi (detti anche elenchi di controllo degli accessi o ACL). È possibile specificare utenti o gruppi Windows locali o di dominio, utenti o gruppi UNIX. Se si specifica un nome utente Windows di dominio, è necessario includere il dominio dell'utente utilizzando il formato dominio/nome utente. 
+
+
+| Policy di Snapshot | Una policy di copia Snapshot specifica la frequenza e il numero di copie Snapshot NetApp create automaticamente. Una copia Snapshot di NetApp è un'immagine del file system point-in-time che non ha alcun impatto sulle performance e richiede uno storage minimo. È possibile scegliere il criterio predefinito o nessuno. È possibile scegliere nessuno per i dati transitori, ad esempio tempdb per Microsoft SQL Server. 
+
+
+| Opzioni avanzate (solo per NFS) | Selezionare una versione NFS per il volume: NFSv3 o NFSv4. 
+
+
+| Initiator group e IQN (solo per iSCSI) | Le destinazioni di storage iSCSI sono denominate LUN (unità logiche) e vengono presentate agli host come dispositivi a blocchi standard. I gruppi di iniziatori sono tabelle dei nomi dei nodi host iSCSI e controllano quali iniziatori hanno accesso a quali LUN. Le destinazioni iSCSI si collegano alla rete tramite schede di rete Ethernet standard (NIC), schede TOE (TCP offload Engine) con iniziatori software, adattatori di rete convergenti (CNA) o adattatori host busto dedicati (HBA) e sono identificate da nomi qualificati iSCSI (IQN). Quando si crea un volume iSCSI, Cloud Manager crea automaticamente un LUN. Abbiamo semplificato la creazione di un solo LUN per volume, per cui non è necessario alcun intervento di gestione. Dopo aver creato il volume, link:task_provisioning_storage.html#connecting-a-lun-to-a-host["Utilizzare IQN per connettersi al LUN dagli host"]. 
+|===
+. Se si sceglie il protocollo CIFS e il server CIFS non è stato configurato, specificare i dettagli del server nella finestra di dialogo Crea un server CIFS, quindi fare clic su *Salva e continua*:
++
+[cols="30,70"]
+|===
+| Campo | Descrizione 
+
+
+| Indirizzo IP primario e secondario DNS | Gli indirizzi IP dei server DNS che forniscono la risoluzione dei nomi per il server CIFS. I server DNS elencati devono contenere i record di posizione del servizio (SRV) necessari per individuare i server LDAP di Active Directory e i controller di dominio per il dominio a cui il server CIFS si unisce. 
+
+
+| Dominio Active Directory da unire | L'FQDN del dominio Active Directory (ad) a cui si desidera che il server CIFS si unisca. 
+
+
+| Credenziali autorizzate per l'accesso al dominio | Il nome e la password di un account Windows con privilegi sufficienti per aggiungere computer all'unità organizzativa (OU) specificata nel dominio ad. 
+
+
+| Nome NetBIOS del server CIFS | Un nome server CIFS univoco nel dominio ad. 
+
+
+| Unità organizzativa  a| 
+L'unità organizzativa all'interno del dominio ad da associare al server CIFS. L'impostazione predefinita è CN=computer.
+
+** Per configurare AWS Managed Microsoft ad come server ad per Cloud Volumes ONTAP, immettere *OU=computer,OU=corp* in questo campo.
+** Per configurare i servizi di dominio ad Azure come server ad per Cloud Volumes ONTAP, immettere *OU=computer AADDC* o *OU=utenti AADDC* in questo campo.https://docs.microsoft.com/en-us/azure/active-directory-domain-services/create-ou["Documentazione di Azure: Creare un'unità organizzativa (OU) in un dominio gestito dai servizi di dominio ad di Azure"^]
+
+
+
+
+| Dominio DNS | Il dominio DNS per la SVM (Storage Virtual Machine) di Cloud Volumes ONTAP. Nella maggior parte dei casi, il dominio è lo stesso del dominio ad. 
+
+
+| Server NTP | Selezionare *Use Active Directory Domain* (Usa dominio Active Directory) per configurare un server NTP utilizzando il DNS di Active Directory. Se è necessario configurare un server NTP utilizzando un indirizzo diverso, utilizzare l'API. Vedere link:api.html["Guida per sviluppatori API di Cloud Manager"^] per ulteriori informazioni. 
+|===
+. Nella pagina Usage Profile (Profilo di utilizzo), Disk Type (tipo di disco) e Tiering Policy (criterio di tiering), scegliere se attivare le funzionalità di efficienza dello storage, scegliere un tipo di disco e modificare il criterio di tiering, se necessario.
++
+Per assistenza, fare riferimento a quanto segue:
+
++
+** link:task_planning_your_config.html#choosing-a-volume-usage-profile["Comprensione dei profili di utilizzo dei volumi"]
+** link:task_planning_your_config.html#sizing-your-system-in-aws["Dimensionamento del sistema in AWS"]
+** link:task_planning_your_config.html#sizing-your-system-in-azure["Dimensionamento del sistema in Azure"]
+** link:concept_data_tiering.html["Panoramica sul tiering dei dati"]
+
+
+. Fare clic su *Go*.
+
+
+.Risultato
+Cloud Volumes ONTAP esegue il provisioning del volume.
+
+.Al termine
+Se è stata fornita una condivisione CIFS, assegnare agli utenti o ai gruppi le autorizzazioni per i file e le cartelle e verificare che tali utenti possano accedere alla condivisione e creare un file.
+
+Se si desidera applicare le quote ai volumi, è necessario utilizzare System Manager o la CLI. Le quote consentono di limitare o tenere traccia dello spazio su disco e del numero di file utilizzati da un utente, un gruppo o un qtree.
+
+
+
+== Creazione di volumi FlexVol sul secondo nodo in una configurazione ha
+
+Per impostazione predefinita, Cloud Manager crea volumi sul primo nodo in una configurazione ha. Se è necessaria una configurazione Active-Active, in cui entrambi i nodi servono i dati ai client, è necessario creare aggregati e volumi sul secondo nodo.
+
+.Fasi
+. Nella pagina ambienti di lavoro, fare doppio clic sul nome dell'ambiente di lavoro Cloud Volumes ONTAP su cui si desidera gestire gli aggregati.
+. Fare clic sull'icona del menu, quindi su *Avanzate > allocazione avanzata*.
+. Fare clic su *Add aggregate* (Aggiungi aggregato), quindi creare l'aggregato.
+. Per nodo principale, scegliere il secondo nodo della coppia ha.
+. Dopo che Cloud Manager ha creato l'aggregato, selezionarlo e fare clic su *Create volume* (Crea volume).
+. Inserire i dettagli del nuovo volume, quindi fare clic su *Create* (Crea).
+
+
+.Al termine
+Se necessario, è possibile creare volumi aggiuntivi su questo aggregato.
+
+
+IMPORTANT: Per le coppie ha implementate in più zone di disponibilità AWS, è necessario montare il volume sui client utilizzando l'indirizzo IP mobile del nodo su cui risiede il volume.
+
+
+
+== Creazione di aggregati
+
+È possibile creare aggregati o lasciare che Cloud Manager lo faccia per te quando crea volumi. Il vantaggio della creazione di aggregati consiste nella possibilità di scegliere la dimensione del disco sottostante, che consente di dimensionare l'aggregato in base alla capacità o alle performance necessarie.
+
+.Fasi
+. Nella pagina ambienti di lavoro, fare doppio clic sul nome dell'istanza di Cloud Volumes ONTAP su cui si desidera gestire gli aggregati.
+. Fare clic sull'icona del menu, quindi fare clic su *Avanzate > allocazione avanzata*.
+. Fare clic su *Add aggregate* (Aggiungi aggregato), quindi specificare i dettagli per l'aggregato.
++
+Per informazioni sul tipo di disco e sulle dimensioni del disco, vedere link:task_planning_your_config.html["Pianificazione della configurazione"].
+
+. Fare clic su *Go*, quindi su *Approve and Purchase* (approva e acquista).
+
+
+
+
+== Connessione di un LUN a un host
+
+Quando si crea un volume iSCSI, Cloud Manager crea automaticamente un LUN. Abbiamo semplificato la creazione di un solo LUN per volume, per cui non è necessario alcun intervento di gestione. Dopo aver creato il volume, utilizzare IQN per connettersi al LUN dagli host.
+
+Tenere presente quanto segue:
+
+. La gestione automatica della capacità di Cloud Manager non si applica alle LUN. Quando Cloud Manager crea un LUN, disattiva la funzione di crescita automatica.
+. È possibile creare ulteriori LUN da System Manager o dall'interfaccia CLI.
+
+
+.Fasi
+. Nella pagina ambienti di lavoro, fare doppio clic sull'ambiente di lavoro Cloud Volumes ONTAP su cui si desidera gestire i volumi.
+. Selezionare un volume, quindi fare clic su *Target IQN*.
+. Fare clic su *Copy* (Copia) per copiare il nome IQN.
+. Impostare una connessione iSCSI dall'host al LUN.
++
+** http://docs.netapp.com/ontap-9/topic/com.netapp.doc.exp-iscsi-rhel-cg/GUID-15E8C226-BED5-46D0-BAED-379EA4311340.html["Configurazione iSCSI Express di ONTAP 9 per Red Hat Enterprise Linux: Avvio delle sessioni iSCSI con la destinazione"^]
+** http://docs.netapp.com/ontap-9/topic/com.netapp.doc.exp-iscsi-cpg/GUID-857453EC-90E9-4AB6-B543-83827CF374BF.html["Configurazione iSCSI Express di ONTAP 9 per Windows: Avvio di sessioni iSCSI con la destinazione"^]
+
+
+
+
+
+
+== Utilizzo di FlexCache Volumes per accelerare l'accesso ai dati
+
+Un volume FlexCache è un volume di storage che memorizza nella cache i dati di lettura NFS da un volume di origine (o di origine). Le successive letture dei dati memorizzati nella cache consentono un accesso più rapido a tali dati.
+
+È possibile utilizzare i volumi FlexCache per accelerare l'accesso ai dati o per trasferire il traffico dai volumi ad accesso elevato. I volumi FlexCache aiutano a migliorare le performance, soprattutto quando i client devono accedere ripetutamente agli stessi dati, perché i dati possono essere gestiti direttamente senza dover accedere al volume di origine. I volumi FlexCache funzionano bene per i carichi di lavoro di sistema che richiedono un uso intensivo della lettura.
+
+Cloud Manager non fornisce attualmente la gestione dei volumi FlexCache, ma è possibile utilizzare l'interfaccia CLI di ONTAP o Gestione di sistema di ONTAP per creare e gestire i volumi FlexCache:
+
+* http://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-fc-mgmt/home.html["Guida all'alimentazione di FlexCache Volumes per un accesso più rapido ai dati"^]
+* http://docs.netapp.com/ontap-9/topic/com.netapp.doc.onc-sm-help-960/GUID-07F4C213-076D-4FE8-A8E3-410F49498D49.html["Creazione di volumi FlexCache in Gestore di sistema"^]
+
+
+A partire dalla versione 3.7.2, Cloud Manager genera una licenza FlexCache per tutti i nuovi sistemi Cloud Volumes ONTAP. La licenza include un limite di utilizzo di 500 GB.
+
+
+NOTE: Per generare la licenza, Cloud Manager deve accedere a https://ipa-signer.cloudmanager.netapp.com. Assicurarsi che questo URL sia accessibile dal firewall.
+
+video::PBNPVRUeT1o[youtube,width=848,height=480]

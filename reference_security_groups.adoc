@@ -1,0 +1,449 @@
+---
+sidebar: sidebar 
+permalink: reference_security_groups.html 
+keywords: security group, security groups, rules, ports, aws, inbound, outbound, rules 
+summary: Cloud Manager crea gruppi di sicurezza AWS che includono le regole in entrata e in uscita di cui Cloud Manager e Cloud Volumes ONTAP hanno bisogno per funzionare correttamente. Potrebbe essere necessario fare riferimento alle porte per eseguire test o se è necessario utilizzare il proprio. 
+---
+= Regole del gruppo di sicurezza per AWS
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Cloud Manager crea gruppi di sicurezza AWS che includono le regole in entrata e in uscita necessarie per il corretto funzionamento di Connector e Cloud Volumes ONTAP. È possibile fare riferimento alle porte a scopo di test o se si preferisce utilizzare i propri gruppi di protezione.
+
+
+
+== Regole per Cloud Volumes ONTAP
+
+Il gruppo di sicurezza per Cloud Volumes ONTAP richiede regole sia in entrata che in uscita.
+
+
+
+=== Regole in entrata
+
+L'origine delle regole in entrata nel gruppo di sicurezza predefinito è 0.0.0.0/0.
+
+[cols="10,10,80"]
+|===
+| Protocollo | Porta | Scopo 
+
+
+| Tutti gli ICMP | Tutto | Eseguire il ping dell'istanza 
+
+
+| HTTP | 80 | Accesso HTTP alla console Web di System Manager utilizzando l'indirizzo IP della LIF di gestione del cluster 
+
+
+| HTTPS | 443 | Accesso HTTPS alla console Web di System Manager utilizzando l'indirizzo IP della LIF di gestione del cluster 
+
+
+| SSH | 22 | Accesso SSH all'indirizzo IP della LIF di gestione del cluster o di una LIF di gestione dei nodi 
+
+
+| TCP | 111 | Chiamata a procedura remota per NFS 
+
+
+| TCP | 139 | Sessione del servizio NetBIOS per CIFS 
+
+
+| TCP | 161-162 | Protocollo di gestione di rete semplice 
+
+
+| TCP | 445 | Microsoft SMB/CIFS su TCP con frame NetBIOS 
+
+
+| TCP | 635 | Montaggio NFS 
+
+
+| TCP | 749 | Kerberos 
+
+
+| TCP | 2049 | Daemon del server NFS 
+
+
+| TCP | 3260 | Accesso iSCSI tramite LIF dei dati iSCSI 
+
+
+| TCP | 4045 | Daemon di blocco NFS 
+
+
+| TCP | 4046 | Network status monitor per NFS 
+
+
+| TCP | 10000 | Backup con NDMP 
+
+
+| TCP | 11104 | Gestione delle sessioni di comunicazione tra cluster per SnapMirror 
+
+
+| TCP | 11105 | Trasferimento dei dati SnapMirror con LIF intercluster 
+
+
+| UDP | 111 | Chiamata a procedura remota per NFS 
+
+
+| UDP | 161-162 | Protocollo di gestione di rete semplice 
+
+
+| UDP | 635 | Montaggio NFS 
+
+
+| UDP | 2049 | Daemon del server NFS 
+
+
+| UDP | 4045 | Daemon di blocco NFS 
+
+
+| UDP | 4046 | Network status monitor per NFS 
+
+
+| UDP | 4049 | Protocollo NFS rquotad 
+|===
+
+
+=== Regole in uscita
+
+Il gruppo di protezione predefinito per Cloud Volumes ONTAP apre tutto il traffico in uscita. Se questo è accettabile, attenersi alle regole di base per le chiamate in uscita. Se sono necessarie regole più rigide, utilizzare le regole avanzate in uscita.
+
+
+
+==== Regole di base in uscita
+
+Il gruppo di protezione predefinito per Cloud Volumes ONTAP include le seguenti regole in uscita.
+
+[cols="20,20,60"]
+|===
+| Protocollo | Porta | Scopo 
+
+
+| Tutti gli ICMP | Tutto | Tutto il traffico in uscita 
+
+
+| Tutti i TCP | Tutto | Tutto il traffico in uscita 
+
+
+| Tutti gli UDP | Tutto | Tutto il traffico in uscita 
+|===
+
+
+==== Regole avanzate in uscita
+
+Se sono necessarie regole rigide per il traffico in uscita, è possibile utilizzare le seguenti informazioni per aprire solo le porte richieste per le comunicazioni in uscita da Cloud Volumes ONTAP.
+
+
+NOTE: L'origine è l'interfaccia (indirizzo IP) del sistema Cloud Volumes ONTAP.
+
+[cols="10,10,6,20,20,34"]
+|===
+| Servizio | Protocollo | Porta | Origine | Destinazione | Scopo 
+
+
+.18+| Active Directory | TCP | 88 | LIF di gestione dei nodi | Insieme di strutture di Active Directory | Autenticazione Kerberos V. 
+
+
+| UDP | 137 | LIF di gestione dei nodi | Insieme di strutture di Active Directory | Servizio nomi NetBIOS 
+
+
+| UDP | 138 | LIF di gestione dei nodi | Insieme di strutture di Active Directory | Servizio datagramma NetBIOS 
+
+
+| TCP | 139 | LIF di gestione dei nodi | Insieme di strutture di Active Directory | Sessione del servizio NetBIOS 
+
+
+| TCP E UDP | 389 | LIF di gestione dei nodi | Insieme di strutture di Active Directory | LDAP 
+
+
+| TCP | 445 | LIF di gestione dei nodi | Insieme di strutture di Active Directory | Microsoft SMB/CIFS su TCP con frame NetBIOS 
+
+
+| TCP | 464 | LIF di gestione dei nodi | Insieme di strutture di Active Directory | Kerberos V change & set password (SET_CHANGE) 
+
+
+| UDP | 464 | LIF di gestione dei nodi | Insieme di strutture di Active Directory | Amministrazione delle chiavi Kerberos 
+
+
+| TCP | 749 | LIF di gestione dei nodi | Insieme di strutture di Active Directory | Kerberos V change & set Password (RPCSEC_GSS) 
+
+
+| TCP | 88 | Data LIF (NFS, CIFS, iSCSI) | Insieme di strutture di Active Directory | Autenticazione Kerberos V. 
+
+
+| UDP | 137 | LIF DATI (NFS, CIFS) | Insieme di strutture di Active Directory | Servizio nomi NetBIOS 
+
+
+| UDP | 138 | LIF DATI (NFS, CIFS) | Insieme di strutture di Active Directory | Servizio datagramma NetBIOS 
+
+
+| TCP | 139 | LIF DATI (NFS, CIFS) | Insieme di strutture di Active Directory | Sessione del servizio NetBIOS 
+
+
+| TCP E UDP | 389 | LIF DATI (NFS, CIFS) | Insieme di strutture di Active Directory | LDAP 
+
+
+| TCP | 445 | LIF DATI (NFS, CIFS) | Insieme di strutture di Active Directory | Microsoft SMB/CIFS su TCP con frame NetBIOS 
+
+
+| TCP | 464 | LIF DATI (NFS, CIFS) | Insieme di strutture di Active Directory | Kerberos V change & set password (SET_CHANGE) 
+
+
+| UDP | 464 | LIF DATI (NFS, CIFS) | Insieme di strutture di Active Directory | Amministrazione delle chiavi Kerberos 
+
+
+| TCP | 749 | LIF DATI (NFS, CIFS) | Insieme di strutture di Active Directory | Kerberos V change & set password (RPCSEC_GSS) 
+
+
+| Backup su S3 | TCP | 5010 | LIF intercluster | Endpoint di backup o endpoint di ripristino | Operazioni di backup e ripristino per la funzione Backup in S3 
+
+
+.3+| Cluster | Tutto il traffico | Tutto il traffico | Tutte le LIF su un nodo | Tutte le LIF sull'altro nodo | Comunicazioni tra cluster (solo Cloud Volumes ONTAP ha) 
+
+
+| TCP | 3000 | LIF di gestione dei nodi | MEDIATORE HA | Chiamate ZAPI (solo Cloud Volumes ONTAP ha) 
+
+
+| ICMP | 1 | LIF di gestione dei nodi | MEDIATORE HA | Mantieni attivo (solo Cloud Volumes ONTAP ha) 
+
+
+| DHCP | UDP | 68 | LIF di gestione dei nodi | DHCP | Client DHCP per la prima installazione 
+
+
+| DHCPS | UDP | 67 | LIF di gestione dei nodi | DHCP | Server DHCP 
+
+
+| DNS | UDP | 53 | LIF di gestione dei nodi e LIF dei dati (NFS, CIFS) | DNS | DNS 
+
+
+| NDMP | TCP | 18600–18699 | LIF di gestione dei nodi | Server di destinazione | Copia NDMP 
+
+
+| SMTP | TCP | 25 | LIF di gestione dei nodi | Server di posta | Gli avvisi SMTP possono essere utilizzati per AutoSupport 
+
+
+.4+| SNMP | TCP | 161 | LIF di gestione dei nodi | Monitorare il server | Monitoraggio mediante trap SNMP 
+
+
+| UDP | 161 | LIF di gestione dei nodi | Monitorare il server | Monitoraggio mediante trap SNMP 
+
+
+| TCP | 162 | LIF di gestione dei nodi | Monitorare il server | Monitoraggio mediante trap SNMP 
+
+
+| UDP | 162 | LIF di gestione dei nodi | Monitorare il server | Monitoraggio mediante trap SNMP 
+
+
+.2+| SnapMirror | TCP | 11104 | LIF intercluster | ONTAP Intercluster LIF | Gestione delle sessioni di comunicazione tra cluster per SnapMirror 
+
+
+| TCP | 11105 | LIF intercluster | ONTAP Intercluster LIF | Trasferimento dei dati SnapMirror 
+
+
+| Syslog | UDP | 514 | LIF di gestione dei nodi | Server syslog | Messaggi di inoltro syslog 
+|===
+
+
+== Regole per il gruppo di sicurezza esterno del mediatore ha
+
+Il gruppo di sicurezza esterno predefinito per il mediatore Cloud Volumes ONTAP ha include le seguenti regole in entrata e in uscita.
+
+
+
+=== Regole in entrata
+
+L'origine delle regole in entrata è 0.0.0.0/0.
+
+[cols="20,20,60"]
+|===
+| Protocollo | Porta | Scopo 
+
+
+| SSH | 22 | Connessioni SSH al mediatore ha 
+
+
+| TCP | 3000 | Accesso API RESTful dal connettore 
+|===
+
+
+=== Regole in uscita
+
+Il gruppo di sicurezza predefinito per il mediatore ha apre tutto il traffico in uscita. Se questo è accettabile, attenersi alle regole di base per le chiamate in uscita. Se sono necessarie regole più rigide, utilizzare le regole avanzate in uscita.
+
+
+
+==== Regole di base in uscita
+
+Il gruppo di protezione predefinito per il mediatore ha include le seguenti regole in uscita.
+
+[cols="20,20,60"]
+|===
+| Protocollo | Porta | Scopo 
+
+
+| Tutti i TCP | Tutto | Tutto il traffico in uscita 
+
+
+| Tutti gli UDP | Tutto | Tutto il traffico in uscita 
+|===
+
+
+==== Regole avanzate in uscita
+
+Se sono necessarie regole rigide per il traffico in uscita, è possibile utilizzare le seguenti informazioni per aprire solo le porte necessarie per la comunicazione in uscita dal mediatore ha.
+
+[cols="10,10,30,40"]
+|===
+| Protocollo | Porta | Destinazione | Scopo 
+
+
+| HTTP | 80 | Indirizzo IP del connettore | Scarica gli aggiornamenti per il mediatore 
+
+
+| HTTPS | 443 | Servizi API AWS | Assistenza per il failover dello storage 
+
+
+| UDP | 53 | Servizi API AWS | Assistenza per il failover dello storage 
+|===
+
+NOTE: Anziché aprire le porte 443 e 53, è possibile creare un endpoint VPC di interfaccia dalla subnet di destinazione al servizio AWS EC2.
+
+
+
+== Regole per il gruppo di sicurezza interno del mediatore ha
+
+Il gruppo di sicurezza interno predefinito per il mediatore ha Cloud Volumes ONTAP include le seguenti regole. Cloud Manager crea sempre questo gruppo di sicurezza. Non hai la possibilità di utilizzare il tuo.
+
+
+
+=== Regole in entrata
+
+Il gruppo di sicurezza predefinito include le seguenti regole in entrata.
+
+[cols="20,20,60"]
+|===
+| Protocollo | Porta | Scopo 
+
+
+| Tutto il traffico | Tutto | Comunicazione tra il mediatore ha e i nodi ha 
+|===
+
+
+=== Regole in uscita
+
+Il gruppo di protezione predefinito include le seguenti regole in uscita.
+
+[cols="20,20,60"]
+|===
+| Protocollo | Porta | Scopo 
+
+
+| Tutto il traffico | Tutto | Comunicazione tra il mediatore ha e i nodi ha 
+|===
+
+
+== Regole per il connettore
+
+Il gruppo di protezione per il connettore richiede regole sia in entrata che in uscita.
+
+
+
+=== Regole in entrata
+
+L'origine delle regole in entrata nel gruppo di sicurezza predefinito è 0.0.0.0/0.
+
+[cols="10,10,80"]
+|===
+| Protocollo | Porta | Scopo 
+
+
+| SSH | 22 | Fornisce l'accesso SSH all'host del connettore 
+
+
+| HTTP | 80 | Fornisce l'accesso HTTP dai browser Web client all'interfaccia utente locale e alle connessioni da Cloud Compliance 
+
+
+| HTTPS | 443 | Fornisce l'accesso HTTPS dai browser Web client all'interfaccia utente locale 
+
+
+| TCP | 3128 | Fornisce all'istanza Cloud Compliance l'accesso a Internet, se la rete AWS non utilizza un NAT o un proxy 
+|===
+
+
+=== Regole in uscita
+
+Il gruppo di protezione predefinito per il connettore apre tutto il traffico in uscita. Se questo è accettabile, attenersi alle regole di base per le chiamate in uscita. Se sono necessarie regole più rigide, utilizzare le regole avanzate in uscita.
+
+
+
+==== Regole di base in uscita
+
+Il gruppo di protezione predefinito per il connettore include le seguenti regole in uscita.
+
+[cols="20,20,60"]
+|===
+| Protocollo | Porta | Scopo 
+
+
+| Tutti i TCP | Tutto | Tutto il traffico in uscita 
+
+
+| Tutti gli UDP | Tutto | Tutto il traffico in uscita 
+|===
+
+
+==== Regole avanzate in uscita
+
+Se sono necessarie regole rigide per il traffico in uscita, è possibile utilizzare le seguenti informazioni per aprire solo le porte richieste per la comunicazione in uscita dal connettore.
+
+
+NOTE: L'indirizzo IP di origine è l'host del connettore.
+
+[cols="5*"]
+|===
+| Servizio | Protocollo | Porta | Destinazione | Scopo 
+
+
+.9+| Active Directory | TCP | 88 | Insieme di strutture di Active Directory | Autenticazione Kerberos V. 
+
+
+| TCP | 139 | Insieme di strutture di Active Directory | Sessione del servizio NetBIOS 
+
+
+| TCP | 389 | Insieme di strutture di Active Directory | LDAP 
+
+
+| TCP | 445 | Insieme di strutture di Active Directory | Microsoft SMB/CIFS su TCP con frame NetBIOS 
+
+
+| TCP | 464 | Insieme di strutture di Active Directory | Kerberos V change & set password (SET_CHANGE) 
+
+
+| TCP | 749 | Insieme di strutture di Active Directory | Modifica e impostazione della password Kerberos V di Active Directory (RPCSEC_GSS) 
+
+
+| UDP | 137 | Insieme di strutture di Active Directory | Servizio nomi NetBIOS 
+
+
+| UDP | 138 | Insieme di strutture di Active Directory | Servizio datagramma NetBIOS 
+
+
+| UDP | 464 | Insieme di strutture di Active Directory | Amministrazione delle chiavi Kerberos 
+
+
+| Chiamate API e AutoSupport | HTTPS | 443 | LIF gestione cluster ONTAP e Internet in uscita | Chiamate API ad AWS e ONTAP e invio di messaggi AutoSupport a NetApp 
+
+
+.2+| Chiamate API | TCP | 3000 | LIF gestione cluster ONTAP | Chiamate API a ONTAP 
+
+
+| TCP | 8088 | Backup su S3 | API chiama il backup in S3 
+
+
+| DNS | UDP | 53 | DNS | Utilizzato per la risoluzione DNS da parte di Cloud Manager 
+
+
+| Conformità al cloud | HTTP | 80 | Istanza di Cloud Compliance | Conformità del cloud per Cloud Volumes ONTAP 
+|===

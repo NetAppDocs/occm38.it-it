@@ -1,0 +1,38 @@
+---
+sidebar: sidebar 
+permalink: task_protecting_ransomware.html 
+keywords: snapshot policy, ransomware, protection, fpolicy, block, extension, attacks 
+summary: Gli attacchi ransomware possono costare tempo di business, risorse e reputazione. Cloud Manager consente di implementare la soluzione NetApp per ransomware, che fornisce strumenti efficaci per visibilità, rilevamento e risoluzione dei problemi. 
+---
+= Miglioramento della protezione contro ransomware
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Gli attacchi ransomware possono costare tempo di business, risorse e reputazione. Cloud Manager consente di implementare la soluzione NetApp per ransomware, che fornisce strumenti efficaci per visibilità, rilevamento e risoluzione dei problemi.
+
+.Fasi
+. Dall'ambiente di lavoro, fare clic sull'icona *ransomware*.
++
+image:screenshot_ransomware_icon.gif["Una schermata che mostra l'icona ransomware disponibile nella parte superiore destra della pagina durante la visualizzazione di un ambiente di lavoro."]
+
+. Implementare la soluzione NetApp per ransomware:
++
+.. Fare clic su *Activate Snapshot Policy* (attiva policy Snapshot) se si dispone di volumi che non hanno una policy Snapshot attivata.
++
+La tecnologia Snapshot di NetApp offre la migliore soluzione del settore per la risoluzione dei problemi ransomware. La chiave per un ripristino corretto è il ripristino da backup non infetti. Le copie Snapshot sono di sola lettura, impedendo la corruzione del ransomware. Possono inoltre offrire la granularità necessaria per creare immagini di una singola copia di file o di una soluzione completa di disaster recovery.
+
+.. Fare clic su *Activate FPolicy* (attiva FPolicy) per attivare la soluzione FPolicy di ONTAP, che può bloccare le operazioni sui file in base all'estensione di un file.
++
+Questa soluzione preventiva migliora la protezione dagli attacchi ransomware bloccando i tipi di file ransomware più comuni.
+
+
+
+
+
+image:screenshot_ransomware_protection.gif["Una schermata che mostra la pagina di protezione ransomware disponibile all'interno di un ambiente di lavoro. La schermata mostra il numero di volumi senza Snapshot Policy e la possibilità di bloccare le estensioni dei file ransomware."]

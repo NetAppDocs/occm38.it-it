@@ -1,0 +1,164 @@
+---
+sidebar: sidebar 
+permalink: task_creating_connectors.html 
+keywords: create connector in aws, create connector in azure, create connector in gcp, launch connector in aws, launch connector in azure, launch connector in gcp, deploy connector in aws, deploy connector in azure, deploy connector in gcp 
+summary: 'Un account Admin dovrà implementare un connettore prima di poter utilizzare la maggior parte delle funzionalità di Cloud Manager. Il connettore consente a Cloud Manager di gestire risorse e processi all"interno del tuo ambiente di cloud pubblico. Questa pagina descrive come creare un connettore direttamente da Cloud Manager.' 
+---
+= Creazione di un connettore da Cloud Manager
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Un account Admin deve implementare un _connettore_ prima di poter utilizzare la maggior parte delle funzionalità di Cloud Manager. Il connettore consente a Cloud Manager di gestire risorse e processi all'interno del tuo ambiente di cloud pubblico. Questa pagina descrive come creare un connettore direttamente da Cloud Manager.
+
+Questi passaggi devono essere completati da un utente che ha il ruolo di amministratore dell'account. Un amministratore dell'area di lavoro non può creare un connettore.
+
+link:concept_connectors.html["Scopri quando è necessario un connettore"].
+
+
+TIP: Quando crei il tuo primo ambiente di lavoro Cloud Volumes ONTAP, Cloud Manager ti chiederà di creare un connettore se non ne hai ancora uno.
+
+
+
+== Creazione di un connettore in AWS
+
+Cloud Manager consente di creare un connettore in AWS direttamente dalla relativa interfaccia utente. È inoltre possibile scegliere di link:task_launching_aws_mktp.html["Creare il connettore da AWS Marketplace"], o. link:task_installing_linux.html["scaricare il software e installarlo sul proprio host"].
+
+.Di cosa hai bisogno
+* Una chiave di accesso AWS e una chiave segreta per un utente IAM che dispone di https://mysupport.netapp.com/site/info/cloud-manager-policies["autorizzazioni richieste"^].
+* VPC, subnet e coppia di chiavi nella regione AWS desiderata.
+
+
+.Fasi
+. Se si sta creando il primo ambiente di lavoro, fare clic su *Aggiungi ambiente di lavoro* e seguire le istruzioni. In caso contrario, fare clic sull'icona del connettore e selezionare *Aggiungi connettore*.
++
+image:screenshot_connector_add.gif["Una schermata che mostra l'icona del connettore nell'intestazione e l'azione Add Connector."]
+
+. Fare clic su *Let's Start*.
+. Scegli *Amazon Web Services* come tuo cloud provider.
++
+Tenere presente che il connettore deve disporre di una connessione di rete con il tipo di ambiente di lavoro che si sta creando e con i servizi che si intende abilitare.
+
++
+link:reference_networking_cloud_manager.html["Scopri di più sui requisiti di rete per il connettore"].
+
+. Consulta le informazioni necessarie e fai clic su *continua*.
+. Fornire le informazioni richieste:
++
+** *AWS Credentials*: Immettere un nome per l'istanza e specificare la chiave di accesso AWS e la chiave segreta che soddisfano i requisiti di autorizzazione.
+** *Location*: Specificare una regione AWS, un VPC e una subnet per l'istanza.
+** *Rete*: Selezionare la coppia di chiavi da utilizzare con l'istanza, se attivare un indirizzo IP pubblico e, facoltativamente, specificare una configurazione proxy.
+** *Security Group*: Scegliere se creare un nuovo gruppo di sicurezza o se selezionare un gruppo di sicurezza esistente che consenta l'accesso HTTP, HTTPS e SSH in entrata.
++
+
+NOTE: Non c'è traffico in entrata verso il connettore, a meno che non venga avviato. HTTP e HTTPS forniscono l'accesso a link:concept_connectors.html#the-local-user-interface["UI locale"], che utilizzerai in rare circostanze. SSH è necessario solo se è necessario connettersi all'host per la risoluzione dei problemi.
+
+
+
+. Fare clic su *Create* (Crea).
++
+L'istanza dovrebbe essere pronta in circa 7 minuti. Si consiglia di rimanere sulla pagina fino al completamento del processo.
+
+
+
+
+
+== Creazione di un connettore in Azure
+
+Cloud Manager consente di creare un connettore in Azure direttamente dalla sua interfaccia utente. È inoltre possibile scegliere di link:task_launching_azure_mktp.html["Creare il connettore da Azure Marketplace"], o a. link:task_installing_linux.html["scaricare il software e installarlo sul proprio host"].
+
+.Di cosa hai bisogno
+* Il https://mysupport.netapp.com/site/info/cloud-manager-policies["autorizzazioni richieste"^] Per il tuo account Azure.
+* Un abbonamento Azure.
+* Una VNET e una subnet nella regione Azure desiderata.
+
+
+.Fasi
+. Se si sta creando il primo ambiente di lavoro, fare clic su *Aggiungi ambiente di lavoro* e seguire le istruzioni. In caso contrario, fare clic sull'icona del connettore e selezionare *Aggiungi connettore*.
++
+image:screenshot_connector_add.gif["Una schermata che mostra l'icona del connettore nell'intestazione e l'azione Add Connector."]
+
+. Fare clic su *Let's Start*.
+. Scegli *Microsoft Azure* come tuo cloud provider.
++
+Tenere presente che il connettore deve disporre di una connessione di rete con il tipo di ambiente di lavoro che si sta creando e con i servizi che si intende abilitare.
+
++
+link:reference_networking_cloud_manager.html["Scopri di più sui requisiti di rete per il connettore"].
+
+. Consulta le informazioni necessarie e fai clic su *continua*.
+. Se richiesto, accedere all'account Microsoft, che dovrebbe disporre delle autorizzazioni necessarie per creare la macchina virtuale.
++
+Il modulo è di proprietà e ospitato da Microsoft. Le tue credenziali non vengono fornite a NetApp.
+
+. Fornire le informazioni richieste:
++
+** *VM Authentication*: Immettere un nome per la macchina virtuale e un nome utente e una password o una chiave pubblica.
+** *Basic Settings* (Impostazioni di base): Scegliere un abbonamento Azure, un'area Azure e se creare un nuovo gruppo di risorse o utilizzare un gruppo di risorse esistente.
+** *Rete*: Scegliere un VNET e una subnet, se attivare un indirizzo IP pubblico e, facoltativamente, specificare una configurazione proxy.
+** *Security Group*: Scegliere se creare un nuovo gruppo di sicurezza o se selezionare un gruppo di sicurezza esistente che consenta l'accesso HTTP, HTTPS e SSH in entrata.
++
+
+NOTE: Non c'è traffico in entrata verso il connettore, a meno che non venga avviato. HTTP e HTTPS forniscono l'accesso a link:concept_connectors.html#the-local-user-interface["UI locale"], che utilizzerai in rare circostanze. SSH è necessario solo se è necessario connettersi all'host per la risoluzione dei problemi.
+
+
+
+. Fare clic su *Create* (Crea).
++
+La macchina virtuale dovrebbe essere pronta in circa 7 minuti. Si consiglia di rimanere sulla pagina fino al completamento del processo.
+
+
+
+
+
+== Creazione di un connettore in GCP
+
+Cloud Manager consente di creare un connettore in GCP direttamente dalla sua interfaccia utente. È inoltre possibile scegliere di link:task_installing_linux.html["scaricare il software e installarlo sul proprio host"].
+
+.Di cosa hai bisogno
+* Il https://mysupport.netapp.com/site/info/cloud-manager-policies["autorizzazioni richieste"^] Per il tuo account Google Cloud.
+* Un progetto Google Cloud.
+* Account di servizio che dispone delle autorizzazioni necessarie per creare e gestire Cloud Volumes ONTAP.
+* Un VPC e una subnet nell'area di Google Cloud desiderata.
+
+
+.Fasi
+. Se si sta creando il primo ambiente di lavoro, fare clic su *Aggiungi ambiente di lavoro* e seguire le istruzioni. In caso contrario, fare clic sull'icona del connettore e selezionare *Aggiungi connettore*.
++
+image:screenshot_connector_add.gif["Una schermata che mostra l'icona del connettore nell'intestazione e l'azione Add Connector."]
+
+. Fare clic su *Let's Start*.
+. Scegli *Google Cloud Platform* come tuo cloud provider.
++
+Tenere presente che il connettore deve disporre di una connessione di rete con il tipo di ambiente di lavoro che si sta creando e con i servizi che si intende abilitare.
+
++
+link:reference_networking_cloud_manager.html["Scopri di più sui requisiti di rete per il connettore"].
+
+. Consulta le informazioni necessarie e fai clic su *continua*.
+. Se richiesto, accedere all'account Google, che dovrebbe disporre delle autorizzazioni necessarie per creare l'istanza della macchina virtuale.
++
+Il modulo è di proprietà e ospitato da Google. Le tue credenziali non vengono fornite a NetApp.
+
+. Fornire le informazioni richieste:
++
+** *Basic Settings* (Impostazioni di base): Immettere un nome per l'istanza della macchina virtuale e specificare un account di progetto e servizio con le autorizzazioni richieste.
+** *Location*: Specificare una regione, una zona, un VPC e una subnet per l'istanza.
+** *Network* (rete): Scegliere se attivare un indirizzo IP pubblico e, facoltativamente, specificare una configurazione proxy.
+** *Firewall Policy*: Scegliere se creare una nuova policy firewall o se selezionare una policy firewall esistente che consenta l'accesso HTTP, HTTPS e SSH in entrata.
++
+
+NOTE: Non c'è traffico in entrata verso il connettore, a meno che non venga avviato. HTTP e HTTPS forniscono l'accesso a link:concept_connectors.html#the-local-user-interface["UI locale"], che utilizzerai in rare circostanze. SSH è necessario solo se è necessario connettersi all'host per la risoluzione dei problemi.
+
+
+
+. Fare clic su *Create* (Crea).
++
+L'istanza dovrebbe essere pronta in circa 7 minuti. Si consiglia di rimanere sulla pagina fino al completamento del processo.
+
+

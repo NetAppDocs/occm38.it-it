@@ -1,0 +1,40 @@
+---
+sidebar: sidebar 
+permalink: reference_aws_marketplace.html 
+keywords: aws marketplace, marketplace pages, marketplace offerings, subscribe, subscribing 
+summary: Nel marketplace AWS sono disponibili diverse offerte per Cloud Manager e Cloud Volumes ONTAP. Se non sei sicuro di quale pagina devi utilizzare, leggi di seguito e ti indirizzeremo alla pagina giusta in base al tuo obiettivo. 
+---
+= Pagine del marketplace AWS per Cloud Manager e Cloud Volumes ONTAP
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Nel marketplace AWS sono disponibili diverse offerte per Cloud Manager e Cloud Volumes ONTAP. Se hai bisogno di aiuto per comprendere lo scopo di ciascuna pagina, leggi le descrizioni riportate di seguito.
+
+In tutti i casi, non è possibile avviare Cloud Volumes ONTAP in AWS dal marketplace AWS. È necessario avviarlo direttamente da Cloud Manager.
+
+[cols="34,33,33"]
+|===
+| Obiettivo | Pagina AWS Marketplace da utilizzare | Ulteriori informazioni 
+
+
+| Abilita l'utilizzo di PAYGO Cloud Volumes ONTAP, Tier cloud, conformità cloud e altri servizi aggiuntivi | https://aws.amazon.com/marketplace/pp/B07QX2QLXX["Cloud Manager - implementazione di  gestione dei servizi dati cloud NetApp"^] | Questo abbonamento consente di addebitare il costo per LA versione PAYGO di Cloud Volumes ONTAP 9.6 e versioni successive. Consente inoltre di addebitare costi per il Cloud Tiering, la Cloud Compliance e altri servizi aggiuntivi. Devi iscriverti a questa offerta quando Cloud Manager ti richiede e ti reindirizza alla pagina. Cloud Manager visualizza un messaggio nella procedura guidata ambiente di lavoro o quando si aggiungono nuove credenziali in Impostazioni. Questa pagina non consente di avviare Cloud Manager in AWS. Questo dovrebbe essere fatto da https://cloud.netapp.com["NetApp Cloud Central"^], O in alternativa utilizzando l'AMI elencato nella riga 3 di questa tabella. 
+
+
+| Abilita l'utilizzo di PAYGO Cloud Volumes ONTAP, Tier cloud, conformità cloud e altri servizi aggiuntivi _utilizzando un contratto annuale_ | https://aws.amazon.com/marketplace/pp/B086PDWSS8["Cloud Manager (contratti) - implementa  Gestisci NetApp Cloud Data Services"^] | Questo abbonamento è un'alternativa all'abbonamento della prima riga. Consente di ottenere un pagamento anticipato annuale per gli elenchi. È principalmente per i partner NetApp. 
+
+
+| Implementare Cloud Manager da AWS Marketplace utilizzando un AMI | https://aws.amazon.com/marketplace/pp/B018REK8QG["Cloud Manager - Installazione manuale senza chiavi di accesso"^] | Si consiglia di avviare Cloud Manager in AWS da https://cloud.netapp.com["NetApp Cloud Central"^], Ma è possibile avviarlo da questa pagina di AWS Marketplace, se si preferisce. 
+
+
+| Implementazione di Cloud Volumes ONTAP PAYGO (9.5 o precedente)  a| 
+* https://aws.amazon.com/marketplace/pp/B011KEZ734["Cloud Volumes ONTAP per AWS"^]
+* https://aws.amazon.com/marketplace/pp/B01H4LVJ84["Cloud Volumes ONTAP per AWS - alta disponibilità"^]
+
+| Queste pagine di AWS Marketplace consentono di sottoscrivere le versioni a nodo singolo o ha di Cloud Volumes ONTAP PAYGO per le versioni 9.5 e precedenti. A partire dalla versione 9.6, è necessario iscriversi alla pagina AWS Marketplace elencata nella riga 1 di questa tabella per le implementazioni PAYGO. 
+|===

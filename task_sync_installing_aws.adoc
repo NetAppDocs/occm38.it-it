@@ -1,0 +1,111 @@
+---
+sidebar: sidebar 
+permalink: task_sync_installing_aws.html 
+keywords: data broker, install, aws, networking, permissions, regions, install data broker in aws, install in aws, deploy in aws, deploy data broker in aws, cft, template, iam role, use your own iam role, regions, supported regions, networking requirements, port, ports, 443, port 443, ntp, network time protocol, permissions, iam role, iam permissions, aws data broker 
+summary: 'Quando si crea una relazione di sincronizzazione, scegliere l"opzione AWS Data Broker per implementare il software del data broker su una nuova istanza EC2 in un VPC. Cloud Sync guida l"utente attraverso il processo di installazione, ma i requisiti e i passaggi vengono ripetuti in questa pagina per facilitare la preparazione all"installazione.' 
+---
+= Installazione del data broker in AWS
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Quando si crea una relazione di sincronizzazione, scegliere l'opzione AWS Data Broker per implementare il software del data broker su una nuova istanza EC2 in un VPC. Cloud Sync guida l'utente attraverso il processo di installazione, ma i requisiti e i passaggi vengono ripetuti in questa pagina per facilitare la preparazione all'installazione.
+
+È inoltre possibile installare il data broker su un host Linux esistente nel cloud o on-premise. link:task_sync_installing_linux.html["Scopri di più"].
+
+
+
+== Regioni AWS supportate
+
+Tutte le regioni sono supportate, ad eccezione di quelle della Cina e di GovCloud (USA).
+
+
+
+== Requisiti di rete
+
+* Il broker di dati necessita di una connessione Internet in uscita in modo che possa eseguire il polling del servizio Cloud Sync per le attività sulla porta 443.
++
+Quando Cloud Sync implementa il data broker in AWS, crea un gruppo di sicurezza che abilita la comunicazione in uscita richiesta. Nota: È possibile configurare il data broker per l'utilizzo di un server proxy durante il processo di installazione.
+
++
+Per limitare la connettività in uscita, vedere link:reference_sync_networking.html["l'elenco degli endpoint a cui il data broker contatta"].
+
+* NetApp consiglia di configurare l'origine, la destinazione e il data broker per utilizzare un servizio NTP (Network Time Protocol). La differenza di tempo tra i tre componenti non deve superare i 5 minuti.
+
+
+
+
+== Autorizzazioni necessarie per implementare il data broker in AWS
+
+L'account utente AWS utilizzato per implementare il data broker deve disporre delle autorizzazioni incluse in https://s3.amazonaws.com/metadata.datafabric.io/docs/aws_iam_policy.json["Questa policy fornita da NetApp"^].
+
+
+
+== [[iam]]requisiti per utilizzare il tuo ruolo IAM con il data broker AWS
+
+Quando Cloud Sync implementa il data broker, crea un ruolo IAM per l'istanza del data broker. Se preferisci, puoi implementare il data broker utilizzando il tuo ruolo IAM. È possibile utilizzare questa opzione se l'organizzazione dispone di policy di sicurezza rigorose.
+
+Il ruolo IAM deve soddisfare i seguenti requisiti:
+
+* Il servizio EC2 deve essere autorizzato ad assumere il ruolo di IAM come entità attendibile.
+* link:media/aws_iam_policy_data_broker.json["Le autorizzazioni definite in questo file JSON"^] Deve essere associato al ruolo IAM in modo che il data broker possa funzionare correttamente.
+
+
+Seguire i passaggi riportati di seguito per specificare il ruolo IAM durante l'implementazione del data broker.
+
+
+
+== Installazione del data broker
+
+È possibile installare un data broker in AWS quando si crea una relazione di sincronizzazione.
+
+.Fasi
+. Fare clic su *Create New Sync* (Crea nuova sincronizzazione).
+. Nella pagina *Definisci relazione di sincronizzazione*, scegliere un'origine e una destinazione e fare clic su *continua*.
++
+Completa i passaggi fino a raggiungere la pagina *Data Broker*.
+
+. Nella pagina *Data Broker*, fare clic su *Create Data Broker*, quindi selezionare *Amazon Web Services*.
++
+Se disponi già di un data broker, dovrai fare clic su image:screenshot_plus_icon.gif["Una schermata se l'icona più"] prima icona.
+
++
+image:screenshot_create_data_broker.gif["Schermata della pagina Data Broker che consente di scegliere tra un data broker AWS, Azure, GCP e on-Prem."]
+
+. Immettere un nome per il broker di dati e fare clic su *continua*.
+. Immettere una chiave di accesso AWS in modo che Cloud Sync possa creare il data broker in AWS per conto dell'utente.
++
+Le chiavi non vengono salvate o utilizzate per altri scopi.
+
++
+Se invece non si desidera fornire le chiavi di accesso, fare clic sul collegamento in fondo alla pagina per utilizzare un modello CloudFormation. Quando si utilizza questa opzione, non è necessario fornire le credenziali perché si effettua l'accesso direttamente ad AWS.
+
++
+[[cft]]il seguente video mostra come avviare l'istanza del data broker utilizzando un modello CloudFormation:
+
++
+video::video_cloud_sync.mp4[width=848,height=480]
+. Se è stata immessa una chiave di accesso AWS, selezionare una posizione per l'istanza, selezionare una coppia di chiavi, scegliere se attivare un indirizzo IP pubblico, quindi selezionare un ruolo IAM esistente oppure lasciare vuoto il campo in modo che Cloud Sync crei il ruolo.
++
+Se scegli il tuo ruolo IAM, <<iam,è necessario fornire le autorizzazioni necessarie>>.
+
++
+image:screenshot_aws_data_broker.gif["Una schermata delle informazioni da fornire durante l'implementazione di un data broker in AWS."]
+
+. Una volta che il data broker è disponibile, fare clic su *Continue* (continua) in Cloud Sync.
++
+L'immagine seguente mostra un'istanza implementata correttamente in AWS:
+
++
+image:screenshot_created_instance.gif["Questa schermata mostra un'istanza implementata correttamente. L'interfaccia mostra i dettagli sull'istanza, inclusa la rete AWS."]
+
+. Completare le pagine della procedura guidata per creare la nuova relazione di sincronizzazione.
+
+
+.Risultato
+Hai implementato un data broker in AWS e creato una nuova relazione di sincronizzazione. Puoi utilizzare questo data broker con ulteriori relazioni di sincronizzazione.

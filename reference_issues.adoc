@@ -1,0 +1,21 @@
+---
+sidebar: sidebar 
+permalink: reference_issues.html 
+keywords: issues, bugs, known issues 
+summary: 'I problemi noti identificano i problemi che potrebbero impedire l"utilizzo corretto di questa versione del prodotto.' 
+---
+= Problemi noti
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+I problemi noti identificano i problemi che potrebbero impedire l'utilizzo corretto di questa versione del prodotto.
+
+Non ci sono problemi noti in questa versione di Cloud Manager.
+
+I problemi noti relativi a Cloud Volumes ONTAP sono disponibili in https://docs.netapp.com/us-en/cloud-volumes-ontap/["Note di rilascio di Cloud Volumes ONTAP"^] E per il software ONTAP in generale in https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["Note di rilascio di ONTAP"^].

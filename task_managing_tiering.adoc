@@ -1,0 +1,131 @@
+---
+sidebar: sidebar 
+permalink: task_managing_tiering.html 
+keywords: discover, volumes, report, hot, cold, inactive, active, capacity, used capacity, savings, health, failed 
+summary: Ora che hai scoperto e tierato i dati dal tuo primo cluster ONTAP, puoi tierare i dati da volumi aggiuntivi, scoprire cluster aggiuntivi e molto altro ancora. 
+---
+= Gestione del tiering dei dati dai cluster
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Ora che hai impostato il tiering dei dati dai cluster ONTAP, puoi tierare i dati da volumi aggiuntivi, modificare la policy di tiering di un volume e molto altro ancora.
+
+
+
+== Tiering dei dati da volumi aggiuntivi
+
+Impostare il tiering dei dati per volumi aggiuntivi in qualsiasi momento, ad esempio dopo la creazione di un nuovo volume.
+
+.Fasi
+. Nella parte superiore di Cloud Manager, fare clic su *Tiering*.
+. Dal pannello di controllo del cluster, fare clic su *Tier Volumes* per il cluster.
+. Per ciascun volume, fare clic su image:screenshot_edit_icon.gif["Una schermata dell'icona di modifica visualizzata alla fine di ogni riga della tabella per il tiering dei volumi"] Selezionare una policy di tiering, regolare i giorni di raffreddamento e fare clic su *Apply* (Applica).
++
+link:concept_cloud_tiering.html#volume-tiering-policies["Scopri di più sulle policy di tiering dei volumi"].
+
++
+image:https://docs.netapp.com/us-en/cloud-tiering/media/screenshot_volumes_select.gif["Una schermata che mostra i volumi selezionati nella pagina Select Source Volumes (Seleziona volumi di origine)."]
+
++
+
+TIP: Non è necessario configurare lo storage a oggetti perché è già stato configurato durante la configurazione iniziale del tiering per il cluster. ONTAP eseguirà il tiering dei dati inattivi da questi volumi nello stesso archivio di oggetti.
+
+. Al termine, fare clic su *Chiudi*.
+
+
+
+
+== Modifica della policy di tiering di un volume
+
+La modifica del criterio di tiering per un volume modifica il modo in cui ONTAP esegue il tiering dei dati cold in storage a oggetti. La modifica ha inizio dal momento in cui si modifica la policy, ovvero solo il successivo comportamento di tiering per il volume.
+
+.Fasi
+. Nella parte superiore di Cloud Manager, fare clic su *Tiering*.
+. Dal pannello di controllo del cluster, fare clic su *Tier Volumes* per il cluster.
+. Fare clic su image:screenshot_edit_icon.gif["Una schermata dell'icona di modifica visualizzata alla fine di ogni riga della tabella per il tiering dei volumi"] Selezionare una policy di tiering, regolare i giorni di raffreddamento e fare clic su *Apply* (Applica).
++
+link:concept_cloud_tiering.html#volume-tiering-policies["Scopri di più sulle policy di tiering dei volumi"].
+
+
+
+
+
+== Gestione delle impostazioni di tiering sugli aggregati
+
+Ogni aggregato dispone di due impostazioni che è possibile regolare: La soglia di fullness del tiering e se è attivata la funzione di reporting dei dati inattivi.
+
+Soglia di fullness tiering:: Impostando la soglia su un numero inferiore, si riduce la quantità di dati da memorizzare nel Tier di performance prima di eseguire il tiering. Questo potrebbe essere utile per grandi aggregati che contengono pochi dati attivi.
++
+--
+Impostando la soglia su un numero più elevato, si aumenta la quantità di dati da memorizzare nel Tier di performance prima di eseguire il tiering. Questo potrebbe essere utile per le soluzioni progettate per il Tier solo quando gli aggregati sono quasi alla capacità massima.
+
+--
+Reporting dei dati inattivi:: Il reporting dei dati inattivi (IDR) utilizza un periodo di raffreddamento di 31 giorni per determinare quali dati sono considerati inattivi. La quantità di dati cold a più livelli dipende dalle policy di tiering impostate sui volumi. Questa quantità potrebbe essere diversa dalla quantità di dati cold rilevata dall'IDR utilizzando un periodo di raffreddamento di 31 giorni.
++
+--
+
+TIP: È meglio mantenere l'IDR abilitato perché aiuta a identificare i dati inattivi e le opportunità di risparmio. IDR deve rimanere abilitato se il tiering dei dati è stato attivato su un aggregato.
+
+--
+
+
+.Fasi
+. Nella parte superiore di Cloud Manager, fare clic su *Tiering*.
+. Dalla pagina *Cloud Tiering*, fare clic sull'icona del menu di un cluster e selezionare *Manage aggregates* (Gestisci aggregati).
++
+image:https://docs.netapp.com/us-en/cloud-tiering/media/screenshot_manage_aggregates.gif["Una schermata del pannello di controllo del cluster che mostra un cluster e il menu delle azioni espanso."]
+
+. Nella pagina *Manage aggregates* (Gestisci aggregati), fare clic su image:screenshot_edit_icon.gif["Una schermata dell'icona di modifica visualizzata alla fine di ogni riga della tabella per la gestione degli aggregati"] per un aggregato nella tabella.
+. Modificare la soglia di fullness e scegliere se attivare o disattivare il reporting dei dati inattivi.
++
+image:https://docs.netapp.com/us-en/cloud-tiering/media/screenshot_edit_aggregate.gif["Una schermata che mostra un dispositivo di scorrimento per modificare la soglia di fullness del tiering e un pulsante per attivare o disattivare il reporting dei dati inattivi."]
+
+. Fare clic su *Apply* (Applica).
+
+
+
+
+== Revisione delle informazioni di tiering per un cluster
+
+Potresti voler vedere la quantità di dati nel Tier cloud e la quantità di dati presenti sui dischi. In alternativa, è possibile visualizzare la quantità di dati hot e cold sui dischi del cluster. Cloud Tiering fornisce queste informazioni per ogni cluster.
+
+.Fasi
+. Nella parte superiore di Cloud Manager, fare clic su *Tiering*.
+. Dal pannello di controllo del cluster, fare clic su *ulteriori informazioni* per un cluster.
++
+image:https://docs.netapp.com/us-en/cloud-tiering/media/screenshot_more_info.gif["Una schermata che mostra il pulsante More info (ulteriori informazioni), disponibile nella dashboard del cluster per ciascun cluster."]
+
+. Esaminare i dettagli del cluster.
++
+Ecco un esempio:
+
++
+image:https://docs.netapp.com/us-en/cloud-tiering/media/screenshot_cluster_info.gif["Una schermata che mostra il report del cluster, in cui sono indicate le informazioni relative alla capacità totale utilizzata, alla capacità utilizzata dal cluster, alle informazioni sul cluster e allo storage a oggetti."]
+
+
+
+
+
+== Correzione dello stato operativo
+
+Possono verificarsi errori. Quando lo fanno, il Cloud Tiering visualizza uno stato di salute operativo "non riuscito" sul pannello di controllo del cluster. Lo stato di salute riflette lo stato del sistema ONTAP e di Cloud Manager.
+
+.Fasi
+. Identificare tutti i cluster con stato operativo "Failed" (guasto).
++
+image:https://docs.netapp.com/us-en/cloud-tiering/media/screenshot_tiering_health.gif["Una schermata che mostra lo stato di integrità del tiering non riuscito per un cluster."]
+
+. Passare il mouse su image:https://docs.netapp.com/us-en/cloud-tiering/media/screenshot_info_icon.gif["Una schermata dell'icona i che mostra il motivo dell'errore"] per visualizzare il motivo del guasto.
+. Correggere il problema:
++
+.. Verificare che il cluster ONTAP sia operativo e che disponga di una connessione in entrata e in uscita con il provider di storage a oggetti.
+.. Verificare che Cloud Manager disponga di connessioni in uscita al servizio di tiering cloud, all'archivio di oggetti e ai cluster ONTAP che rileva.
+
+
+

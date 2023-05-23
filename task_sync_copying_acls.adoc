@@ -1,0 +1,85 @@
+---
+sidebar: sidebar 
+permalink: task_sync_copying_acls.html 
+keywords: permissions, access control list, acls, ntfs, cifs, smb, shares, robocopy, copy, transfer, activate, operating system, os, ram, cpu, networking, copy acls to the target 
+summary: 'Cloud Sync può copiare gli elenchi di controllo degli accessi (ACL) tra una condivisione SMB di origine e una condivisione SMB di destinazione. Se necessario, è possibile conservare manualmente gli ACL utilizzando robocopy.' 
+---
+= Copia degli ACL tra le condivisioni SMB
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Cloud Sync può copiare gli elenchi di controllo degli accessi (ACL) tra una condivisione SMB di origine e una condivisione SMB di destinazione. Se necessario, è possibile conservare manualmente gli ACL utilizzando robocopy.
+
+.Scelte
+* <<Configurazione di Cloud Sync per copiare gli ACL tra server SMB,Impostare Cloud Sync per la copia automatica degli ACL>>
+* <<Copia manuale degli ACL,Copiare manualmente gli ACL>>
+
+
+
+
+== Configurazione di Cloud Sync per copiare gli ACL tra server SMB
+
+Copiare gli ACL tra server SMB attivando un'impostazione quando si crea una relazione o dopo la creazione di una relazione.
+
+Questa funzionalità è disponibile per le nuove relazioni di sincronizzazione create dopo la release 23 febbraio 2020. Se si desidera utilizzare questa funzione con le relazioni esistenti create prima di tale data, sarà necessario ricreare la relazione.
+
+.Di cosa hai bisogno
+* Una nuova relazione di sincronizzazione o una relazione di sincronizzazione esistente creata dopo la release del 23 febbraio 2020.
+* Qualsiasi tipo di broker di dati.
++
+Questa funzionalità funziona con _qualsiasi_ tipo di data broker: AWS, Azure, Google Cloud Platform o data broker on-premise. Il data broker on-premise può essere eseguito link:task_sync_installing_linux.html["qualsiasi sistema operativo supportato"].
+
+
+
+.Passaggi per una nuova relazione
+. Da Cloud Sync, fare clic su *Crea nuova sincronizzazione*.
+. Trascinare *SMB Server* nell'origine e nella destinazione e fare clic su *Continue* (continua).
+. Nella pagina *SMB Server*:
++
+.. Immettere un nuovo server SMB o selezionare un server esistente e fare clic su *continua*.
+.. Immettere le credenziali per il server SMB.
+.. Selezionare *Copy Access Control Lists to the target* (Copia elenchi di controllo degli accessi nella destinazione) e fare clic su *Continue* (continua).
++
+image:screenshot_acl_support.gif["Una schermata che mostra l'opzione per abilitare la copia degli elenchi di controllo degli accessi nella destinazione."]
+
+
+
+. Seguire le istruzioni rimanenti per creare la relazione di sincronizzazione.
+
+
+.Passaggi per una relazione esistente
+. Passare il mouse sulla relazione di sincronizzazione e fare clic sul menu delle azioni.
+. Fare clic su *Impostazioni*.
+. Selezionare *Copy Access Control Lists to the target* (Copia elenchi di controllo degli accessi nella destinazione).
+. Fare clic su *Save Settings* (Salva impostazioni).
+
+
+.Risultato
+Durante la sincronizzazione dei dati, Cloud Sync preserva gli ACL tra le condivisioni SMB di origine e di destinazione.
+
+
+
+== Copia manuale degli ACL
+
+È possibile conservare manualmente gli ACL tra le condivisioni SMB utilizzando il comando Windows robocopy.
+
+.Fasi
+. Identificare un host Windows con accesso completo a entrambe le condivisioni SMB.
+. Se uno degli endpoint richiede l'autenticazione, utilizzare il comando *net use* per connettersi agli endpoint dall'host Windows.
++
+Eseguire questa procedura prima di utilizzare robocopy.
+
+. Da Cloud Sync, creare una nuova relazione tra le condivisioni SMB di origine e di destinazione o sincronizzare una relazione esistente.
+. Una volta completata la sincronizzazione dei dati, eseguire il seguente comando dall'host Windows per sincronizzare gli ACL e la proprietà:
++
+ robocopy /E /COPY:SOU /secfix [source] [target] /w:0 /r:0 /XD ~snapshots /UNILOG:”[logfilepath]
++
+È necessario specificare sia _source_ che _target_ utilizzando il formato UNC. Ad esempio: <server>/<share>/<path>
+
+

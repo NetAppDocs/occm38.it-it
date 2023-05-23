@@ -1,0 +1,75 @@
+---
+sidebar: sidebar 
+permalink: task_managing_state.html 
+keywords: schedule, schedules, scheduling, shutdowns, shut down, restart, stop, stopping, turn off, weekday, weekend 
+summary: Puoi arrestare e avviare Cloud Volumes ONTAP da Cloud Manager per gestire i costi di calcolo del cloud. 
+---
+= Gestione dello stato di Cloud Volumes ONTAP
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Puoi arrestare e avviare Cloud Volumes ONTAP da Cloud Manager per gestire i costi di calcolo del cloud.
+
+
+
+== Pianificazione degli arresti automatici di Cloud Volumes ONTAP
+
+Per ridurre i costi di calcolo, potrebbe essere necessario arrestare Cloud Volumes ONTAP durante intervalli di tempo specifici. Invece di eseguire questa operazione manualmente, è possibile configurare Cloud Manager in modo che arresti e riavvii automaticamente i sistemi in orari specifici.
+
+.A proposito di questa attività
+Quando si pianifica un arresto automatico del sistema Cloud Volumes ONTAP, Cloud Manager posticipa l'arresto se è in corso un trasferimento di dati attivo. Cloud Manager arresta il sistema al termine del trasferimento.
+
+Questa attività pianifica gli arresti automatici di entrambi i nodi in una coppia ha.
+
+.Fasi
+. Dall'ambiente di lavoro, fare clic sull'icona dell'orologio:
++
+image:screenshot_shutdown_icon.gif["Schermata: Mostra l'icona che carica la pagina di spegnimento automatico."]
+
+. Specificare il programma di arresto:
++
+.. Scegliere se si desidera spegnere il sistema ogni giorno, ogni giorno feriale, ogni fine settimana o qualsiasi combinazione delle tre opzioni.
+.. Specificare quando si desidera spegnere il sistema e per quanto tempo si desidera disattivarlo.
++
+*Esempio*
+
++
+La seguente immagine mostra un programma che indica a Cloud Manager di spegnere il sistema ogni sabato alle 12:00 per 48 ore. Cloud Manager riavvia il sistema ogni lunedì alle 12:00
+
++
+image:screenshot_shutdown.gif["Schermata: Mostra un programma di arresto che arresta Cloud Volumes ONTAP ogni fine settimana alle 12:00 AM per 48 ore."]
+
+
+
+. Fare clic su *Save* (Salva).
+
+
+.Risultato
+Cloud Manager salva la pianificazione. L'icona dell'orologio cambia per indicare che è stata impostata una pianificazione: image:screenshot_shutdown_icon_scheduled.gif["Schermata: Mostra l'icona di spegnimento automatico dopo la definizione di un programma."]
+
+
+
+== Arresto di Cloud Volumes ONTAP
+
+L'arresto di Cloud Volumes ONTAP consente di risparmiare sui costi di calcolo e di creare snapshot dei dischi root e di boot, che possono essere utili per la risoluzione dei problemi.
+
+.A proposito di questa attività
+Quando si interrompe una coppia ha, Cloud Manager arresta entrambi i nodi.
+
+.Fasi
+. Dall'ambiente di lavoro, fare clic sull'icona *Spegni*.
++
+image:screenshot_otc_turn_off.gif["Schermata: Mostra l'icona per spegnere un sistema Cloud Volumes ONTAP."]
+
+. Mantenere l'opzione per creare snapshot abilitata, in quanto le snapshot possono abilitare il ripristino del sistema.
+. Fare clic su *Spegni*.
++
+L'arresto del sistema può richiedere fino a qualche minuto. È possibile riavviare i sistemi in un secondo momento dalla pagina ambiente di lavoro.
+
+

@@ -1,0 +1,125 @@
+---
+sidebar: sidebar 
+permalink: task_setting_up_cloud_central_accounts.html 
+keywords: account settings, workspaces, Connector, account admin, workspace admin, users, associate, disassociate, add user, add users, user management, administer, user, management, account, user account, user accounts, create workspace, add workspace, setup workspace, workspace, Connector, manage Connector, manage workspace, associate Connector 
+summary: Quando accedi a Cloud Manager per la prima volta, ti viene richiesto di creare un account NetApp Cloud Central. Questo account offre multi-tenancy e consente di organizzare utenti e risorse in aree di lavoro isolate. 
+---
+= Impostazione di aree di lavoro e utenti nell'account Cloud Central
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Quando accedi a Cloud Manager per la prima volta, ti viene richiesto di creare un _account NetApp Cloud Central_. Questo account offre multi-tenancy e consente di organizzare utenti e risorse in _aree di lavoro_ isolate.
+
+link:concept_cloud_central_accounts.html["Scopri di più sul funzionamento degli account Cloud Central"].
+
+Configura il tuo account Cloud Central in modo che gli utenti possano accedere a Cloud Manager e agli ambienti di lavoro in un'area di lavoro. Basta aggiungere un singolo utente o più utenti e aree di lavoro.
+
+
+
+== Aggiunta di aree di lavoro
+
+In Cloud Manager, le aree di lavoro consentono di isolare un set di ambienti di lavoro da altri ambienti di lavoro e da altri utenti. Ad esempio, è possibile creare due aree di lavoro e associare utenti separati a ciascuna area di lavoro.
+
+.Fasi
+. Nella parte superiore di Cloud Manager, fare clic sull'elenco a discesa *account*.
++
+image:screenshot_account_settings_menu.gif["Una schermata che mostra l'opzione Impostazioni account nel banner superiore di Cloud Manager."]
+
+. Fare clic su *Manage account* (Gestisci account) accanto all'account attualmente selezionato.
++
+image:screenshot_manage_account_settings.gif["Una schermata che mostra l'opzione Manage account Settings (Gestisci impostazioni account) disponibile nell'elenco a discesa account (account)."]
+
+. Fare clic su *Workspaces*.
+. Fare clic su *Aggiungi nuova area di lavoro*.
+. Immettere un nome per l'area di lavoro e fare clic su *Aggiungi*.
+
+
+.Al termine
+Se un amministratore dell'area di lavoro ha bisogno di accedere a questa area di lavoro, sarà necessario associare l'utente. Inoltre, dovrai associare i connettori allo spazio di lavoro in modo che gli amministratori dell'area di lavoro possano utilizzarli.
+
+
+
+== Aggiunta di utenti
+
+Associa gli utenti di Cloud Central all'account Cloud Central in modo che questi utenti possano creare e gestire ambienti di lavoro in Cloud Manager.
+
+.Fasi
+. Se l'utente non l'ha già fatto, chiedere all'utente di accedere a. https://cloud.netapp.com["NetApp Cloud Central"^] e iscriverti.
+. Nella parte superiore di Cloud Manager, fare clic sull'elenco a discesa *account* e fare clic su *Manage account* (Gestisci account).
++
+image:screenshot_manage_account_settings.gif["Una schermata che mostra l'opzione Manage account Settings (Gestisci impostazioni account) disponibile nell'elenco a discesa account (account)."]
+
+. Dalla scheda Users (utenti), fare clic su *associate User* (Associa utente).
+. Inserire l'indirizzo e-mail dell'utente e selezionare un ruolo per l'utente:
++
+** *Account Admin*: Può eseguire qualsiasi azione in Cloud Manager.
+** *Workspace Admin*: Consente di creare e gestire le risorse nelle aree di lavoro assegnate.
+** *Compliance Viewer*: È in grado di visualizzare solo le informazioni di conformità e generare report per le aree di lavoro a cui sono autorizzati ad accedere.
+
+
+. Se si seleziona Workspace Admin (Amministratore area di lavoro) o Compliance Viewer (Visualizzatore conformità), selezionare una o più aree di lavoro da associare all'utente.
++
+image:screenshot_associate_user.gif["Una schermata che mostra come associare un utente selezionando un ruolo e le aree di lavoro associate."]
+
+. Fare clic su *Associa utente*.
+
+
+.Risultato
+L'utente deve ricevere un'e-mail da NetApp Cloud Central intitolata "account Association". L'e-mail include le informazioni necessarie per accedere a Cloud Manager.
+
+
+
+== Associazione di Workspace Admins alle aree di lavoro
+
+È possibile associare gli amministratori Workspace a aree di lavoro aggiuntive in qualsiasi momento. L'associazione dell'utente consente di creare e visualizzare gli ambienti di lavoro in tale area di lavoro.
+
+.Fasi
+. Nella parte superiore di Cloud Manager, fare clic sull'elenco a discesa *account* e fare clic su *Manage account* (Gestisci account).
++
+image:screenshot_manage_account_settings.gif["Una schermata che mostra l'opzione Manage account Settings (Gestisci impostazioni account) disponibile nell'elenco a discesa account (account)."]
+
+. Dalla scheda Users (utenti), fare clic sul menu delle azioni nella riga corrispondente all'utente.
++
+image:screenshot_associate_user_workspace.gif["Una schermata che mostra il menu delle azioni disponibile quando si passa il mouse sul nome di un utente nella tabella Users (utenti)."]
+
+. Fare clic su *Gestisci aree di lavoro*.
+. Selezionare una o più aree di lavoro e fare clic su *Applica*.
+
+
+.Risultato
+L'utente può ora accedere a tali aree di lavoro da Cloud Manager, purché il connettore sia stato associato anche alle aree di lavoro.
+
+
+
+== Associazione di connettori alle aree di lavoro
+
+È necessario associare un connettore alle aree di lavoro in modo che gli amministratori dell'area di lavoro possano utilizzare tali connettori per creare sistemi Cloud Volumes ONTAP.
+
+Se si dispone solo di account Admins, non è necessario associare il connettore alle aree di lavoro. Gli amministratori degli account hanno la possibilità di accedere a tutte le aree di lavoro in Cloud Manager per impostazione predefinita.
+
+link:concept_cloud_central_accounts.html#users-workspaces-and-service-connectors["Scopri di più su utenti, aree di lavoro e connettori"].
+
+.Fasi
+. Nella parte superiore di Cloud Manager, fare clic sull'elenco a discesa *account* e fare clic su *Manage account* (Gestisci account).
++
+image:screenshot_manage_account_settings.gif["Una schermata che mostra l'opzione Manage account Settings (Gestisci impostazioni account) disponibile nell'elenco a discesa account (account)."]
+
+. Fare clic su *Connector* (connettore).
+. Fare clic su *Manage Workspaces* (Gestisci aree di lavoro) per il connettore che si desidera associare.
+. Selezionare una o più aree di lavoro e fare clic su *Applica*.
+
+
+.Risultato
+Gli amministratori dell'area di lavoro possono ora utilizzare questi connettori per creare sistemi Cloud Volumes ONTAP.
+
+
+
+== Quali sono le prossime novità?
+
+Ora che hai configurato il tuo account, puoi gestirlo in qualsiasi momento rimuovendo utenti, gestendo aree di lavoro, connettori e sottoscrizioni. link:task_managing_cloud_central_accounts.html["Scopri di più"].

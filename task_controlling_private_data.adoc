@@ -1,0 +1,439 @@
+---
+sidebar: sidebar 
+permalink: task_controlling_private_data.html 
+keywords: personal files, personal data, sensitive personal files, sensitive personal data, health data, ethnic origin, political opinions, gdpr, email address, credit card, ip address, iban, national ID, identifier, sex, criminal, compliance, privacy 
+summary: Ottieni il controllo dei tuoi dati privati visualizzando i dettagli relativi ai dati personali e ai dati personali sensibili della tua organizzazione. Puoi anche ottenere visibilità esaminando le categorie e i tipi di file che Cloud Compliance ha trovato nei tuoi dati. 
+---
+= Ottenere visibilità e controllo sui dati privati
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Ottieni il controllo dei tuoi dati privati visualizzando i dettagli relativi ai dati personali e ai dati personali sensibili della tua organizzazione. Puoi anche ottenere visibilità esaminando le categorie e i tipi di file che Cloud Compliance ha trovato nei tuoi dati.
+
+Per impostazione predefinita, il dashboard Cloud Compliance visualizza i dati di conformità per tutti gli ambienti di lavoro e i database.
+
+image:screenshot_compliance_dashboard.png["Schermata della dashboard Cloud Compliance"]
+
+Se si desidera visualizzare i dati solo per alcuni ambienti di lavoro, <<Visualizzazione dei dati da ambienti di lavoro specifici,selezionare gli ambienti di lavoro>>.
+
+
+
+== Dati personali
+
+Cloud Compliance identifica automaticamente parole, stringhe e modelli specifici (Regex) all'interno dei dati. Ad esempio, informazioni di identificazione personale (PII), numeri di carta di credito, numeri di previdenza sociale, numeri di conto bancario e altro ancora. <<Tipi di dati personali,Consulta l'elenco completo>>.
+
+Per alcuni tipi di dati personali, Cloud Compliance utilizza _Proximity Validation_ per validarne i risultati. La convalida avviene cercando una o più parole chiave predefinite in prossimità dei dati personali trovati. Ad esempio, Cloud Compliance identifica un Numero di previdenza sociale (SSN) come SSN se viene visualizzato un termine di prossimità, ad esempio _SSN_ o _social Security_. <<Tipi di dati personali,L'elenco seguente>> Mostra quando Cloud Compliance utilizza la convalida di prossimità.
+
+
+
+=== Visualizzazione di file contenenti dati personali
+
+.Fasi
+. Nella parte superiore di Cloud Manager, fare clic su *Cloud Compliance* e fare clic sulla scheda *Dashboard*.
+. Per esaminare i dettagli di tutti i dati personali, fare clic sull'icona accanto alla percentuale dei dati personali.
++
+image:screenshot_compliance_personal.gif["Una schermata che mostra la selezione della percentuale dei dati personali."]
+
+. Per esaminare i dettagli di un tipo specifico di dati personali, fare clic su *Visualizza tutto*, quindi fare clic sull'icona *esamina risultati* per un tipo specifico di dati personali.
++
+image:screenshot_personal_files.gif["Una schermata della finestra di dialogo dei file personali in cui è possibile fare clic sull'icona dei risultati dell'analisi accanto a un tipo di dati personali."]
+
+. Esaminare i dati ricercando, ordinando, espandendo i dettagli di un file specifico, facendo clic su *esamina risultati* per visualizzare le informazioni mascherate o scaricando l'elenco dei file.
++
+image:screenshot_compliance_investigation_page.gif["Una schermata di informazioni dettagliate dopo aver fatto clic su Investigate Results (esamina risultati)."]
+
+. È inoltre possibile filtrare il contenuto della pagina di analisi per visualizzare solo i risultati desiderati. Le schede di primo livello consentono di visualizzare i dati dai file (dati non strutturati) o dai database (dati strutturati).
++
+Sono disponibili filtri per ambiente di lavoro, repository di storage, categoria, dati privati, tipo di file, Data dell'ultima modifica e se le autorizzazioni dell'oggetto S3 sono aperte all'accesso pubblico.
+
++
+image:screenshot_compliance_investigation_filtered.png["Una schermata dei filtri disponibili quando si perfezionano i risultati nella pagina di analisi."]
+
+
+
+
+
+=== Tipi di dati personali
+
+I dati personali contenuti nei file possono essere dati personali di carattere generale o identificativi nazionali. La terza colonna indica se la conformità al cloud utilizza <<Dati personali,convalida della prossimità>> per convalidare i risultati per l'identificatore.
+
+[cols="20,50,18"]
+|===
+| Tipo | Identificatore | Convalida della prossimità? 
+
+
+.3+| Generale | Indirizzo e-mail | No 
+
+
+| Numero della carta di credito | No 
+
+
+| Numero IBAN (International Bank account Number) | No 
+
+
+.31+| Identificatori nazionali | ID belga (numero nazionale) | Sì 
+
+
+| ID brasiliano (CPF) | Sì 
+
+
+| ID bulgaro (UCN) | Sì 
+
+
+| California driver's License | Sì 
+
+
+| ID croato (OIB) | Sì 
+
+
+| Codice fiscale di Cipro (TIC) | Sì 
+
+
+| Documento d'identità ceco/slovacco | Sì 
+
+
+| ID danese (CPR) | Sì 
+
+
+| Olandese ID (BSN) | Sì 
+
+
+| ID estone | Sì 
+
+
+| ID finlandese (HETU) | Sì 
+
+
+| Francese Tax Identification Number (SPI) | Sì 
+
+
+| Codice fiscale tedesco (Steuerliche Identifikationsnummer) | Sì 
+
+
+| ID greco | Sì 
+
+
+| Codice fiscale ungherese | Sì 
+
+
+| Irish ID (PPS) (ID irlandese) | Sì 
+
+
+| ID Israeliano | Sì 
+
+
+| Codice fiscale italiano | Sì 
+
+
+| Documento d'identità lettone | Sì 
+
+
+| ID lituano | Sì 
+
+
+| Lussemburgo ID | Sì 
+
+
+| ID maltese | Sì 
+
+
+| ID polacco (PESEL) | Sì 
+
+
+| Portoghese Tax Identification Number (NIF) | Sì 
+
+
+| ID rumeno (CNP) | Sì 
+
+
+| ID sloveno (EMSO) | Sì 
+
+
+| ID sudafricano | Sì 
+
+
+| Codice fiscale spagnolo | Sì 
+
+
+| ID svedese | Sì 
+
+
+| REGNO UNITO ID (NINO) | Sì 
+
+
+| Numero di previdenza sociale (SSN) USA | Sì 
+|===
+
+
+== Dati personali sensibili
+
+Cloud Compliance identifica automaticamente tipi speciali di informazioni personali sensibili, come definito dalle normative sulla privacy, ad esempio https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R0679&from=EN#d1e2051-1-1["articoli 9 e 10 del GDPR"^]. Ad esempio, informazioni relative alla salute, all'origine etnica o all'orientamento sessuale di una persona. <<Tipi di dati personali sensibili,Consulta l'elenco completo>>.
+
+Cloud Compliance utilizza l'intelligenza artificiale (ai), l'elaborazione del linguaggio naturale (NLP), l'apprendimento automatico (ML) e il calcolo cognitivo (CC) per comprendere il significato dei contenuti che scansiona al fine di estrarre le entità e classificarle di conseguenza.
+
+Ad esempio, una categoria di dati GDPR sensibili è l'origine etnica. Grazie alle sue capacità di NLP, Cloud Compliance è in grado di distinguere la differenza tra una frase con la dicitura "George is Mexican" (che indica i dati sensibili come specificato nell'articolo 9 del GDPR) e "George is Eating Mexican Food" (George is Eating Mexican Food).
+
+
+NOTE: Quando si esegue la scansione di dati personali sensibili, è supportata solo l'inglese. Il supporto per altre lingue verrà aggiunto in un secondo momento.
+
+
+
+=== Visualizzazione di file contenenti dati personali sensibili
+
+.Fasi
+. Nella parte superiore di Cloud Manager, fare clic su *Cloud Compliance*.
+. Per esaminare i dettagli di tutti i dati personali sensibili, fare clic sull'icona accanto alla percentuale dei dati personali sensibili.
++
+image:screenshot_compliance_sensitive_personal.gif["Una schermata che mostra la selezione della percentuale di dati personali sensibili."]
+
+. Per esaminare i dettagli di un tipo specifico di dati personali sensibili, fare clic su *Visualizza tutto*, quindi fare clic sull'icona *esamina risultati* per un tipo specifico di dati personali sensibili.
++
+image:screenshot_sensitive_personal_files.gif["Una schermata della finestra di dialogo dei file personali sensibili in cui è possibile fare clic sull'icona dei risultati dell'analisi accanto a un tipo di dati personali."]
+
+. Esaminare i dati ricercando, ordinando, espandendo i dettagli di un file specifico, facendo clic su *esamina risultati* per visualizzare le informazioni mascherate o scaricando l'elenco dei file.
+
+
+
+
+=== Tipi di dati personali sensibili
+
+I dati personali sensibili che Cloud Compliance può trovare nei file includono:
+
+Riferimento alle procedure penali:: Dati relativi alle condanne e ai reati penali di una persona fisica.
+Riferimento di etnia:: Dati relativi alla razza o all'origine etnica di una persona fisica.
+Riferimento di salute:: Dati relativi alla salute di una persona fisica.
+Codici medici ICD-9-CM:: Codici utilizzati nel settore medico e sanitario.
+Codici medici ICD-10-CM:: Codici utilizzati nel settore medico e sanitario.
+Riferimento alle credenze filosofiche:: Dati relativi alle convinzioni filosofiche di una persona naturale.
+Riferimenti alle credenze religiose:: Dati relativi alle convinzioni religiose di una persona fisica.
+Sex Life o orientamento di riferimento:: Dati relativi alla vita sessuale o all'orientamento sessuale di una persona fisica.
+
+
+
+
+== Categorie
+
+Cloud Compliance prende i dati sottoposti a scansione e li divide in diversi tipi di categorie. Le categorie sono argomenti basati sull'analisi ai del contenuto e dei metadati di ciascun file. <<Tipi di categorie,Vedere l'elenco delle categorie>>.
+
+Le categorie possono aiutarti a capire cosa accade con i tuoi dati mostrando i tipi di informazioni di cui disponi. Ad esempio, una categoria come i curriculum o i contratti dei dipendenti può includere dati sensibili. Quando si analizzano i risultati, è possibile che i contratti dei dipendenti siano memorizzati in una posizione non sicura. A questo punto, è possibile correggere il problema.
+
+
+NOTE: Per le categorie è supportato solo l'inglese. Il supporto per altre lingue verrà aggiunto in un secondo momento.
+
+
+
+=== Visualizzazione dei file in base alle categorie
+
+.Fasi
+. Nella parte superiore di Cloud Manager, fare clic su *Cloud Compliance*.
+. Fare clic sull'icona *esamina risultati* di una delle 4 categorie principali direttamente dalla schermata principale oppure fare clic su *Visualizza tutto* e quindi sull'icona corrispondente a una delle categorie.
++
+image:screenshot_categories.gif["Una schermata della finestra di dialogo delle categorie in cui è possibile fare clic sull'icona dei risultati dell'analisi accanto a una categoria."]
+
+. Esaminare i dati ricercando, ordinando, espandendo i dettagli di un file specifico, facendo clic su *esamina risultati* per visualizzare le informazioni mascherate o scaricando l'elenco dei file.
+
+
+
+
+=== Tipi di categorie
+
+La conformità al cloud classifica i tuoi dati nel modo seguente:
+
+Finanza::
++
+--
+* Bilanci
+* Ordini di acquisto
+* Fatture
+* Report trimestrali
+
+
+--
+FC::
++
+--
+* Controlli in background
+* Piani di compensazione
+* Contratti con i dipendenti
+* Recensioni dei dipendenti
+* Salute
+* Riprende
+
+
+--
+Legale::
++
+--
+* NDA
+* Contratti fornitore-cliente
+
+
+--
+Marketing::
++
+--
+* Campagne
+* Conferenze
+
+
+--
+Operazioni::
++
+--
+* Report di audit
+
+
+--
+Vendite::
++
+--
+* Ordini di vendita
+
+
+--
+Servizi::
++
+--
+* RFI
+* RFP
+* SOW
+* Formazione
+
+
+--
+Supporto::
++
+--
+* Reclami e biglietti
+
+
+--
+Categorie di metadati::
++
+--
+* Dati dell'applicazione
+* Archiviare i file
+* Audio
+* Dati delle applicazioni di business
+* File CAD
+* Codice
+* Database e file di indice
+* File di progettazione
+* Email Application Data (dati applicazione email)
+* Eseguibili
+* Dati delle applicazioni finanziarie
+* Health Application Data
+* Immagini
+* Registri
+* Documenti vari
+* Presentazioni varie
+* Fogli di calcolo vari
+* Video
+
+
+--
+
+
+
+
+== Tipi di file
+
+Cloud Compliance prende i dati sottoposti a scansione e li suddivide in base al tipo di file. La revisione dei tipi di file consente di controllare i dati sensibili, poiché alcuni tipi di file potrebbero non essere memorizzati correttamente. <<Tipi di file,Vedere l'elenco dei tipi di file>>.
+
+Ad esempio, è possibile memorizzare file CAD che includono informazioni molto sensibili sull'organizzazione. Se non sono protetti, è possibile assumere il controllo dei dati sensibili limitando le autorizzazioni o spostando i file in un'altra posizione.
+
+
+
+=== Visualizzazione dei tipi di file
+
+.Fasi
+. Nella parte superiore di Cloud Manager, fare clic su *Cloud Compliance*.
+. Fare clic sull'icona *esamina risultati* per uno dei 4 tipi di file principali direttamente dalla schermata principale oppure fare clic su *Visualizza tutto*, quindi fare clic sull'icona corrispondente a uno qualsiasi dei tipi di file.
++
+image:screenshot_file_types.gif["Una schermata della finestra di dialogo tipi di file in cui è possibile fare clic sull'icona analisi dei risultati accanto a un tipo di file."]
+
+. Esaminare i dati ricercando, ordinando, espandendo i dettagli di un file specifico, facendo clic su *esamina risultati* per visualizzare le informazioni mascherate o scaricando l'elenco dei file.
+
+
+
+
+=== Tipi di file
+
+Cloud Compliance esegue la scansione di tutti i file per individuare informazioni su categorie e metadati e visualizza tutti i tipi di file nella sezione tipi di file della dashboard.
+
+Tuttavia, quando Cloud Compliance rileva le informazioni personali identificabili (PII) o esegue una ricerca DSAR, sono supportati solo i seguenti formati di file: .PDF, .DOCX, .DOC, .PPTX, .XLS, XLSX, .CSV, .TXT, .RTF E .JSON.
+
+
+
+== Visualizzazione dei dati da ambienti di lavoro specifici
+
+Puoi filtrare i contenuti della dashboard Cloud Compliance per visualizzare i dati di conformità per tutti gli ambienti di lavoro e i database o solo per ambienti di lavoro specifici.
+
+Quando filtri la dashboard, Cloud Compliance regola i dati di conformità e invia report solo agli ambienti di lavoro selezionati.
+
+.Fasi
+. Fare clic sul menu a discesa del filtro, selezionare gli ambienti di lavoro per i quali si desidera visualizzare i dati e fare clic su *View* (Visualizza).
++
+image:screenshot_cloud_compliance_filter.gif[""]
+
+
+
+
+
+== Accuratezza delle informazioni rilevate
+
+NetApp non può garantire una precisione del 100% dei dati personali e dei dati personali sensibili identificati dalla Cloud Compliance. È sempre necessario convalidare le informazioni esaminando i dati.
+
+In base ai nostri test, la tabella seguente mostra l'accuratezza delle informazioni rilevate dalla Cloud Compliance. Lo suddivideremo per _precisione_ e _richiamo_:
+
+Precisione:: La probabilità che ciò che trova Cloud Compliance sia stata identificata correttamente. Ad esempio, un tasso di precisione del 90% per i dati personali significa che 9 file su 10 identificati come contenenti informazioni personali contengono effettivamente informazioni personali. 1 file su 10 sarebbe un falso positivo.
+Ricorda:: La probabilità che la conformità cloud trovi ciò che dovrebbe. Ad esempio, un tasso di richiamo del 70% per i dati personali significa che Cloud Compliance è in grado di identificare 7 file su 10 che contengono effettivamente informazioni personali nella tua organizzazione. La conformità al cloud perderebbe il 30% dei dati e non verrà visualizzata nella dashboard.
+
+
+Cloud Compliance è in una release di disponibilità controllata e stiamo costantemente migliorando la precisione dei nostri risultati. Tali miglioramenti saranno automaticamente disponibili nelle future release di Cloud Compliance.
+
+[cols="25,20,20"]
+|===
+| Tipo | Precisione | Ricorda 
+
+
+| Dati personali - Generale | 90%-95% | 60%-80% 
+
+
+| Dati personali - identificatori del Paese | 30%-60% | 40%-60% 
+
+
+| Dati personali sensibili | 80%-95% | 20%-30% 
+
+
+| Categorie | 90%-97% | 60%-80% 
+|===
+
+
+== Contenuto di ciascun report elenco file (file CSV)
+
+Da ogni pagina di analisi è possibile scaricare elenchi di file (in formato CSV) che includono dettagli sui file identificati. Se sono presenti più di 10,000 risultati, nell'elenco vengono visualizzati solo i primi 10,000 risultati.
+
+Ciascun elenco di file include le seguenti informazioni:
+
+* Nome del file
+* Tipo di ubicazione
+* Ambiente di lavoro
+* Repository di storage
+* Protocollo
+* Percorso del file
+* Tipo di file
+* Categoria
+* Informazioni personali
+* Informazioni personali sensibili
+* Data di rilevamento dell'eliminazione
++
+Una data di rilevamento dell'eliminazione identifica la data in cui il file è stato cancellato o spostato. In questo modo è possibile identificare quando sono stati spostati file sensibili. I file cancellati non fanno parte del numero di file visualizzato nella dashboard o nella pagina di analisi. I file vengono visualizzati solo nei report CSV.
+
+

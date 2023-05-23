@@ -1,0 +1,106 @@
+---
+sidebar: sidebar 
+permalink: task_managing_connectors.html 
+keywords: managing connectors, uninstall connector, switch connectors, switch between connectors, go to local UI, local interface, local connector, local cloud manager 
+summary: Dopo aver creato uno o più connettori, è possibile gestirli passando da connettori a interfacce utente locali in esecuzione su un connettore e altro ancora. 
+---
+= Gestione dei connettori esistenti
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Dopo aver creato uno o più connettori, è possibile gestirli passando da connettori a interfacce utente locali in esecuzione su un connettore e altro ancora.
+
+
+
+== Passaggio da un connettore all'altro
+
+Se si dispone di più connettori, è possibile passare da un connettore all'altro per visualizzare gli ambienti di lavoro associati a uno specifico connettore.
+
+Ad esempio, supponiamo di lavorare in un ambiente multi-cloud. In AWS potrebbe essere presente un connettore e in Google Cloud un altro connettore. Per gestire i sistemi Cloud Volumes ONTAP in esecuzione in tali cloud, è necessario passare da un connettore all'altro.
+
+.Fase
+. Fare clic sull'elenco a discesa *Connector*, selezionare un altro connettore, quindi fare clic su *Switch*.
++
+image:screenshot_connector_switch.gif["Una schermata che mostra l'icona del connettore nell'intestazione e l'azione Switch."]
+
++
+Cloud Manager aggiorna e mostra gli ambienti di lavoro associati al connettore selezionato.
+
+
+
+
+
+== Accesso all'interfaccia utente locale
+
+Sebbene sia necessario eseguire quasi tutte le attività dall'interfaccia utente SaaS, sul connettore è ancora disponibile un'interfaccia utente locale. Questa interfaccia è necessaria per alcune attività che devono essere eseguite dal connettore stesso:
+
+* link:task_configuring_proxy.html["Impostazione di un server proxy"]
+* Installazione di una patch (in genere collaborerete con il personale NetApp per installare una patch)
+* Download dei messaggi AutoSupport (solitamente indirizzati dal personale NetApp in caso di problemi)
+
+
+.Fasi
+. https://docs.netapp.com/us-en/occm/task_logging_in.html["Accedere all'interfaccia SaaS di Cloud Manager"^] Da un computer che dispone di una connessione di rete all'istanza del connettore.
++
+Se il connettore non dispone di un indirizzo IP pubblico, è necessaria una connessione VPN oppure è necessario connettersi da un host di collegamento che si trova nella stessa rete del connettore.
+
+. Fare clic sull'elenco a discesa *Connector*, selezionare il menu delle azioni di un connettore, quindi fare clic su *Go to Local UI* (Vai all'interfaccia utente locale).
++
+image:screenshot_connector_local_ui.gif["Una schermata che mostra l'icona del connettore nell'intestazione e l'azione Go to local UI (Vai all'interfaccia utente locale)."]
+
++
+L'interfaccia di Cloud Manager in esecuzione sul connettore viene caricata in una nuova scheda del browser.
+
+
+
+
+
+== Rimozione dei connettori da Cloud Manager
+
+Se un connettore non è attivo, è possibile rimuoverlo dall'elenco dei connettori in Cloud Manager. Questa operazione può essere eseguita se la macchina virtuale Connector è stata eliminata o se il software Connector è stato disinstallato.
+
+Tenere presente quanto segue per la rimozione di un connettore:
+
+* Questa azione non elimina la macchina virtuale.
+* Questa azione non può essere ripristinata - una volta rimosso un connettore da Cloud Manager, non puoi aggiungerlo di nuovo a Cloud Manager.
+
+
+.Fasi
+. Fare clic sull'elenco a discesa Connector dall'intestazione Cloud Manager.
+. Fare clic sul menu delle azioni per un connettore inattivo e fare clic su *Remove Connector* (Rimuovi connettore).
++
+image:screenshot_connector_remove.gif["Una schermata del widget Connector in cui è possibile rimuovere un connettore inattivo."]
+
+. Inserire il nome del connettore da confermare, quindi fare clic su Remove (Rimuovi).
+
+
+.Risultato
+Cloud Manager rimuove il connettore dai record.
+
+
+
+== Disinstallazione del software Connector
+
+Il connettore include uno script di disinstallazione che è possibile utilizzare per disinstallare il software per risolvere i problemi o per rimuovere in modo permanente il software dall'host.
+
+.Fase
+. Eseguire lo script di disinstallazione dall'host Linux:
++
+*/opt/application/netapp/cloudmanager/bin/uninstall.sh [silent]*
+
++
+_silent_ esegue lo script senza richiedere conferma.
+
+
+
+.E gli aggiornamenti software?
+****
+Il connettore aggiorna automaticamente il software alla versione più recente, a patto che sia disponibile link:reference_networking_cloud_manager.html["accesso a internet in uscita"] per ottenere l'aggiornamento software.
+
+****

@@ -1,0 +1,352 @@
+---
+sidebar: sidebar 
+permalink: faq_sync.html 
+keywords: community, forums, help, support, videos, faq, getting help, permissions, access control lists, acls, preserve, preserving, troubleshooting, support 
+summary: Puoi ottenere aiuto con Cloud Sync e trovare ulteriori informazioni attraverso varie risorse, tra cui forum, servizi di chat e video. 
+---
+= Domande tecniche frequenti su Cloud Sync
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Queste FAQ possono essere utili se stai cercando una risposta rapida a una domanda.
+
+
+
+== Per iniziare
+
+Le seguenti domande si riferiscono alla guida introduttiva di Cloud Sync.
+
+
+
+=== Come funziona Cloud Sync?
+
+Cloud Sync utilizza il software per il broker dei dati NetApp per sincronizzare i dati da un'origine a una destinazione (questa è denominata _relazione di sincronizzazione_).
+
+Il data broker controlla le relazioni di sincronizzazione tra le origini e le destinazioni. Dopo aver impostato una relazione di sincronizzazione, Cloud Sync analizza il sistema di origine e lo suddivide in più flussi di replica per eseguire il push sui dati di destinazione selezionati.
+
+Dopo la copia iniziale, il servizio sincronizza i dati modificati in base alla pianificazione impostata.
+
+
+
+=== Come funziona la prova gratuita di 14 giorni?
+
+La prova gratuita di 14 giorni inizia quando ti iscrivi al servizio Cloud Sync. Non sei soggetto ai costi di NetApp per le relazioni Cloud Sync che crei per 14 giorni. Tuttavia, tutti i costi relativi alle risorse per qualsiasi broker di dati implementato sono ancora validi.
+
+
+
+=== Quanto costa Cloud Sync?
+
+L'utilizzo di Cloud Sync comporta due tipi di costi: Costi di servizio e costi delle risorse.
+
+*Costi di servizio*
+
+Per i prezzi pay-as-you-go, i costi del servizio Cloud Sync sono orari, in base al numero di relazioni di sincronizzazione create.
+
+* https://aws.amazon.com/marketplace/pp/B01LZV5DUJ["Visualizza i prezzi pay-as-you-go in AWS"^]
+* https://aws.amazon.com/marketplace/pp/B06XX5V3M2["Visualizza i prezzi annuali in AWS"^]
+* https://azuremarketplace.microsoft.com/en-us/marketplace/apps/netapp.cloud-sync-service?tab=PlansAndPrice["Visualizza i prezzi in Azure"^]
+
+
+Le licenze Cloud Sync sono disponibili anche presso il vostro rappresentante NetApp. Ogni licenza consente 20 relazioni di sincronizzazione per 12 mesi.
+
+link:concept_cloud_sync.html["Scopri di più sulle licenze"].
+
+*Costi delle risorse*
+
+I costi delle risorse sono correlati ai costi di calcolo e storage per l'esecuzione del data broker nel cloud.
+
+
+
+=== Come viene fatturato Cloud Sync?
+
+Esistono due modi per pagare le relazioni di sincronizzazione dopo la fine della prova gratuita di 14 giorni. La prima opzione consiste nell'abbonarsi ad AWS o Azure, che consente di pagare a consumo o di pagare annualmente. La seconda opzione consiste nell'acquistare le licenze direttamente da NetApp.
+
+
+
+=== Posso utilizzare Cloud Sync al di fuori del cloud?
+
+Sì, puoi utilizzare Cloud Sync in un'architettura non cloud. L'origine e la destinazione possono risiedere on-premise e così anche il broker di dati.
+
+Nota i seguenti punti chiave sull'utilizzo di Cloud Sync al di fuori del cloud:
+
+* Per la sincronizzazione on-premise, NetApp StorageGRID mette a disposizione un bucket Amazon S3 privato.
+* Il data broker ha bisogno di una connessione a Internet per comunicare con il servizio Cloud Sync.
+* Se non acquisti una licenza direttamente da NetApp, dovrai disporre di un account AWS o Azure per la fatturazione del servizio PAYGO Cloud Sync.
+
+
+
+
+=== Come si accede a Cloud Sync?
+
+Cloud Sync è disponibile in Gestione cloud nella scheda *sincronizzazione*.
+
+
+
+== Fonti e destinazioni supportate
+
+Le seguenti domande relative all'origine e alle destinazioni supportate in una relazione di sincronizzazione.
+
+
+
+=== Quali fonti e destinazioni supporta Cloud Sync?
+
+Cloud Sync supporta diversi tipi di relazioni di sincronizzazione. link:reference_sync_requirements.html["Visualizzare l'intero elenco"].
+
+
+
+=== Quali versioni di NFS e SMB sono supportate da Cloud Sync?
+
+Cloud Sync supporta NFS versione 3 e successive e SMB versione 1 e successive.
+
+link:reference_sync_requirements.html["Scopri di più sui requisiti di sincronizzazione"].
+
+
+
+=== Quando Amazon S3 è la destinazione, è possibile eseguire il tiering dei dati in base a una classe di storage S3 specifica?
+
+Sì, è possibile scegliere una classe di storage S3 specifica quando AWS S3 è la destinazione:
+
+* Standard (classe predefinita)
+* Tiering intelligente
+* Standard-infrequent Access (accesso standard-non frequente)
+* Accesso non frequente a una sola zona
+* Ghiacciaio
+* Glacier Deep Archive
+
+
+
+
+=== E i Tier di storage per lo storage Azure Blob?
+
+È possibile scegliere un livello di storage Azure Blob specifico quando un container Blob è la destinazione:
+
+* Storage a caldo
+* Storage fresco
+
+
+
+
+== Networking
+
+Le seguenti domande si riferiscono ai requisiti di rete per Cloud Sync.
+
+
+
+=== Quali sono i requisiti di rete per Cloud Sync?
+
+L'ambiente Cloud Sync richiede che il data broker sia connesso all'origine e alla destinazione attraverso il protocollo selezionato (NFS, SMB, EFS) o l'API dello storage a oggetti (Amazon S3, Azure Blob, IBM Cloud Object Storage).
+
+Inoltre, il broker di dati necessita di una connessione Internet in uscita sulla porta 443 in modo che possa comunicare con il servizio Cloud Sync e contattare altri servizi e repository.
+
+Per ulteriori informazioni, link:reference_sync_networking.html["esaminare i requisiti di rete"].
+
+
+
+=== Esistono limitazioni di rete relative alla connettività del data broker?
+
+I broker di dati richiedono l'accesso a Internet. Non supportiamo un server proxy durante l'implementazione del data broker in Azure o in Google Cloud Platform.
+
+
+
+== Sincronizzazione dei dati
+
+Le seguenti domande si riferiscono al funzionamento della sincronizzazione dei dati.
+
+
+
+=== Con quale frequenza si verifica la sincronizzazione?
+
+La pianificazione predefinita è impostata per la sincronizzazione giornaliera. Dopo la sincronizzazione iniziale, è possibile:
+
+* Modificare la pianificazione di sincronizzazione in base al numero di giorni, ore o minuti desiderato
+* Disattivare la pianificazione della sincronizzazione
+* Eliminare la pianificazione di sincronizzazione (nessun dato andrà perso; verrà rimossa solo la relazione di sincronizzazione)
+
+
+
+
+=== Qual è la pianificazione minima di sincronizzazione?
+
+È possibile pianificare una relazione per sincronizzare i dati ogni 1 minuto.
+
+
+
+=== Il broker di dati riprova quando un file non riesce a sincronizzarsi? O il timeout?
+
+Il data broker non esegue il timeout quando un singolo file non riesce a trasferire. Invece, il data broker tenta di nuovo 3 volte prima di saltare il file. Il valore di RETRY è configurabile nelle impostazioni per una relazione di sincronizzazione.
+
+link:task_sync_managing_relationships.html#changing-the-settings-for-a-sync-relationship["Scopri come modificare le impostazioni per una relazione di sincronizzazione"].
+
+
+
+=== E se si dispone di un set di dati molto grande?
+
+Se una singola directory contiene almeno 600,000 file, mailto:ng-cloudsync-support@netapp.com[contattaci] per aiutarti a configurare il data broker in modo da gestire il payload. Potrebbe essere necessario aggiungere ulteriore memoria alla macchina del broker di dati.
+
+
+
+== Sicurezza
+
+Le seguenti domande relative alla sicurezza.
+
+
+
+=== Cloud Sync è sicuro?
+
+Sì. Tutta la connettività di rete del servizio Cloud Sync viene eseguita utilizzando https://aws.amazon.com/sqs/["Amazon Simple Queue Service (SQS)"^].
+
+Tutte le comunicazioni tra il data broker e Amazon S3, Azure Blob, Google Cloud Storage e IBM Cloud Object Storage vengono effettuate tramite il protocollo HTTPS.
+
+Se utilizzi Cloud Sync con sistemi on-premise (di origine o di destinazione), ecco alcune opzioni di connettività consigliate:
+
+* Una connessione AWS Direct Connect, Azure ExpressRoute o Google Cloud Interconnect, non instradata su Internet (e in grado di comunicare solo con le reti cloud specificate)
+* Una connessione VPN tra il dispositivo gateway on-premise e le reti cloud
+* Per un trasferimento dei dati estremamente sicuro con i bucket S3, lo storage Azure Blob o Google Cloud Storage, è possibile stabilire un endpoint Amazon Private S3 Endpoint, un endpoint del servizio Azure Virtual Network o un accesso privato a Google.
+
+
+Uno qualsiasi di questi metodi stabilisce una connessione sicura tra i server NAS on-premise e un data broker Cloud Sync.
+
+
+
+=== I dati sono crittografati da Cloud Sync?
+
+* Cloud Sync supporta la crittografia data-in-flight tra server NFS di origine e di destinazione. link:task_sync_nfs_encryption.html["Scopri di più"].
+* La crittografia non è supportata con SMB.
+* Quando un bucket Amazon S3 è la destinazione di una relazione di sincronizzazione, puoi scegliere se attivare la crittografia dei dati utilizzando la crittografia AWS KMS o AES-256.
+
+
+
+
+== Permessi
+
+Le seguenti domande si riferiscono alle autorizzazioni per i dati.
+
+
+
+=== Le autorizzazioni dei dati SMB sono sincronizzate con la posizione di destinazione?
+
+È possibile impostare Cloud Sync in modo da conservare gli elenchi di controllo degli accessi (ACL) tra una condivisione SMB di origine e una condivisione SMB di destinazione. In alternativa, è possibile copiare manualmente gli ACL. link:task_sync_copying_acls.html["Scopri come copiare gli ACL tra le condivisioni SMB"].
+
+
+
+=== Le autorizzazioni dei dati NFS sono sincronizzate con la posizione di destinazione?
+
+Cloud Sync copia automaticamente le autorizzazioni NFS tra i server NFS come segue:
+
+* NFS versione 3: Cloud Sync copia i permessi e il proprietario del gruppo di utenti.
+* NFS versione 4: Cloud Sync copia gli ACL.
+
+
+
+
+== Performance
+
+Le seguenti domande si riferiscono alle performance di Cloud Sync.
+
+
+
+=== Cosa rappresenta l'indicatore di avanzamento di una relazione di sincronizzazione?
+
+La relazione di sincronizzazione mostra il throughput della scheda di rete del data broker. Se le prestazioni di sincronizzazione sono state accelerate utilizzando più broker di dati, il throughput è la somma di tutto il traffico. Questo throughput viene aggiornato ogni 20 secondi.
+
+
+
+=== Sto riscontrando problemi di performance. Possiamo limitare il numero di trasferimenti simultanei?
+
+Il data broker può sincronizzare 4 file alla volta. Se si dispone di file di grandi dimensioni (più TB ciascuno), il completamento del processo di trasferimento può richiedere molto tempo e le prestazioni potrebbero risentirne.
+
+Limitare il numero di trasferimenti simultanei può essere di aiuto. Mailto:ng-cloudsync-support@netapp.com[Contattaci per ricevere assistenza].
+
+
+
+=== Perché si riscontrano prestazioni ridotte con Azure NetApp Files?
+
+Quando si sincronizzano i dati con o da Azure NetApp Files, potrebbero verificarsi errori e problemi di performance se il livello di servizio del disco è standard.
+
+Impostare il livello di servizio su Premium o Ultra per migliorare le prestazioni di sincronizzazione.
+
+https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-service-levels#throughput-limits["Scopri di più sui livelli di servizio e sul throughput di Azure NetApp Files"^].
+
+
+
+=== Perché si riscontrano prestazioni ridotte con Cloud Volumes Service per AWS?
+
+Quando sincronizzi i dati da o verso un volume cloud, potresti riscontrare guasti e problemi di performance se il livello di performance per il volume cloud è Standard.
+
+Impostare il livello di servizio su Premium o Extreme per migliorare le prestazioni di sincronizzazione.
+
+
+
+=== Quanti broker di dati sono richiesti?
+
+Quando si crea una nuova relazione, si inizia con un singolo data broker (a meno che non sia stato selezionato un data broker esistente che appartiene a una relazione di sincronizzazione accelerata). In molti casi, un singolo data broker può soddisfare i requisiti di performance per una relazione di sincronizzazione. In caso contrario, puoi accelerare le performance di sincronizzazione aggiungendo ulteriori broker di dati. Tuttavia, è necessario prima controllare altri fattori che possono influire sulle prestazioni di sincronizzazione.
+
+Diversi fattori possono influire sulle performance di trasferimento dei dati. Le performance di sincronizzazione complessive potrebbero risentire della larghezza di banda, della latenza e della topologia di rete, delle specifiche delle macchine virtuali del data broker e delle performance del sistema storage. Ad esempio, un singolo broker di dati in una relazione di sincronizzazione può raggiungere 100 MB/s, mentre il throughput del disco sulla destinazione potrebbe consentire solo 64 MB/s. Di conseguenza, il data broker continua a cercare di copiare i dati, ma la destinazione non può soddisfare le performance del data broker.
+
+Pertanto, verificare le prestazioni della rete e il throughput del disco sulla destinazione.
+
+Quindi, puoi prendere in considerazione l'accelerazione delle performance di sincronizzazione aggiungendo un ulteriore broker di dati per condividere il carico di tale relazione. link:task_sync_managing_relationships.html#accelerating-sync-performance["Scopri come accelerare le performance di sincronizzazione"].
+
+
+
+== Eliminare le cose
+
+Le seguenti domande si riferiscono all'eliminazione di relazioni di sincronizzazione e dati da origini e destinazioni.
+
+
+
+=== Cosa succede se si elimina la relazione Cloud Sync?
+
+L'eliminazione di una relazione interrompe tutte le future sincronizzazioni dei dati e termina il pagamento. Tutti i dati sincronizzati con la destinazione rimangono invariato.
+
+
+
+=== Cosa succede se si elimina qualcosa dal server di origine? Viene rimosso anche dalla destinazione?
+
+Per impostazione predefinita, se si dispone di una relazione di sincronizzazione attiva, l'elemento eliminato sul server di origine non viene eliminato dalla destinazione durante la sincronizzazione successiva. Tuttavia, nelle impostazioni di sincronizzazione per ciascuna relazione è disponibile un'opzione in cui è possibile definire che Cloud Sync elimini i file nella posizione di destinazione se sono stati eliminati dall'origine.
+
+link:task_sync_managing_relationships.html#changing-the-settings-for-a-sync-relationship["Scopri come modificare le impostazioni per una relazione di sincronizzazione"].
+
+
+
+=== Cosa succede se si elimina qualcosa dalla destinazione? Viene rimosso anche dalla fonte?
+
+Se un elemento viene eliminato dalla destinazione, non verrà rimosso dall'origine. La relazione è unidirezionale, dall'origine alla destinazione. Al successivo ciclo di sincronizzazione, Cloud Sync confronta l'origine con la destinazione, identifica l'elemento mancante e Cloud Sync lo copia di nuovo dall'origine alla destinazione.
+
+
+
+== Risoluzione dei problemi
+
+https://kb.netapp.com/Advice_and_Troubleshooting/Cloud_Services/Cloud_Sync/Cloud_Sync_FAQ:_Support_and_Troubleshooting["Knowledge base di NetApp: Domande frequenti su Cloud Sync: Supporto e risoluzione dei problemi"^]
+
+
+
+== Analisi approfondita del data broker
+
+La seguente domanda si riferisce al data broker.
+
+
+
+=== Puoi spiegare l'architettura del data broker?
+
+Certo. Ecco i punti più importanti:
+
+* Il data broker è un'applicazione node.js in esecuzione su un host Linux.
+* Cloud Sync implementa il data broker come segue:
++
+** AWS: Da un modello AWS CloudFormation
+** Azure: Da Azure Resource Manager
+** Google: Da Google Cloud Deployment Manager
+** Se si utilizza il proprio host Linux, è necessario installare manualmente il software
+
+
+* Il software data broker si aggiorna automaticamente alla versione più recente.
+* Il data broker utilizza AWS SQS come canale di comunicazione affidabile e sicuro e per il controllo e il monitoraggio. SQS fornisce anche un layer di persistenza.
+* È possibile aggiungere ulteriori broker di dati a una relazione per aumentare la velocità di trasferimento e aggiungere alta disponibilità. In caso di guasto di un broker di dati, esiste una resilienza del servizio.
+

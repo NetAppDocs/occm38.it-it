@@ -1,0 +1,110 @@
+---
+sidebar: sidebar 
+permalink: concept_cloud_central_accounts.html 
+keywords: accounts, workspaces, Connector, users, cloud central, admin, Account Admin, Workspace Admin, account settings, workspaces, users, connector, service connector, user accounts, what are users, what is a workspace, users and workspaces 
+summary: Un account Cloud Central offre multi-tenancy e consente di organizzare utenti e risorse in aree di lavoro isolate da Cloud Manager. 
+---
+= Impostazioni dell'account: Utenti, aree di lavoro, connettori e sottoscrizioni
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Un _account Cloud Central_ offre multi-tenancy e consente di organizzare utenti e risorse in aree di lavoro isolate da Cloud Manager.
+
+Ad esempio, più utenti possono implementare e gestire i sistemi Cloud Volumes ONTAP in ambienti isolati denominati _workspaces_. Queste aree di lavoro sono invisibili agli altri utenti, a meno che non siano condivise.
+
+Quando accedi per la prima volta a Cloud Manager, ti viene richiesto di selezionare o creare un account Cloud Central:
+
+image:screenshot_account_selection.gif["Una schermata della procedura guidata di configurazione di Cloud Manager che richiede l'account Cloud Central in cui si desidera creare Cloud Manager."]
+
+Gli amministratori dell'account possono quindi modificare le impostazioni di questo account gestendo utenti, aree di lavoro, connettori e sottoscrizioni:
+
+image:screenshot_account_settings.gif["Una schermata che mostra il widget Impostazioni account da cui è possibile gestire utenti, aree di lavoro e connettori."]
+
+Per istruzioni dettagliate, vedere link:task_setting_up_cloud_central_accounts.html["Configurazione dell'account Cloud Central"].
+
+
+
+== Impostazioni dell'account
+
+Il widget Impostazioni account in Cloud Manager consente agli amministratori account di gestire un account Cloud Central. Se hai appena creato il tuo account, partirai da zero. Tuttavia, se hai già configurato un account, vedrai _tutti_ gli utenti, gli spazi di lavoro, i connettori e gli abbonamenti associati all'account.
+
+
+
+== Utenti
+
+Gli utenti visualizzati nelle Impostazioni account sono gli utenti di NetApp Cloud Central associati al tuo account Cloud Central. L'associazione di un utente a un account e a una o più aree di lavoro in tale account consente a tali utenti di creare e gestire ambienti di lavoro in Cloud Manager.
+
+Quando si associa un utente, viene assegnato un ruolo:
+
+* _Account Admin_: Può eseguire qualsiasi azione in Cloud Manager.
+* _Workspace Admin_: Consente di creare e gestire le risorse nell'area di lavoro assegnata.
+* _Cloud Compliance Viewer_: È in grado di visualizzare solo le informazioni di conformità e generare report per i sistemi ai quali è consentito l'accesso.
+
+
+
+
+== Aree di lavoro
+
+In Cloud Manager, uno spazio di lavoro isola qualsiasi numero di _ambienti di lavoro_ da altri ambienti di lavoro. Gli amministratori dell'area di lavoro non possono accedere agli ambienti di lavoro in un'area di lavoro a meno che l'amministratore dell'account non colleghi l'amministratore a tale area di lavoro.
+
+Un ambiente di lavoro rappresenta un sistema storage:
+
+* Un sistema Cloud Volumes ONTAP a nodo singolo o una coppia ha
+* Un cluster ONTAP on-premise nella rete
+* Un cluster ONTAP in una configurazione di storage privato NetApp
+
+
+
+
+== Connettori
+
+Un connettore consente a Cloud Manager di gestire risorse e processi all'interno del tuo ambiente di cloud pubblico. Il connettore viene eseguito su un'istanza di macchina virtuale implementata nel provider cloud o su un host on-premise configurato.
+
+È possibile utilizzare un connettore con più di un servizio dati cloud NetApp. Ad esempio, se disponi già di un connettore per Cloud Manager, puoi selezionarlo quando configuri il servizio Cloud Tiering.
+
+
+
+== Abbonamenti
+
+Il widget Impostazioni account mostra gli abbonamenti NetApp associati all'account selezionato.
+
+Quando ti iscrivi a Cloud Manager dal marketplace di un cloud provider, verrai reindirizzato a Cloud Central dove dovrai salvare l'abbonamento e associarlo a account specifici.
+
+Dopo aver effettuato l'iscrizione, ogni abbonamento è disponibile dal widget Impostazioni account. Verranno visualizzati solo gli abbonamenti associati all'account attualmente visualizzato.
+
+È possibile rinominare un abbonamento e disassociarlo da uno o più account.
+
+Ad esempio, supponiamo di avere due account e di fatturarvi ciascuno tramite abbonamenti separati. Potresti disassociare un abbonamento da uno degli account, in modo che gli utenti di quell'account non scelgano accidentalmente l'abbonamento sbagliato quando crei un ambiente di lavoro Cloud Volume ONTAP.
+
+
+
+== Esempi
+
+I seguenti esempi illustrano come configurare gli account.
+
+
+NOTE: In entrambe le immagini di esempio che seguono, il connettore e i sistemi Cloud Volumes ONTAP non risiedono effettivamente _nell'account NetApp Cloud Central, ma vengono eseguiti in un cloud provider. Si tratta di una rappresentazione concettuale della relazione tra ciascun componente.
+
+
+
+=== Esempio 1
+
+Nell'esempio riportato di seguito viene illustrato un account che utilizza due aree di lavoro per creare ambienti isolati. Il primo spazio di lavoro è per un ambiente di produzione e il secondo per un ambiente di sviluppo.
+
+image:diagram_cloud_central_accounts_one.png["Un diagramma che mostra un singolo account Cloud Central che contiene due aree di lavoro. Ogni area di lavoro è associata allo stesso connettore e dispone di un proprio Workspace Admin"]
+
+
+
+=== Esempio 2
+
+Ecco un altro esempio che mostra il più alto livello di multi-tenancy utilizzando due account Cloud Central separati. Ad esempio, un service provider potrebbe utilizzare Cloud Manager in un account per fornire servizi ai propri clienti, mentre utilizza un altro account per fornire il disaster recovery per una delle proprie business unit.
+
+L'account 2 include due connettori separati. Questo potrebbe verificarsi se i sistemi sono in regioni separate o in provider cloud separati.
+
+image:diagram_cloud_central_accounts_two.png["Un diagramma che mostra due account Cloud Central, ciascuno con diverse aree di lavoro e i relativi Workspace Admins associati."]

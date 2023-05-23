@@ -1,0 +1,102 @@
+---
+sidebar: sidebar 
+permalink: task_licensing_cloud_tiering.html 
+keywords: subscribe, trial, marketplace, subscription, paygo, pay, pay as you go, aws, tiering, cloud tiering 
+summary: 'Paga il tiering cloud con un abbonamento pay-as-you-go, una licenza di tiering ONTAP chiamata FabricPool o una combinazione di entrambi. Se desideri pagare a consumo, devi iscriverti al marketplace per il cloud provider a cui vuoi mettere a livello i dati cold. Non c"è bisogno di iscriversi da ogni mercato.' 
+---
+= Impostare le licenze per il Cloud Tiering
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Paga il tiering cloud con un abbonamento pay-as-you-go, una licenza di tiering ONTAP chiamata _FabricPool_ o una combinazione di entrambi. Se desideri pagare a consumo, devi iscriverti al marketplace per il cloud provider a cui vuoi mettere a livello i dati cold. Non c'è bisogno di iscriversi da ogni mercato.
+
+Alcune note prima di leggere ulteriori informazioni:
+
+* Se nel cluster è già installata una licenza FabricPool, non è necessario eseguire altre operazioni.
+* Se hai già sottoscritto l'abbonamento a Cloud Manager nel marketplace del tuo cloud provider, sarai automaticamente iscritto anche a Cloud Tiering. Verrà visualizzato un abbonamento attivo nella scheda Cloud Tiering *Licensing*. Non dovrai più iscriverti.
+* Non sono previsti costi per il tiering dei dati su StorageGRID. Non è richiesta alcuna licenza BYOL o registrazione PAYGO.
+
+
+link:concept_cloud_tiering.html["Scopri di più sul funzionamento delle licenze per il Cloud Tiering"].
+
+
+
+== Iscrizione a AWS Marketplace
+
+Iscriviti al Cloud Tiering dal marketplace AWS per impostare un abbonamento pay-as-you-go per il tiering dei dati dai cluster ONTAP ad AWS S3.
+
+[[subscribe-aws]]
+.Fasi
+. In Cloud Manager, fare clic su *Tiering > Licensing*.
+. Fare clic su *Subscribe* sotto AWS Marketplace, quindi fare clic su *Continue* (continua).
+. Iscriviti a AWS Marketplace, quindi accedi nuovamente a Cloud Central per completare la registrazione.
++
+Il seguente video mostra il processo:
+
++
+video::video_subscribing_aws_tiering.mp4[width=848,height=480]
+
+
+
+
+== Iscrizione a Azure Marketplace
+
+Iscriviti a Cloud Tiering dal marketplace Azure per impostare un abbonamento pay-as-you-go per il tiering dei dati dai cluster ONTAP allo storage Blob Azure.
+
+[[subscribe-azure]]
+.Fasi
+. In Cloud Manager, fare clic su *Tiering > Licensing*.
+. Fare clic su *Subscribe* sotto Azure Marketplace, quindi fare clic su *Continue*.
+. Iscriviti a Azure Marketplace, quindi accedi nuovamente a Cloud Central per completare la registrazione.
++
+Il seguente video mostra il processo:
+
++
+video::video_subscribing_azure_tiering.mp4[width=848,height=480]
+
+
+
+
+== Iscrizione al GCP Marketplace
+
+Iscriviti al Cloud Tiering dal GCP Marketplace per impostare un abbonamento pay-as-you-go per il tiering dei dati dai cluster ONTAP allo storage Google Cloud.
+
+.Fasi
+. In Cloud Manager, fare clic su *Tiering > Licensing*.
+. Fare clic su *Subscribe* sotto GCP Marketplace, quindi fare clic su *Continue* (continua).
+. Iscriviti al GCP Marketplace, quindi accedi nuovamente a Cloud Central per completare la registrazione.
++
+[[subscribe-gcp]]il seguente video mostra il processo:
+
++
+video::video_subscribing_gcp_tiering.mp4[width=848,height=480]
+
+
+
+
+== Aggiunta di una licenza di tiering a ONTAP
+
+Porta la tua licenza acquistando una licenza ONTAP FabricPool da NetApp.
+
+.Fasi
+. Se non disponi di una licenza FabricPool, mailto:ng-cloud-tiering@netapp.com?subject=Licensing[contattaci per acquistarne una].
+. In Cloud Manager, fare clic su *Tiering > Licensing*.
+. Nella tabella elenco cluster, fare clic su *Activate License (BYOL)* per un cluster ONTAP on-premise.
++
+image:screenshot_activate_license.gif["Schermata della pagina Licensing (licenze) in cui è possibile attivare una licenza per un cluster on-premise."]
+
+. Inserire il numero di serie della licenza, quindi l'account NetApp Support Site associato al numero di serie.
+. Fare clic su *Activate License* (attiva licenza).
+
+
+.Risultato
+Cloud Tiering registra la licenza e la installa sul cluster.
+
+.Al termine
+Se si acquista ulteriore capacità aggiuntiva in un secondo momento, la licenza sul cluster viene aggiornata automaticamente con la nuova capacità. Non è necessario applicare un nuovo file di licenza NetApp (NLF) al cluster.

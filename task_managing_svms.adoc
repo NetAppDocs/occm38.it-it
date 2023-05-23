@@ -1,0 +1,83 @@
+---
+sidebar: sidebar 
+permalink: task_managing_svms.html 
+keywords: storage virtual machine, vserver, svm, storage vm, supported number, number supported 
+summary: Una VM di storage è una macchina virtuale in esecuzione in ONTAP che fornisce servizi di storage e dati ai client. Questo potrebbe essere conosciuto come SVM o vserver. Cloud Volumes ONTAP è configurato con una VM di storage per impostazione predefinita, ma alcune configurazioni supportano altre VM di storage. 
+---
+= Gestione delle VM di storage
+:toc: macro
+:hardbreaks:
+:allow-uri-read: 
+:toc: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+Una VM di storage è una macchina virtuale in esecuzione in ONTAP che fornisce servizi di storage e dati ai client. Potresti sapere che si tratta di un _SVM_ o di un _vserver_. Cloud Volumes ONTAP è configurato con una VM di storage per impostazione predefinita, ma alcune configurazioni supportano altre VM di storage.
+
+
+
+== Numero di VM storage supportate
+
+Cloud Volumes ONTAP 9.7 supporta più macchine virtuali storage in AWS con determinate configurazioni e una licenza aggiuntiva. https://docs.netapp.com/us-en/cloud-volumes-ontap/reference_limits_aws_97.html#logical-storage-limits["Visualizza il numero di VM di storage supportate in AWS"^]. Contattare il proprio account team per ottenere una licenza add-on SVM.
+
+Tutte le altre configurazioni Cloud Volumes ONTAP supportano una VM di storage per il servizio dati e una VM di storage di destinazione utilizzata per il disaster recovery. È possibile attivare la VM di storage di destinazione per l'accesso ai dati in caso di interruzione della VM di storage di origine.
+
+Una VM di storage copre l'intero sistema Cloud Volumes ONTAP (coppia ha o nodo singolo).
+
+
+
+== Creazione di VM storage aggiuntive
+
+Se supportato dalla configurazione, è possibile creare ulteriori VM di storage utilizzando link:task_connecting_to_otc.html["System Manager o CLI"].
+
+* http://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-cifs-cg/GUID-CE5DE09F-3B48-48FE-A41C-9D69C3D0C402.html["Creazione di una SVM per l'accesso SMB"^]
+* http://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nfs-cg/GUID-CE5DE09F-3B48-48FE-A41C-9D69C3D0C402.html["Creazione di una SVM per l'accesso NFS"^]
+* http://docs.netapp.com/ontap-9/topic/com.netapp.doc.exp-iscsi-cpg/GUID-0FCB46AA-DA18-417B-A9EF-B6A665DB77FC.html["Creazione di una SVM per l'accesso iSCSI"^]
+* https://library.netapp.com/ecm/ecm_get_file/ECMLP2839856["Creazione di una SVM di destinazione per il disaster recovery"^]
+
+
+
+
+== Utilizzo di più macchine virtuali storage in Cloud Manager
+
+Cloud Manager supporta tutte le VM di storage aggiuntive create da System Manager o CLI.
+
+Ad esempio, l'immagine seguente mostra come scegliere una VM di storage quando si crea un volume.
+
+image:screenshot_create_volume_svm.gif["Una schermata che mostra la possibilità di selezionare la VM di storage in cui si desidera creare un volume."]
+
+L'immagine seguente mostra come scegliere una VM di storage durante la replica di un volume su un altro sistema.
+
+image:screenshot_replicate_volume_svm.gif["Una schermata che mostra la possibilità di selezionare la VM di storage in cui si desidera replicare un volume."]
+
+
+
+== Gestione del disaster recovery delle macchine virtuali dello storage
+
+Cloud Manager non fornisce alcun supporto di configurazione o orchestrazione per il disaster recovery delle macchine virtuali dello storage. È necessario utilizzare System Manager o la CLI.
+
+* https://library.netapp.com/ecm/ecm_get_file/ECMLP2839856["Guida rapida alla preparazione del disaster recovery per SVM"^]
+* https://library.netapp.com/ecm/ecm_get_file/ECMLP2839857["Guida di SVM Disaster Recovery Express"^]
+
+
+
+
+== Modifica del nome della VM di storage
+
+Cloud Manager assegna automaticamente un nome alla singola VM di storage creata per Cloud Volumes ONTAP. È possibile modificare il nome della VM di storage se si dispone di standard di denominazione rigorosi. Ad esempio, è possibile che il nome corrisponda a quello delle VM di storage per i cluster ONTAP.
+
+Se hai creato altre VM di storage per Cloud Volumes ONTAP, non puoi rinominare le VM di storage da Cloud Manager. È necessario eseguire questa operazione direttamente da Cloud Volumes ONTAP utilizzando Gestione di sistema o l'interfaccia CLI.
+
+.Fasi
+. Dall'ambiente di lavoro, fare clic sull'icona del menu, quindi su *informazioni*.
+. Fare clic sull'icona di modifica a destra del nome della VM di storage.
++
+image:screenshot_svm.gif["Schermata: Mostra il campo SVM Name (Nome SVM) e l'icona di modifica che è necessario fare clic per modificare il nome SVM."]
+
+. Nella finestra di dialogo Modify SVM Name (Modifica nome SVM), modificare il nome, quindi fare clic su *Save* (Salva).
+

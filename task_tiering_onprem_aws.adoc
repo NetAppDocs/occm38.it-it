@@ -1,0 +1,234 @@
+---
+sidebar: sidebar 
+permalink: task_tiering_onprem_aws.html 
+keywords: data tiering, fabricpool, cloud tiering, tiering cold data, tiering inactive data, tiering aff, tiering fas, tiering ontap, tiering volumes, tier data, tier cold data, tier fas, tier aff, tier ontap, aws, amazon, s3 
+summary: Liberare spazio sui cluster ONTAP on-premise mediante il tiering dei dati su Amazon S3. Il tiering dei dati è basato sul servizio Cloud Tiering di NetApp. 
+---
+= Tiering dei dati dai cluster ONTAP on-premise ad Amazon S3
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Liberare spazio sui cluster ONTAP on-premise mediante il tiering dei dati su Amazon S3. Il tiering dei dati è basato sul servizio Cloud Tiering di NetApp.
+
+
+
+== Avvio rapido
+
+Inizia subito seguendo questi passaggi o scorri verso il basso fino alle restanti sezioni per ottenere informazioni dettagliate.
+
+
+
+==== image:number1.png["numero 1"] Preparatevi a eseguire il tiering dei dati su Amazon S3
+
+[role="quick-margin-para"]
+Sono necessari i seguenti elementi:
+
+[role="quick-margin-list"]
+* Un sistema AFF o FAS con aggregati all-SSD che esegue ONTAP 9.2 o versione successiva e dispone di una connessione HTTPS ad Amazon S3.
+* Un account AWS che dispone di una chiave di accesso e. <<Preparazione di Amazon S3,le autorizzazioni richieste>> In questo modo, il cluster ONTAP può eseguire il tiering dei dati inattivi in e fuori da S3.
+* Un connettore installato in un VPC AWS o on-premise.
+* Rete per il connettore che abilita una connessione HTTPS in uscita al cluster ONTAP, allo storage S3 e al servizio di tiering cloud.
+
+
+
+
+==== image:number2.png["numero 2"] Impostare il tiering
+
+[role="quick-margin-para"]
+In Cloud Manager, selezionare un ambiente di lavoro on-premise, fare clic su *Setup Tiering* e seguire le istruzioni per assegnare i dati ad Amazon S3.
+
+
+
+==== image:number3.png["numero 3"] Impostare la licenza
+
+[role="quick-margin-para"]
+Al termine della prova gratuita, paga il Tier cloud con un abbonamento pay-as-you-go, una licenza di tiering ONTAP o una combinazione di entrambi:
+
+[role="quick-margin-list"]
+* Per iscriversi a AWS Marketplace, fare clic su *Tiering > Licensing*, fare clic su *Subscribe*, quindi seguire le istruzioni.
+* Per pagare utilizzando una licenza di tiering, mailto:ng-cloud-tiering@netapp.com?subject=Licensing[contattaci se devi acquistarne una], quindi link:task_licensing_cloud_tiering.html["Aggiungilo al tuo cluster da Cloud Tiering"].
+
+
+
+
+== Requisiti
+
+Verificare il supporto per il cluster ONTAP, configurare la rete e preparare lo storage a oggetti.
+
+L'immagine seguente mostra ciascun componente e le connessioni che è necessario preparare tra di essi:
+
+image:diagram_cloud_tiering_aws.png["Immagine dell'architettura che mostra il servizio di tiering cloud con una connessione al connettore del provider cloud, il connettore con una connessione al cluster ONTAP e una connessione tra il cluster ONTAP e lo storage a oggetti nel provider cloud. I dati attivi risiedono nel cluster ONTAP, mentre i dati inattivi risiedono nello storage a oggetti."]
+
+
+NOTE: La comunicazione tra un connettore e S3 è solo per la configurazione dello storage a oggetti. Il connettore può risiedere in sede, invece che nel cloud.
+
+
+
+=== Preparazione dei cluster ONTAP
+
+I cluster ONTAP devono soddisfare i seguenti requisiti quando si esegue il tiering dei dati su Amazon S3.
+
+Piattaforme ONTAP supportate:: Cloud Tiering supporta sistemi AFF e aggregati all-SSD su sistemi FAS.
+Versione di ONTAP supportata:: ONTAP 9.2 o versione successiva
+Requisiti di rete del cluster::
++
+--
+* Il cluster ONTAP avvia una connessione HTTPS tramite la porta 443 ad Amazon S3.
++
+ONTAP legge e scrive i dati da e verso lo storage a oggetti. Lo storage a oggetti non viene mai avviato, ma risponde.
+
++
+Sebbene AWS Direct Connect offra performance migliori e costi di trasferimento dei dati inferiori, non è necessario tra il cluster ONTAP e S3. Poiché le performance sono significativamente migliori quando si utilizza AWS Direct Connect, si consiglia di farlo.
+
+* È necessaria una connessione in entrata dal connettore, che può risiedere in un VPC AWS o in sede.
++
+Non è richiesta una connessione tra il cluster e il servizio Cloud Tiering.
+
+* Su ogni nodo ONTAP che ospita volumi a più livelli è richiesta una LIF intercluster. La LIF deve essere associata a _IPSpace_ che ONTAP deve utilizzare per connettersi allo storage a oggetti.
++
+Gli IPspaces consentono la segregazione del traffico di rete, consentendo la separazione del traffico client per la privacy e la sicurezza. http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-69120CF0-F188-434F-913E-33ACB8751A5D.html["Scopri di più su IPspaces"^].
+
++
+Quando si imposta il tiering dei dati, Cloud Tiering richiede l'utilizzo di IPSpace. È necessario scegliere l'IPSpace a cui ciascun LIF è associato. Potrebbe trattarsi dell'IPSpace "predefinito" o di un IPSpace personalizzato creato.
+
+
+
+--
+Volumi e aggregati supportati:: Il numero totale di volumi che il cloud tiering può tierare potrebbe essere inferiore al numero di volumi sul sistema ONTAP. Questo perché i volumi non possono essere suddivisi in livelli da alcuni aggregati. Ad esempio, non è possibile eseguire il tiering dei dati dai volumi SnapLock o dalle configurazioni MetroCluster. Consultare la documentazione ONTAP per link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/GUID-8E421CC9-1DE1-492F-A84C-9EB1B0177807.html["Funzionalità o funzionalità non supportate da FabricPool"^].
+
+
+
+NOTE: Cloud Tiering supporta FlexGroup Volumes, a partire da ONTAP 9.5. Il programma di installazione funziona come qualsiasi altro volume.
+
+
+
+=== Creazione o commutazione di connettori
+
+Per eseguire il Tier dei dati nel cloud è necessario un connettore. Quando si esegue il tiering dei dati in AWS S3, è possibile utilizzare un connettore che si trova in un VPC AWS o on-premise. Sarà necessario creare un nuovo connettore o assicurarsi che il connettore attualmente selezionato si trovi in AWS o on-premise.
+
+* link:concept_connectors.html["Scopri di più sui connettori"]
+* link:task_creating_connectors_aws.html["Creazione di un connettore in AWS"]
+* link:reference_cloud_mgr_reqs.html["Requisiti host del connettore"]
+* link:task_sync_installing_linux.html["Installazione del connettore su un host Linux esistente"]
+* link:task_managing_connectors.html["Passaggio da un connettore all'altro"]
+
+
+
+
+=== Preparazione del collegamento in rete per il connettore
+
+Assicurarsi che il connettore disponga delle connessioni di rete richieste. Un connettore può essere installato on-premise o in AWS.
+
+.Fasi
+. Assicurarsi che la rete in cui è installato il connettore abiliti le seguenti connessioni:
++
+** Una connessione Internet in uscita al servizio Cloud Tiering sulla porta 443 (HTTPS)
+** Una connessione HTTPS sulla porta 443 a S3
+** Una connessione HTTPS tramite la porta 443 ai cluster ONTAP
+
+
+. Se necessario, abilitare un endpoint VPC su S3.
++
+Si consiglia di utilizzare un endpoint VPC su S3 se si dispone di una connessione diretta o VPN dal cluster ONTAP al VPC e si desidera che la comunicazione tra il connettore e S3 rimanga nella rete interna AWS.
+
+
+
+
+
+=== Preparazione di Amazon S3
+
+Quando si imposta il tiering dei dati su un nuovo cluster, viene richiesto di creare un bucket S3 o di selezionare un bucket S3 esistente nell'account AWS in cui è configurato il connettore.
+
+L'account AWS deve disporre di autorizzazioni e di una chiave di accesso che è possibile inserire in Cloud Tiering. Il cluster ONTAP utilizza la chiave di accesso per raggruppare i dati in S3 e in S3.
+
+.Fasi
+. Fornire le seguenti autorizzazioni all'utente IAM:
++
+[source, json]
+----
+"s3:ListAllMyBuckets",
+"s3:ListBucket",
+"s3:GetBucketLocation",
+"s3:GetObject",
+"s3:PutObject",
+"s3:DeleteObject"
+----
++
+https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-user.html["Documentazione AWS: Creazione di un ruolo per delegare le autorizzazioni a un utente IAM"^]
+
+. Creare o individuare una chiave di accesso.
++
+Cloud Tiering passa la chiave di accesso al cluster ONTAP. Le credenziali non vengono memorizzate nel servizio Cloud Tiering.
+
++
+https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html["Documentazione AWS: Gestione delle chiavi di accesso per gli utenti IAM"^]
+
+
+
+
+
+== Tiering dei dati inattivi dal primo cluster ad Amazon S3
+
+Dopo aver preparato l'ambiente AWS, iniziare a tiering dei dati inattivi dal primo cluster.
+
+.Di cosa hai bisogno
+* link:task_discovering_ontap.html["Un ambiente di lavoro on-premise"].
+* Chiave di accesso AWS per un utente IAM che dispone delle autorizzazioni S3 richieste.
+
+
+.Fasi
+. Selezionare un cluster on-premise.
+. Fare clic su *Setup Tiering*.
++
+image:screenshot_setup_tiering_onprem.gif["Una schermata che mostra l'opzione di configurazione del tiering visualizzata sul lato destro della schermata dopo aver selezionato un ambiente di lavoro ONTAP on-premise."]
+
++
+Ora ti trovi nella dashboard di Tiering.
+
+. Fare clic su *Set up Tiering* (Configura tiering) accanto al cluster.
+. Completare la procedura riportata nella pagina *Tiering Setup*:
++
+.. *S3 bucket*: Aggiungi un nuovo bucket S3 o seleziona un bucket S3 esistente che inizia con il prefisso _fabric-pool_ e fai clic su *continua*.
++
+Il prefisso _fabric-pool_ è necessario perché il criterio IAM per il connettore consente all'istanza di eseguire azioni S3 sui bucket denominati con quel prefisso esatto.
+
++
+Ad esempio, è possibile chiamare il bucket fabric-pool-AFF1 S3, dove AFF1 è il nome del cluster.
+
+.. *Storage Class* (Classe di storage): Selezionare la classe di storage S3 a cui si desidera trasferire i dati dopo 30 giorni e fare clic su *Continue* (continua).
++
+Se si sceglie Standard, i dati rimangono in quella classe di storage.
+
+.. *Credenziali*: Inserire l'ID della chiave di accesso e la chiave segreta per un utente IAM che dispone delle autorizzazioni S3 richieste.
++
+L'utente IAM deve trovarsi nello stesso account AWS del bucket selezionato o creato nella pagina *S3 bucket*.
+
+.. *Rete cluster*: Selezionare l'IPSpace che ONTAP deve utilizzare per connettersi allo storage a oggetti e fare clic su *continua*.
++
+La scelta dell'IPSpace corretto garantisce che il Cloud Tiering possa configurare una connessione da ONTAP allo storage a oggetti del tuo provider di cloud.
+
+
+
+. Fare clic su *Continue* (continua) per selezionare i volumi a cui si desidera assegnare il Tier.
+. Nella pagina *Tier Volumes*, impostare il tiering per ciascun volume. Fare clic su image:screenshot_edit_icon.gif["Una schermata dell'icona di modifica visualizzata alla fine di ogni riga della tabella per il tiering dei volumi"] Selezionare una policy di tiering, regolare i giorni di raffreddamento e fare clic su *Apply* (Applica).
++
+link:concept_cloud_tiering.html#volume-tiering-policies["Scopri di più sulle policy di tiering dei volumi"].
+
++
+image:https://docs.netapp.com/us-en/cloud-tiering/media/screenshot_volumes_select.gif["Una schermata che mostra i volumi selezionati nella pagina Select Source Volumes (Seleziona volumi di origine)."]
+
+
+
+.Risultato
+Il tiering dei dati è stato configurato correttamente dai volumi del cluster allo storage a oggetti S3.
+
+.Quali sono le prossime novità?
+link:task_licensing_cloud_tiering.html["Assicurati di iscriverti al servizio Cloud Tiering"].
+
+È inoltre possibile aggiungere cluster aggiuntivi o rivedere le informazioni sui dati attivi e inattivi sul cluster. Per ulteriori informazioni, vedere link:task_managing_tiering.html["Gestione del tiering dei dati dai cluster"].

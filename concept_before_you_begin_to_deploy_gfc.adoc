@@ -1,0 +1,178 @@
+---
+sidebar: sidebar 
+permalink: concept_before_you_begin_to_deploy_gfc.html 
+keywords: global file cache, core, edge, management server 
+summary: Prima di iniziare a implementare Global file cache nel cloud e nelle sedi remote, è necessario conoscere molti requisiti. 
+---
+= Prima di iniziare a implementare Global file cache
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Prima di iniziare a implementare Global file cache nel cloud e nelle sedi remote, è necessario conoscere molti requisiti.
+
+
+
+== Considerazioni sulla progettazione di Global file cache Core
+
+A seconda dei requisiti, potrebbe essere necessario implementare una o più istanze Global file cache Core per creare il fabric Global file cache. L'istanza Core è progettata per fungere da cooperativa di traffico tra le istanze di Global file cache Edge distribuite e le risorse del file server del data center, ad esempio condivisioni di file, cartelle e file.
+
+Durante la progettazione dell'implementazione di Global file cache, è necessario determinare le caratteristiche più adatte al proprio ambiente in termini di scalabilità, disponibilità delle risorse e ridondanza. Global file cache Core può essere implementato nei seguenti modi:
+
+* Istanza standalone di GFC Core
+* GFC Core Load Distributed Design (Cold Standby)
+
+
+Vedere <<Linee guida per il dimensionamento>> Per comprendere il numero massimo di istanze Edge e utenti totali che ciascuna configurazione può supportare:
+
+Rivolgiti al tuo Global file cache Solutions Engineer per discutere delle opzioni migliori per l'implementazione aziendale.
+
+
+
+== Linee guida per il dimensionamento
+
+Sono disponibili alcuni rapporti di dimensionamento delle linee guida che è necessario tenere a mente durante la configurazione del sistema iniziale. È necessario rivedere questi rapporti dopo aver accumulato una certa cronologia di utilizzo per assicurarsi di utilizzare il sistema in modo ottimale. Questi includono:
+
+* Rapporto Global file cache Edges/Core
+* Rapporto utenti distribuiti/edge Global file cache
+* Rapporto core utenti distribuiti/Global file cache
+
+
+
+
+=== Numero di istanze Edge per istanza principale
+
+Le nostre linee guida consigliano fino a 10 istanze Edge per istanza Global file cache Core, con un massimo di 20 edge per istanza Global file cache Core. Ciò dipende in misura significativa dal tipo e dalla dimensione media del file del carico di lavoro più comune. In alcuni casi, con carichi di lavoro più comuni è possibile aggiungere più istanze Edge per core, ma in questi casi è necessario contattare il supporto NetApp per dimensionare correttamente il numero di istanze Edge e Core in base al tipo e alle dimensioni dei set di file.
+
+
+NOTE: Puoi sfruttare più istanze Global file cache Edge e Core contemporaneamente per scalare l'infrastruttura in base ai requisiti.
+
+
+
+=== Numero di utenti simultanei per istanza Edge
+
+Global file cache Edge gestisce l'elevato carico di lavoro in termini di algoritmi di caching e differenze a livello di file. Una singola istanza Global file cache Edge può servire fino a 400 utenti per istanza fisica Edge dedicata e fino a 200 utenti per implementazioni virtuali dedicate. Ciò dipende in misura significativa dal tipo e dalla dimensione media del file del carico di lavoro più comune. Per tipi di file collaborativi più grandi, guidare verso il 50% del numero massimo di utenti per limite inferiore Global file cache Edge (a seconda dell'implementazione fisica o virtuale). Per gli elementi Office più comuni con dimensioni medie dei file <1 MB, guida verso il 100% di utenti per limite superiore Global file cache Edge (a seconda dell'implementazione fisica o virtuale).
+
+
+NOTE: Global file cache Edge rileva se è in esecuzione su un'istanza virtuale o fisica e limita il numero di connessioni SMB alla condivisione di file virtuale locale al massimo di 200 o 400 connessioni simultanee.
+
+
+
+=== Numero di utenti simultanei per istanza Core
+
+L'istanza Global file cache Core è estremamente scalabile, con un numero di utenti simultanei consigliato di 3,000 utenti per core. Ciò dipende in misura significativa dal tipo e dalla dimensione media del file del carico di lavoro più comune.
+
+Rivolgiti al tuo Global file cache Solutions Engineer per discutere delle opzioni migliori per l'implementazione aziendale.
+
+
+
+== Prerequisiti
+
+I prerequisiti descritti in questa sezione si riferiscono ai componenti installati nel cloud: Global file cache Management Server e Global file cache Core.
+
+Vengono descritti i prerequisiti di Global file cache Edge link:download_gfc_resources.html#global-file-cache-edge-requirements["qui"].
+
+
+
+=== Istanza di Cloud Manager
+
+Quando utilizzi Cloud Volumes ONTAP per Azure come piattaforma di storage, assicurati che Cloud Manager disponga delle autorizzazioni come mostrato nella più recente https://occm-sample-policies.s3.amazonaws.com/Policy_for_cloud_Manager_Azure_3.8.7.json["Policy di Cloud Manager per Azure"^].
+
+Per impostazione predefinita, le istanze create di recente dispongono di tutte le autorizzazioni necessarie. Se l'istanza è stata distribuita prima della versione 3.8.7 (3 agosto 2020), sarà necessario aggiungere questi elementi.
+
+[source, json]
+----
+"Microsoft.Resources/deployments/operationStatuses/read",
+"Microsoft.Insights/Metrics/Read",
+"Microsoft.Compute/virtualMachines/extensions/write",
+"Microsoft.Compute/virtualMachines/extensions/read",
+"Microsoft.Compute/virtualMachines/extensions/delete",
+"Microsoft.Compute/virtualMachines/delete",
+"Microsoft.Network/networkInterfaces/delete",
+"Microsoft.Network/networkSecurityGroups/delete",
+"Microsoft.Resources/deployments/delete",
+----
+
+
+=== Piattaforma di storage (volumi)
+
+La piattaforma di storage back-end, in questo caso l'istanza di Cloud Volumes ONTAP implementata, dovrebbe presentare le condivisioni di file SMB. Tutte le condivisioni che verranno esposte tramite Global file cache devono consentire al gruppo Everyone il controllo completo a livello di condivisione, limitando al contempo le autorizzazioni attraverso le autorizzazioni NTFS.
+
+Se non è stata impostata almeno una condivisione file SMB sull'istanza di Cloud Volumes ONTAP, è necessario disporre delle seguenti informazioni per poter configurare queste informazioni durante l'installazione:
+
+* Nome di dominio di Active Directory, indirizzo IP del server dei nomi, credenziali di amministratore di Active Directory.
+* Il nome e le dimensioni del volume che si desidera creare, il nome dell'aggregato su cui verrà creato il volume e il nome della condivisione.
+
+
+Si consiglia di utilizzare un volume sufficientemente grande per ospitare il set di dati totale dell'applicazione, oltre alla possibilità di scalare di conseguenza in base alla crescita del set di dati. Se nell'ambiente di lavoro sono presenti più aggregati, vedere link:task_managing_storage.html["Gestione degli aggregati esistenti"^] per determinare quale aggregato dispone dello spazio più disponibile per il nuovo volume.
+
+
+
+=== Global file cache Management Server
+
+Questo Global file cache Management Server richiede l'accesso esterno su HTTPS (porta TCP 443) per connettersi al servizio di abbonamento del provider cloud e per accedere ai seguenti URL:
+
+* https://talonazuremicroservices.azurewebsites.net["https://talonazuremicroservices.azurewebsites.net"]
+* https://talonlicensing.table.core.windows.net["https://talonlicensing.table.core.windows.net"]
+
+
+Questa porta deve essere esclusa da qualsiasi dispositivo di ottimizzazione WAN o policy di restrizione firewall affinché il software Global file cache funzioni correttamente.
+
+Global file cache Management Server richiede anche un nome NetBIOS univoco (geografico) per l'istanza (ad esempio GFC-MS1).
+
+
+NOTE: Un server di gestione può supportare più istanze Global file cache Core distribuite in diversi ambienti di lavoro. Se implementato da Cloud Manager, ogni ambiente di lavoro dispone di un proprio storage back-end separato e non contiene gli stessi dati.
+
+
+
+=== Core Global file cache
+
+Questo core Global file cache è in attesa sull'intervallo di porte TCP 6618-6630. A seconda della configurazione del firewall o del Network Security Group (NSG), potrebbe essere necessario consentire esplicitamente l'accesso a queste porte tramite le regole delle porte in entrata. Inoltre, queste porte devono essere escluse da qualsiasi dispositivo di ottimizzazione WAN o policy di restrizione firewall affinché il software Global file cache funzioni correttamente.
+
+I requisiti di base della Global file cache sono:
+
+* Un nome NetBIOS univoco (geografico) per l'istanza (ad esempio GFC-CORE1)
+* Nome di dominio di Active Directory
++
+** Le istanze Global file cache devono essere unite al dominio Active Directory.
+** Le istanze di Global file cache devono essere gestite in un'unità organizzativa (OU) specifica di Global file cache ed escluse dagli oggetti Criteri di gruppo aziendali ereditati.
+
+
+* Account di servizio. I servizi su questo Global file cache Core vengono eseguiti come account utente di dominio specifico. Questo account, noto anche come account di servizio, deve disporre dei seguenti privilegi su ciascuno dei server SMB che saranno associati all'istanza Global file cache Core:
++
+** L'account di servizio fornito deve essere un utente di dominio.
+
+
+
+
+A seconda del livello di restrizioni e GPO nell'ambiente di rete, questo account potrebbe richiedere privilegi di amministratore di dominio.
+
+* Deve disporre dei privilegi di "Esegui come servizio".
+* La password deve essere impostata su "non scade mai".
+* L'opzione dell'account "l'utente deve modificare la password all'accesso successivo" deve essere DISATTIVATA (deselezionata).
+* Deve essere membro del gruppo Built-in Backup Operators del file server back-end (attivato automaticamente quando implementato tramite Cloud Manager).
+
+
+
+
+=== Server di gestione delle licenze
+
+* Global file cache License Management Server (LMS) deve essere configurato su Microsoft Windows Server 2016 Standard o Datacenter Edition o Windows Server 2019 Standard o Datacenter Edition, preferibilmente sull'istanza Global file cache Core nel data center o nel cloud.
+* Se si richiede un'istanza separata di Global file cache LMS, è necessario installare il pacchetto di installazione del software Global file cache più recente su un'istanza di Microsoft Windows Server non aggiornata.
+* L'istanza di LMS deve essere in grado di connettersi al servizio di abbonamento (servizi Azure / Internet pubblico) utilizzando HTTPS (porta TCP 443).
+* Le istanze Core ed Edge devono connettersi all'istanza LMS utilizzando HTTPS (porta TCP 443).
+
+
+
+
+=== Networking
+
+* Firewall: Le porte TCP devono essere consentite tra le istanze Global file cache Edge e Core.
+* Porte TCP Global file cache: 443 (HTTPS), 6618–6630.
+* I dispositivi di ottimizzazione di rete (come Riverbed Steelhead) devono essere configurati per passare attraverso porte specifiche Global file cache (TCP 6618-6630).
+

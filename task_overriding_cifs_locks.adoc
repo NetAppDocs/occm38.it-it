@@ -1,0 +1,36 @@
+---
+sidebar: sidebar 
+permalink: task_overriding_cifs_locks.html 
+keywords: CIFS locks, azure maintenance, maintenance events, cifs sessions, storage failover 
+summary: 'L"amministratore dell"account può attivare un"impostazione in Cloud Manager che impedisce i problemi di failover dello storage Cloud Volumes ONTAP durante gli eventi di manutenzione di Azure. Quando si attiva questa impostazione, Cloud Volumes ONTAP esegue il veto di CIFS e ripristina le sessioni CIFS attive.' 
+---
+= Esclusione dei blocchi CIFS per Cloud Volumes ONTAP ha in Azure
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+L'amministratore dell'account può attivare un'impostazione in Cloud Manager che impedisce i problemi di failover dello storage Cloud Volumes ONTAP durante gli eventi di manutenzione di Azure. Quando si attiva questa impostazione, Cloud Volumes ONTAP esegue il veto di CIFS e ripristina le sessioni CIFS attive.
+
+.A proposito di questa attività
+Microsoft Azure pianifica gli eventi di manutenzione periodica sulle macchine virtuali. Quando si verifica un evento di manutenzione su un nodo di una coppia Cloud Volumes ONTAP ha, la coppia ha avvia il Takeover dello storage. Se durante questo evento di manutenzione sono presenti sessioni CIFS attive, i blocchi sui file CIFS possono impedire il failover dello storage.
+
+Se si attiva questa impostazione, Cloud Volumes ONTAP veto i blocchi e ripristina le sessioni CIFS attive. Di conseguenza, la coppia ha può completare il failover dello storage durante questi eventi di manutenzione.
+
+
+IMPORTANT: Questo processo potrebbe interrompere i client CIFS. I dati non impegnati dai client CIFS potrebbero andare persi.
+
+.Di cosa hai bisogno
+È necessario creare un connettore prima di poter modificare le impostazioni di Cloud Manager. link:concept_connectors.html#how-to-create-a-connector["Scopri come"].
+
+.Fasi
+. Nella parte superiore destra della console di Cloud Manager, fare clic sull'icona Impostazioni e selezionare *Impostazioni Cloud Manager*.
++
+image:screenshot_settings_icon.gif["Una schermata che mostra l'icona Settings (Impostazioni) in alto a destra della console di Cloud Manager."]
+
+. In *ha CIFS Locks*, selezionare la casella di controllo e fare clic su *Save* (Salva).
+

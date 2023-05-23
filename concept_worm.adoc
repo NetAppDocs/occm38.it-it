@@ -1,0 +1,51 @@
+---
+sidebar: sidebar 
+permalink: concept_worm.html 
+keywords: worm, write once, read many, snaplock, enterprise, retain, retention, period 
+summary: 'È possibile attivare lo storage WORM (Write Once, Read Many) su un sistema Cloud Volumes ONTAP per conservare i file in forma non modificata per un periodo di conservazione specificato. I file WORM sono protetti a livello di file.' 
+---
+= Storage WORM
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+È possibile attivare lo storage WORM (Write Once, Read Many) su un sistema Cloud Volumes ONTAP per conservare i file in forma non modificata per un periodo di conservazione specificato. Lo storage WORM è basato sulla tecnologia SnapLock in modalità Enterprise, il che significa che i file WORM sono protetti a livello di file.
+
+Una volta che un file è stato salvato nello storage WORM, non può essere modificato, anche dopo la scadenza del periodo di conservazione. Un clock a prova di manomissione determina quando è trascorso il periodo di conservazione di un file WORM.
+
+Una volta trascorso il periodo di conservazione, l'utente è responsabile dell'eliminazione dei file non più necessari.
+
+[discrete]
+=== Attivazione dello storage WORM
+
+È possibile attivare lo storage WORM su un sistema Cloud Volumes ONTAP quando si crea un nuovo ambiente di lavoro. Ciò include la specifica di un codice di attivazione e l'impostazione del periodo di conservazione predefinito per i file. È possibile ottenere un codice di attivazione utilizzando l'icona della chat in basso a destra dell'interfaccia di Cloud Manager.
+
+
+NOTE: Non è possibile attivare lo storage WORM su singoli volumi. WORM deve essere attivato a livello di sistema.
+
+L'immagine seguente mostra come attivare lo storage WORM durante la creazione di un ambiente di lavoro:
+
+image:screenshot_enabling_worm.gif["Mostra l'opzione WORM disponibile quando si crea un nuovo ambiente di lavoro."]
+
+[discrete]
+=== Commit dei file in WORM
+
+È possibile utilizzare un'applicazione per il commit dei file in WORM su NFS o CIFS oppure utilizzare l'interfaccia utente di ONTAP per il commit automatico dei file in WORM. È inoltre possibile utilizzare un file .WORM appendibile per conservare i dati scritti in modo incrementale, ad esempio le informazioni di log.
+
+Dopo aver attivato lo storage WORM su un sistema Cloud Volumes ONTAP, è necessario utilizzare l'interfaccia utente di ONTAP per la gestione dello storage WORM. Per istruzioni, fare riferimento a. http://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-arch-con/home.html["Documentazione ONTAP"^].
+
+
+NOTE: Il supporto Cloud Volumes ONTAP per lo storage WORM equivale alla modalità aziendale SnapLock.
+
+[discrete]
+=== Limitazioni
+
+* Se si elimina o si sposta un disco direttamente da AWS o Azure, è possibile eliminare un volume prima della data di scadenza.
+* Quando lo storage WORM è attivato, non è possibile abilitare il tiering dei dati sullo storage a oggetti.
+* Per abilitare lo storage WORM, è necessario disattivare il backup su cloud.
+

@@ -1,0 +1,196 @@
+---
+sidebar: sidebar 
+permalink: faq_cloud_compliance.html 
+keywords: faq, frequently asked questions, questions 
+summary: Queste FAQ possono essere utili se stai cercando una risposta rapida a una domanda. 
+---
+= Domande frequenti sulla conformità al cloud
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Queste FAQ possono essere utili se stai cercando una risposta rapida a una domanda.
+
+
+
+== Che cos'è la conformità al cloud?
+
+La conformità al cloud è un'offerta cloud che utilizza la tecnologia basata sull'intelligenza artificiale (ai) per aiutare le organizzazioni a comprendere il contesto dei dati e identificare i dati sensibili nelle configurazioni Azure NetApp Files, nei sistemi Cloud Volumes ONTAP ospitati in AWS o Azure, nei bucket Amazon S3 e nei database.
+
+Cloud Compliance offre parametri predefiniti (ad esempio tipi e categorie di informazioni sensibili) per soddisfare le nuove normative sulla conformità dei dati per la privacy e la sensibilità dei dati, come GDPR, CCPA, HIPAA e altro ancora.
+
+
+
+== Perché dovrei utilizzare Cloud Compliance?
+
+La conformità al cloud può aiutarti con i dati per aiutarti a:
+
+* Rispettare le normative sulla privacy e sulla conformità dei dati.
+* Rispettare le policy di conservazione dei dati.
+* Individuare e creare report su dati specifici in risposta a soggetti interessati, come richiesto da GDPR, CCPA, HIPAA e altre normative sulla privacy dei dati.
+
+
+
+
+== Quali sono i casi di utilizzo più comuni per la conformità al cloud?
+
+* Identificare le informazioni personali identificabili (PII).
+* Identificare un ampio ambito di informazioni sensibili come richiesto dalle normative sulla privacy GDPR e CCPA.
+* Rispettare le nuove e future normative sulla privacy dei dati.
+
+
+https://cloud.netapp.com/cloud-compliance["Scopri di più sui casi di utilizzo per la conformità al cloud"^].
+
+
+
+== Quali tipi di dati è possibile sottoporre a scansione con la conformità al cloud?
+
+Cloud Compliance supporta la scansione di dati non strutturati su protocolli NFS e CIFS gestiti da Cloud Volumes ONTAP e Azure NetApp Files. Cloud Compliance può anche eseguire la scansione dei dati memorizzati nei bucket Amazon S3.
+
+Inoltre, Cloud Compliance è in grado di eseguire la scansione di database che si trovano ovunque, non devono essere gestiti da Cloud Manager.
+
+link:concept_cloud_compliance.html#how-scans-work["Scopri come funzionano le scansioni"].
+
+
+
+== Quali cloud provider sono supportati?
+
+Cloud Compliance opera come parte di Cloud Manager e attualmente supporta AWS e Azure. In questo modo, la tua organizzazione potrà ottenere una visibilità unificata della privacy tra diversi cloud provider. Il supporto per Google Cloud Platform (GCP) verrà aggiunto a breve.
+
+
+
+== Come posso accedere alla conformità cloud?
+
+La conformità al cloud viene gestita e gestita tramite Cloud Manager. Puoi accedere alle funzionalità Cloud Compliance dalla scheda *Compliance* di Cloud Manager.
+
+
+
+== Come funziona Cloud Compliance?
+
+Cloud Compliance implementa un altro livello di intelligenza artificiale insieme al sistema Cloud Manager e ai sistemi storage. Esegue quindi la scansione dei dati su volumi, bucket e database e indicizza le informazioni sui dati trovate.
+
+link:concept_cloud_compliance.html["Scopri di più sul funzionamento della conformità al cloud"].
+
+
+
+== Quanto costa la Cloud Compliance?
+
+Il costo per l'utilizzo della conformità cloud dipende dalla quantità di dati che si sta scansionando. I primi 1 TB di dati che Cloud Compliance analizza in uno spazio di lavoro di Cloud Manager sono gratuiti. Per continuare a eseguire la scansione dei dati dopo tale data, è necessario un abbonamento ad AWS o Azure Marketplace. Vedere https://cloud.netapp.com/cloud-compliance#pricing["prezzi"^] per ulteriori informazioni.
+
+
+
+== Con quale frequenza la Cloud Compliance esegue la scansione dei miei dati?
+
+I dati cambiano di frequente, pertanto la conformità del cloud esegue una scansione continua dei dati senza alcun impatto sui dati. Anche se la scansione iniziale dei dati potrebbe richiedere più tempo, le scansioni successive eseguono solo la scansione delle modifiche incrementali, riducendo i tempi di scansione del sistema.
+
+link:concept_cloud_compliance.html#how-scans-work["Scopri come funzionano le scansioni"].
+
+
+
+== Cloud Compliance offre report?
+
+Sì. Le informazioni offerte dalla Cloud Compliance possono essere rilevanti per gli altri stakeholder delle tue organizzazioni, pertanto ti consentiamo di generare report per condividere le informazioni.
+
+Per la conformità al cloud sono disponibili i seguenti report:
+
+Report sulla valutazione dei rischi per la privacy:: Fornisce informazioni sulla privacy dai dati e un punteggio di rischio per la privacy. link:task_generating_compliance_reports.html["Scopri di più"].
+Report Data Subject Access Request:: Consente di estrarre un report di tutti i file che contengono informazioni relative al nome specifico o all'identificativo personale di un soggetto. link:task_responding_to_dsar.html["Scopri di più"].
+Report PCI DSS:: Consente di identificare la distribuzione delle informazioni sulla carta di credito nei file. link:task_generating_compliance_reports.html["Scopri di più"].
+Report HIPAA:: Consente di identificare la distribuzione delle informazioni sanitarie tra i file. link:task_generating_compliance_reports.html["Scopri di più"].
+Report su un tipo di informazioni specifico:: Sono disponibili report che includono dettagli sui file identificati che contengono dati personali e dati personali sensibili. È inoltre possibile visualizzare i file suddivisi per categoria e tipo di file. link:task_controlling_private_data.html["Scopri di più"].
+
+
+
+
+== Quale tipo di istanza o macchina virtuale è richiesto per la conformità al cloud?
+
+* In Azure, Cloud Compliance viene eseguito su una macchina virtuale Standard_D16s_v3 con un disco da 512 GB.
+* In AWS, Cloud Compliance viene eseguito su un'istanza m5.4xLarge con un disco GP2 da 500 GB.
++
+Nelle regioni in cui m5.4xlarge non è disponibile, Cloud Compliance viene eseguito su un'istanza m4.4xlarge.
+
+
+
+
+NOTE: La modifica o il ridimensionamento del tipo di istanza/VM non è supportato. È necessario utilizzare le dimensioni predefinite fornite.
+
+link:concept_cloud_compliance.html["Scopri di più sul funzionamento della conformità al cloud"].
+
+
+
+== Le prestazioni di scansione variano?
+
+Le performance di scansione possono variare in base alla larghezza di banda della rete e alle dimensioni medie dei file nel tuo ambiente cloud.
+
+
+
+== Quali tipi di file sono supportati?
+
+Cloud Compliance esegue la scansione di tutti i file per individuare informazioni su categorie e metadati e visualizza tutti i tipi di file nella sezione tipi di file della dashboard.
+
+Quando Cloud Compliance rileva le informazioni personali identificabili (PII) o esegue una ricerca DSAR, sono supportati solo i seguenti formati di file: .PDF, .DOCX, .DOC, .PPTX, .XLS, XLSX, .CSV, .TXT, .RTF E .JSON.
+
+
+
+== Come posso abilitare la conformità al cloud?
+
+Innanzitutto, devi implementare un'istanza di Cloud Compliance in Cloud Manager. Una volta eseguita l'istanza, è possibile abilitarla negli ambienti di lavoro e nei database esistenti dalla scheda *Compliance* o selezionando un ambiente di lavoro specifico.
+
+link:task_getting_started_compliance.html["Scopri come iniziare"].
+
+
+NOTE: L'attivazione della conformità cloud comporta una scansione iniziale immediata. I risultati della compliance vengono visualizzati poco dopo.
+
+
+
+== Come si disattiva la conformità al cloud?
+
+Dopo aver selezionato un singolo ambiente di lavoro, è possibile disattivare Cloud Compliance dalla pagina Working Environments (ambienti di lavoro).
+
+link:task_managing_compliance.html["Scopri di più"].
+
+
+NOTE: Per rimuovere completamente l'istanza di Cloud Compliance, puoi rimuovere manualmente l'istanza di Cloud Compliance dal portale del tuo cloud provider.
+
+
+
+== Cosa succede se il tiering dei dati è attivato su Cloud Volumes ONTAP?
+
+Potresti voler abilitare la conformità al cloud su un sistema Cloud Volumes ONTAP che esegue il Tier dei dati cold sullo storage a oggetti. Se il tiering dei dati è attivato, Cloud Compliance esegue la scansione di tutti i dati presenti sui dischi e cold data tiered in storage a oggetti.
+
+La scansione di compliance non riscalda i dati cold, ma rimane fredda e viene tierata per lo storage a oggetti.
+
+
+
+== Posso utilizzare la conformità al cloud per eseguire la scansione dello storage ONTAP on-premise?
+
+La scansione dei dati direttamente da un ambiente di lavoro ONTAP on-premise non è supportata. Tuttavia, è possibile eseguire la scansione dei dati ONTAP on-premise replicando i dati NFS o CIFS on-premise in un ambiente di lavoro Cloud Volumes ONTAP e attivando la conformità su tali volumi. Stiamo pianificando di supportare la conformità al cloud con offerte cloud aggiuntive come Cloud Volumes Service. 
+
+link:task_scanning_onprem.html["Scopri di più"].
+
+
+
+== Cloud Compliance può inviare notifiche alla mia organizzazione?
+
+No, ma è possibile scaricare i report di stato che è possibile condividere internamente all'organizzazione.
+
+
+
+== Posso personalizzare il servizio in base alle esigenze della mia organizzazione?
+
+La conformità al cloud offre informazioni pronte all'uso ai tuoi dati. Queste informazioni possono essere estratte e utilizzate per le esigenze della tua organizzazione.
+
+
+
+== Posso limitare le informazioni sulla conformità al cloud a utenti specifici?
+
+Sì, la conformità del cloud è completamente integrata con Cloud Manager. Gli utenti di Cloud Manager possono visualizzare le informazioni solo per gli ambienti di lavoro che possono visualizzare in base ai privilegi dell'area di lavoro.
+
+Inoltre, se si desidera consentire a determinati utenti di visualizzare solo i risultati della scansione Cloud Compliance senza avere la possibilità di gestire le impostazioni Cloud Compliance, è possibile assegnare a tali utenti il ruolo _Cloud Compliance Viewer_.
+
+link:concept_cloud_compliance.html#user-access-to-compliance-information["Scopri di più"].

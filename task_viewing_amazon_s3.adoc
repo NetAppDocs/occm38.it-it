@@ -1,0 +1,41 @@
+---
+sidebar: sidebar 
+permalink: task_viewing_amazon_s3.html 
+keywords: s3 buckets, s3 storage, s3 working environment, amazon s3 buckets, amazon s3 working environment 
+summary: 'Dopo aver installato un connettore in AWS, Cloud Manager è in grado di rilevare automaticamente le informazioni sui bucket Amazon S3 che risiedono nell"account AWS in cui è installato.' 
+---
+= Visualizzazione dei bucket Amazon S3
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Dopo aver installato un connettore in AWS, Cloud Manager è in grado di rilevare automaticamente le informazioni sui bucket Amazon S3 che risiedono nell'account AWS in cui è installato.
+
+Puoi vedere i dettagli sui bucket S3, tra cui la regione, il livello di accesso, la classe di storage e se il bucket viene utilizzato con Cloud Volumes ONTAP per backup o tiering dei dati. Inoltre, puoi eseguire la scansione dei bucket S3 con la conformità al cloud.
+
+.Fasi
+. link:task_creating_connectors_aws.html["Installare un connettore"] Nell'account AWS in cui si desidera visualizzare i bucket Amazon S3.
++
+Subito dopo, viene visualizzato automaticamente un ambiente di lavoro Amazon S3.
+
++
+image:screenshot_s3_we.gif["Schermata di un ambiente di lavoro Amazon S3."]
+
+. Fare clic sull'ambiente di lavoro e selezionare un'azione dal riquadro di destra.
++
+image:screenshot_s3_actions.gif["Una schermata che mostra il pannello delle azioni dopo aver selezionato un ambiente di lavoro Amazon S3. Il riquadro mostra informazioni su S3: Il numero di bucket e regioni. Il riquadro prevede anche due azioni: Enable Compliance (attiva conformità) e View Bucket (Visualizza bucket)."]
+
+. Fare clic su *Enable Compliance* (attiva compliance) per eseguire la scansione dei bucket S3 alla ricerca di dati personali e sensibili.
++
+Per ulteriori informazioni, vedere link:task_scanning_s3.html["Introduzione alla conformità cloud per Amazon S3"].
+
+. Fare clic su *View Bucket* (Visualizza bucket) per visualizzare i dettagli sui bucket S3 nel proprio account AWS.
++
+image:screenshot_amazon_s3.gif["Una schermata che mostra i dettagli di un ambiente di lavoro Amazon S3: Il numero totale di bucket e il numero totale di regioni, il numero di bucket con servizi attivi e una tabella che mostra i dettagli di ciascun bucket S3."]
+
+

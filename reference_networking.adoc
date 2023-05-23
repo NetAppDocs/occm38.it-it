@@ -1,0 +1,60 @@
+---
+sidebar: sidebar 
+permalink: reference_networking.html 
+keywords: networking overview, networking requirements, endpoints, urls 
+summary: Prima che gli utenti accedano a Cloud Manager, è necessario assicurarsi che i browser Web possano accedere a endpoint specifici. Successivamente, è necessario verificare i requisiti di rete per il tipo specifico di ambiente di lavoro creato e per i servizi che si abilitano. 
+---
+= Panoramica delle reti
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Prima che gli utenti accedano a Cloud Manager, è necessario assicurarsi che i browser Web possano accedere a endpoint specifici. Successivamente, è necessario verificare i requisiti di rete per il tipo specifico di ambiente di lavoro e di servizi che verranno utilizzati.
+
+
+
+== Endpoint a cui si accede dal browser Web
+
+Gli utenti devono accedere a Cloud Manager da un browser Web. Il computer che esegue il browser Web deve disporre di connessioni ai seguenti endpoint:
+
+[cols="43,57"]
+|===
+| Endpoint | Scopo 
+
+
+| https://cloudmanager.cloud.netapp.com | Per connetterti all'interfaccia SaaS di Cloud Manager. 
+
+
+| https://api.services.cloud.netapp.com | Per contattare le API Cloud Central. 
+
+
+| https://auth0.com https://cdn.auth0.com https://netapp-cloud-account.auth0.com https://services.cloud.netapp.com | Il browser Web si connette a questi endpoint per un'autenticazione utente centralizzata tramite NetApp Cloud Central. 
+
+
+| https://widget.intercom.io | Per chat in-product che ti consente di parlare con gli esperti cloud di NetApp. 
+|===
+
+
+== Indice dei requisiti di rete
+
+* link:reference_networking_cloud_manager.html["Connettori"]
+* link:reference_networking_aws.html["Cloud Volumes ONTAP per AWS"]
+* link:reference_networking_azure.html["Cloud Volumes ONTAP per Azure"]
+* link:reference_networking_gcp.html["Cloud Volumes ONTAP per GCP"]
+* link:task_replicating_data.html["Replica dei dati tra sistemi ONTAP"]
+* link:task_getting_started_compliance.html["Conformità del cloud per Cloud Volumes ONTAP o Azure NetApp Files"]
+* link:task_scanning_s3.html["Conformità del cloud per Amazon S3"]
+* link:task_discovering_ontap.html["Cluster ONTAP on-premise"]
++
+** link:task_tiering_onprem_aws.html["Tiering dei dati dai cluster ONTAP ad Amazon S3"]
+** link:task_tiering_onprem_azure.html["Tiering dei dati dai cluster ONTAP allo storage Azure Blob"]
+** link:task_tiering_onprem_gcp.html["Tiering dei dati dai cluster ONTAP allo storage cloud Google"]
+** link:task_tiering_onprem_storagegrid.html["Tiering dei dati dai cluster ONTAP a StorageGRID"]
+
+
+

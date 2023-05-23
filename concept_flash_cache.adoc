@@ -1,0 +1,54 @@
+---
+sidebar: sidebar 
+permalink: concept_flash_cache.html 
+keywords: cloud volumes ontap, aws, ec2, flash cache, read-intensive, read, random, databases, email, file services, c5d.4xlarge, c5d.9xlarge, r5d.2xlarge, compression, performance, azure, nvme, standard, l8s, vm type, virtual machine, m5d.8xlarge, m5d.12xlarge, c5d.18xlarge 
+summary: Alcune configurazioni Cloud Volumes ONTAP in AWS e Azure includono lo storage NVMe locale, che Cloud Volumes ONTAP utilizza come Flash cache per migliorare le performance. 
+---
+= Flash cache
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Alcune configurazioni Cloud Volumes ONTAP in AWS e Azure includono lo storage NVMe locale, che Cloud Volumes ONTAP utilizza come _Flash cache_ per migliorare le performance.
+
+
+
+== Cos'è Flash cache?
+
+Flash cache accelera l'accesso ai dati attraverso il caching intelligente in tempo reale dei dati utente recentemente letti e dei metadati NetApp. È efficace per i carichi di lavoro a lettura intensiva, inclusi database, e-mail e file service.
+
+
+
+== Istanze supportate in AWS
+
+Selezionare uno dei seguenti tipi di istanze EC2 con un sistema Cloud Volumes ONTAP Premium o BYOL nuovo o esistente:
+
+* c5d.4xlarge
+* c5d.9xlarge
+* c5d.18xlarge
+* m5d.8xlarge
+* m5d.12xlarge
+* r5d.2xlarge
+
+
+
+
+== Tipo di VM supportato in Azure
+
+Selezionare il tipo di macchina virtuale Standard_L8s_v2 con un sistema BYOL Cloud Volumes ONTAP a nodo singolo in Azure.
+
+
+
+== Limitazioni
+
+* La compressione deve essere disattivata su tutti i volumi per sfruttare i miglioramenti delle prestazioni di Flash cache.
++
+Scegli l'assenza di efficienza dello storage durante la creazione di un volume da Cloud Manager, oppure crea un volume e poi http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-vsmg/GUID-8508A4CB-DB43-4D0D-97EB-859F58B29054.html["Disattivare la compressione dei dati utilizzando l'interfaccia CLI"^].
+
+* Il ripristino della cache dopo un riavvio non è supportato con Cloud Volumes ONTAP.
+
