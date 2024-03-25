@@ -99,8 +99,9 @@ Quando si imposta il tiering dei dati, Cloud Tiering richiede l'utilizzo di IPSp
 
 
 --
-Volumi e aggregati supportati:: Il numero totale di volumi che il cloud tiering può tierare potrebbe essere inferiore al numero di volumi sul sistema ONTAP. Questo perché i volumi non possono essere suddivisi in livelli da alcuni aggregati. Ad esempio, non è possibile eseguire il tiering dei dati dai volumi SnapLock o dalle configurazioni MetroCluster. Consultare la documentazione ONTAP per link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/GUID-8E421CC9-1DE1-492F-A84C-9EB1B0177807.html["Funzionalità o funzionalità non supportate da FabricPool"^].
 
+
+Direttiva non risolta in <stdin> - include:: https://raw.githubusercontent.com/NetAppDocs/cloud-tiering/master/_include/supported_volumes.adoc []
 
 
 NOTE: Cloud Tiering supporta FlexGroup Volumes, a partire da ONTAP 9.5. Il programma di installazione funziona come qualsiasi altro volume.
